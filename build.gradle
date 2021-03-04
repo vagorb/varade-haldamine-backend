@@ -18,6 +18,12 @@ dependencies {
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	implementation'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation'org.postgresql:postgresql'
+	compileOnly 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor 'org.projectlombok:lombok:1.18.12'
+	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
+	testImplementation('org.springframework.boot:spring-boot-starter-test') {
+		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+	}
 }
 
 test {
