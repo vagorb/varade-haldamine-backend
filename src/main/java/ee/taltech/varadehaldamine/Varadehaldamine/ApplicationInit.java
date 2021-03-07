@@ -16,7 +16,7 @@ public class ApplicationInit implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-//        Vara vara = new Vara("Vasja", "Dima");
-//        service.save(vara);
+        Vara vara = new Vara("Vasja", "Dima");
+        service.save(vara);
     }
 }
