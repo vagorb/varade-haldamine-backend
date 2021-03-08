@@ -14,9 +14,9 @@ public class VaradeService {
     private VaradeRepository varadeRepository;
 
 
-//    public List<Vara> findAll() {
-//        return varadeRepository.findAll();
-//    }
+    public List<Vara> findAll() {
+        return varadeRepository.findAll();
+    }
 
     public void save(Vara vara) {
         varadeRepository.save(vara);
