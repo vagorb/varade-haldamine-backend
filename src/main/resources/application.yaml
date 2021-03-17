@@ -3,28 +3,3 @@ spring:
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: postgres
-
-#server:
-#  servlet:
-#    context-path: /api
-#spring:
-#  jackson:
-#    default-property-inclusion: non_null
-#  jpa:
-#    properties:
-#      hibernate:
-#        services:
-#          db:
-#            image: postgres:11
-#  datasource:
-#    url:
-#      jdbc:postgresql://localhost:5432/postgres
-#    username: postgres
-#    password: postgres
-#
-#  Vara-api:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    ports:
-#      - 8080:8080
