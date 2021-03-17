@@ -1,23 +1,71 @@
 version: "3.6"
+
 services:
-  # you can add database if you want
-    db:
-      image: postgres:11
-      container_name: db
-      ports:
-        - 5432:5432
-      environment:
-        - POSTGRES_USER=root
-        - POSTGRES_PASSWORD=root
-        - POSTGRES_DB=testdb
-    vara-api:
-      build:
-        context: .
-        dockerfile: Dockerfile
-      expose:
-        - 8080
-      ports:
-        - 8080:8080
+  postgres:
+    image: postgres
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+
+#services:
+#  api:
+#    container_name: my-api
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    ports:
+#    - 8080:8080/tcp
+#    links:
+#      - postgres
+#  postgres:
+#    container_name: my-db
+#    restart: always
+#    environment:
+#      - POSTGRES_USER=root
+#      - POSTGRES_PASSWORD=root
+#      - POSTGRES_DB=varadb
+#    image: library/postgres:latest
+#    ports:
+#      - 5432:5432/tcp
+#  flyway:
+#    container_name: my-flyway
+#    environment:
+#      - FLYWAY_USER=root
+#      - FLYWAY_PASWORD=root
+#      - FLYWAY_URL=jdbc:postgresql://postgres:5432/varadb
+#      - FLYWAY_SCHEMAS=flyway, postgres
+#      - FLYWAY_GROUP=true
+#    image: flyway/flyway:latest
+#    command: -locations=filesystem:/flyway/sql -connectRetries=60 migrate
+#    volumes:
+#    - ./sql_version:/flyway/sql
+#    depends_on:
+#      - postgres
+
+
+#  api:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    expose:
+#      - 8080
+#    ports:
+#      - 8080:8080
+#  db:
+#    image: postgres:11
+#    container_name: db
+#    ports:
+#      - 5432:5432
+#    environment:
+#      - POSTGRES_USER=root
+#      - POSTGRES_PASSWORD=root
+#      - POSTGRES_DB=testdb
+#  flyway:
+
 
 
 #version: '2'

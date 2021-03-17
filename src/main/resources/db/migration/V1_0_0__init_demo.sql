@@ -14,3 +14,9 @@
 -- `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 -- `modified_at` DATETIME on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
 --  PRIMARY KEY (`id`)) ENGINE = InnoDB;
+
+CREATE TABLE IF NOT EXISTS demo_table (
+    id SERIAL PRIMARY KEY,
+    alt_id VARCHAR(52),
+    created timestamp
+);
