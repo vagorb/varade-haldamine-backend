@@ -9,5 +9,4 @@ public class VaradeHaldamineApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(VaradeHaldamineApplication.class, args);
 	}
-
 }
