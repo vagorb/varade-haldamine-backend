@@ -28,6 +28,7 @@ dependencies {
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"
 
+	testImplementation group: 'com.h2database', name: 'h2', version: '1.4.200'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
@@ -36,7 +37,8 @@ dependencies {
 
 flyway {
 	url = 'jdbc:postgresql://localhost:5432/postgres'
-	user = 'sa'
+	user = 'postgres'
+	password = 'postgres'
 }
 
 test {
