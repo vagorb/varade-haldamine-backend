@@ -1,10 +1,12 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Service;
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Person;
+import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.PersonInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 @Service
@@ -15,6 +17,16 @@ public class PersonService {
 
     public List<Person> findAll(){
         return personRepository.findAll();
+    }
+
+    public Person addPerson(PersonInfo personInfo){
+        try {
+            if (personInfo != null && !personInfo.getAzureId().isBlank() && !personInfo.getFirstname().isBlank() && !personInfo.getLastName().isBlank()){
+                Person person = new Person(personInfo.getAzureId(), personInfo.getFirstname(), personInfo.getLastName());
+                return personRepository.save(person);
+            }
+        } catch (Exception ignored) {}
+        return null;
     }
 
 }
