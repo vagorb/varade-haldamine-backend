@@ -24,16 +24,6 @@ public class AssetService {
 
 
     public List<Asset> findAll() {
-        Person person1 = new Person();
-        person1.setId(4L);
-        person1.setFirstname("Ilya");
-        person1.setLastname("Boy");
-        person1.setAzureId("194041IAIB");
-
-        Person person2 = new Person();
-        person2.setFirstname("Artur");
-        person2.setLastname("Pärn");
-        person2.setAzureId("wow");
         return assetRepository.findAll();
     }
 }
