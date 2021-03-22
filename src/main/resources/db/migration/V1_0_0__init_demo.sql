@@ -1,6 +1,17 @@
+-- DROP TABLE IF EXISTS Asset;
+-- DROP TABLE IF EXISTS Person;
+-- DROP TABLE IF EXISTS Possessor;
+-- DROP TABLE IF EXISTS Worth;
+-- DROP TABLE IF EXISTS Kit_relation;
+-- DROP TABLE IF EXISTS Address;
+-- DROP TABLE IF EXISTS Classification;
+-- DROP TABLE IF EXISTS Comment;
+-- DROP TABLE IF EXISTS Description;
+
+
 CREATE TABLE IF NOT EXISTS Person (
     id SERIAL PRIMARY KEY,
-    azure_id VARCHAR(50) UNIQUE NOT NULL,
+    azure_id VARCHAR(500) UNIQUE NOT NULL,
     firstname VARCHAR(50) NOT NULL,
     lastname VARCHAR(50) NOT NULL
 );
@@ -58,7 +69,7 @@ CREATE TABLE IF NOT EXISTS Address (
 
 CREATE TABLE IF NOT EXISTS Classification (
     subclass VARCHAR(20) NOT NULL,
-    class VARCHAR(20) NOT NULL
+    main_class VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Description (
