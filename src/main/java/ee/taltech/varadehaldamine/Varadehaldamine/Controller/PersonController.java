@@ -1,12 +1,10 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Person;
+import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.PersonInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -19,7 +17,12 @@ public class PersonController {
     PersonService personService;
 
     @GetMapping
-    public List<Person> getAll() {
+    public List<Person> getAll() throws NoSuchFieldException {
         return personService.findAll();
+    }
+
+    @PostMapping
+    public Person addPerson(PersonInfo person){
+        return personService.addPerson(person);
     }
 }
