@@ -30,4 +30,13 @@ public class Asset {
     private Boolean delicate_condition;
     private Timestamp created_at;
     private Timestamp modified_at;
+
+    public Asset(String id, String name, String subclass, Long possessor_id, Date expiration_date, Boolean delicate_condition) {
+        this.id = id;
+        this.name = name;
+        this.subclass = subclass;
+        this.possessor_id = possessor_id;
+        this.expiration_date = expiration_date;
+        this.delicate_condition = delicate_condition;
+    }
 }

@@ -25,4 +25,8 @@ public class AssetController {
         return assetService.findAll();
     }
 
+    @PostMapping
+    public Asset addAsset(AssetInfo asset){
+        return assetService.addAsset(asset);
+    }
 }
