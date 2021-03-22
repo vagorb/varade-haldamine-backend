@@ -16,7 +16,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AssetController {
 
-    
+
     @Autowired
     AssetService assetService;
 
