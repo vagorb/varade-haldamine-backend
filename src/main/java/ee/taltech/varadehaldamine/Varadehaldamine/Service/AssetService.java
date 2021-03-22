@@ -33,4 +33,5 @@ public class AssetService {
     public List<Asset> findAll() {
         return assetRepository.findAll();
     }
+
 }

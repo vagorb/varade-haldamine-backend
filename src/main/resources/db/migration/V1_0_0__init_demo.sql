@@ -23,6 +23,11 @@ CREATE TABLE IF NOT EXISTS Possessor (
     subdivision SMALLINT
 );
 
+CREATE TABLE IF NOT EXISTS Classification (
+    subclass VARCHAR(20) PRIMARY KEY,
+    main_class VARCHAR(20) NOT NULL
+);
+
 CREATE OR REPLACE FUNCTION trigger_set_timestamp()
 RETURNS TRIGGER AS $$
 BEGIN
@@ -65,11 +70,6 @@ CREATE TABLE IF NOT EXISTS Address (
     asset_id VARCHAR(20) PRIMARY KEY REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE,
     building_abbreviature VARCHAR(10) NOT NULL,
     room VARCHAR(10)
-);
-
-CREATE TABLE IF NOT EXISTS Classification (
-    subclass VARCHAR(20) NOT NULL,
-    main_class VARCHAR(20) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Description (

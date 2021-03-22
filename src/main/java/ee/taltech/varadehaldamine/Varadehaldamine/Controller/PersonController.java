@@ -17,7 +17,7 @@ public class PersonController {
     PersonService personService;
 
     @GetMapping
-    public List<Person> getAll() throws NoSuchFieldException {
+    public List<Person> getAll() {
         return personService.findAll();
     }
 
