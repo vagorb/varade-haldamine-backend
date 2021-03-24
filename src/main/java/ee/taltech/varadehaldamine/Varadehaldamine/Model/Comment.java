@@ -15,6 +15,6 @@ import javax.persistence.Id;
 public class Comment {
     @Id
     private Long id;
-    private String asset_id;
+    private String assetId;
     private String text;
 }

@@ -15,8 +15,8 @@ import java.sql.Timestamp;
 @Entity
 public class Worth {
     @Id
-    private String asset_id;
+    private String assetId;
     private Double price;
-    private Double residual_price;
-    private Timestamp purchase_date;
+    private Double residualPrice;
+    private Timestamp purchaseDate;
 }

@@ -40,14 +40,14 @@ public class AssetService {
     public Asset addAsset(AssetInfo assetInfo) {
         try {
             if (assetInfo != null && !assetInfo.getId().isBlank() && !assetInfo.getName().isBlank()
-                    && !assetInfo.getSubclass().isBlank() && assetInfo.getPossessor_id() != null
-                    && assetInfo.getDelicate_condition() != null && !assetInfo.getBuilding_abbreviature().isBlank()) {
+                    && !assetInfo.getSubclass().isBlank() && assetInfo.getPossessorId() != null
+                    && assetInfo.getDelicateCondition() != null && !assetInfo.getBuildingAbbreviation().isBlank()) {
                 Optional<Classification> classification = classificationRepository.findById(assetInfo.getSubclass());
                 if (classification.isPresent()) {
                     String subclass = classification.get().getSubclass();
                     Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), subclass,
-                            assetInfo.getPossessor_id(), assetInfo.getExpiration_date(),
-                            assetInfo.getDelicate_condition());
+                            assetInfo.getPossessorId(), assetInfo.getExpirationDate(),
+                            assetInfo.getDelicateCondition());
                     Asset dbAsset = assetRepository.save(asset);
                     addAddress(assetInfo);
                     addKitRelation(assetInfo);
@@ -63,7 +63,7 @@ public class AssetService {
 
     private void addAddress(AssetInfo assetInfo) {
         try {
-            Address address = new Address(assetInfo.getId(), assetInfo.getBuilding_abbreviature(), assetInfo.getRoom());
+            Address address = new Address(assetInfo.getId(), assetInfo.getBuildingAbbreviation(), assetInfo.getRoom());
             addressRepository.save(address);
         } catch (Exception ignored) {
         }
@@ -71,8 +71,8 @@ public class AssetService {
 
     private void addKitRelation(AssetInfo assetInfo) {
         try {
-            if (!assetInfo.getComponent_asset_id().isBlank() && !assetInfo.getMajor_asset_id().isBlank()) {
-                KitRelation kit = new KitRelation(assetInfo.getComponent_asset_id(), assetInfo.getMajor_asset_id());
+            if (!assetInfo.getComponentAssetId().isBlank() && !assetInfo.getMajorAssetId().isBlank()) {
+                KitRelation kit = new KitRelation(assetInfo.getComponentAssetId(), assetInfo.getMajorAssetId());
                 kitRelationRepository.save(kit);
             }
 
@@ -92,9 +92,9 @@ public class AssetService {
 
     private void addWorth(AssetInfo assetInfo) {
         try {
-            if (assetInfo.getPrice() != null && assetInfo.getResidual_price() != null) {
+            if (assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null) {
                 Worth worth = new Worth(assetInfo.getId(), assetInfo.getPrice(),
-                        assetInfo.getResidual_price(), assetInfo.getPurchase_date());
+                        assetInfo.getResidualPrice(), assetInfo.getPurchaseDate());
                 worthRepository.save(worth);
             }
         } catch (Exception ignored) {

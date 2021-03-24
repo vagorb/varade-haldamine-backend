@@ -9,5 +9,5 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ClassificationInfo {
     private String subclass;
-    private String main_class;
+    private String mainClass;
 }

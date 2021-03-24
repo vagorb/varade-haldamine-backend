@@ -24,19 +24,19 @@ public class Asset {
     private String name;
     private String subclass;
     private Boolean active;
-    private Long user_id;
-    private Long possessor_id;
-    private Date expiration_date;
-    private Boolean delicate_condition;
-    private Timestamp created_at;
-    private Timestamp modified_at;
+    private Long userId;
+    private Long possessorId;
+    private Date expirationDate;
+    private Boolean delicateCondition;
+    private Timestamp createdAt;
+    private Timestamp modifiedAt;
 
-    public Asset(String id, String name, String subclass, Long possessor_id, Date expiration_date, Boolean delicate_condition) {
+    public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate, Boolean delicateCondition) {
         this.id = id;
         this.name = name;
         this.subclass = subclass;
-        this.possessor_id = possessor_id;
-        this.expiration_date = expiration_date;
-        this.delicate_condition = delicate_condition;
+        this.possessorId = possessorId;
+        this.expirationDate = expirationDate;
+        this.delicateCondition = delicateCondition;
     }
 }

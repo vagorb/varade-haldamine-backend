@@ -16,12 +16,12 @@ public class Person {
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
     private String azureId;
-    private String firstname;
-    private String lastname;
+    private String firstName;
+    private String lastName;
 
-    public Person(String azureId, String firstname, String lastName) {
+    public Person(String azureId, String firstName, String lastName) {
         this.azureId = azureId;
-        this.firstname = firstname;
-        this.lastname = lastName;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 }

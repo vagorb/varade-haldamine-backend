@@ -14,6 +14,6 @@ import javax.persistence.Id;
 @Entity
 public class KitRelation {
     @Id
-    private String component_asset_id;
-    private String major_asset_id;
+    private String componentAssetId;
+    private String majorAssetId;
 }

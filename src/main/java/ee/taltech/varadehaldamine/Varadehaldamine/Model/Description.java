@@ -14,6 +14,6 @@ import javax.persistence.Id;
 @Entity
 public class Description {
     @Id
-    private String asset_id;
+    private String assetId;
     private String text;
 }

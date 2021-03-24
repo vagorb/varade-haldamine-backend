@@ -15,5 +15,5 @@ import javax.persistence.Id;
 public class Classification {
     @Id
     private String subclass;
-    private String main_class;
+    private String mainClass;
 }
