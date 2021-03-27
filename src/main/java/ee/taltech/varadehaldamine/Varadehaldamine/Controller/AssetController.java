@@ -2,9 +2,7 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
-import ee.taltech.varadehaldamine.Varadehaldamine.Model.Person;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
-import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.PersonInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -26,7 +24,7 @@ public class AssetController {
     }
 
     @PostMapping
-    public Asset addAsset(AssetInfo asset){
+    public Asset addAsset(@RequestBody AssetInfo asset){
         return assetService.addAsset(asset);
     }
 }

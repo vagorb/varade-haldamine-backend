@@ -42,9 +42,10 @@ public class AssetService {
             if (assetInfo != null && !assetInfo.getId().isBlank() && !assetInfo.getName().isBlank()
                     && !assetInfo.getSubclass().isBlank() && assetInfo.getPossessorId() != null
                     && assetInfo.getDelicateCondition() != null && !assetInfo.getBuildingAbbreviation().isBlank()) {
+                System.out.println(classificationRepository.findAll());
                 Optional<Classification> classification = classificationRepository.findById(assetInfo.getSubclass());
                 if (classification.isPresent()) {
-                    String subclass = classification.get().getSubclass();
+                    String subclass = classification.get().getSubClass();
                     Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), subclass,
                             assetInfo.getPossessorId(), assetInfo.getExpirationDate(),
                             assetInfo.getDelicateCondition());

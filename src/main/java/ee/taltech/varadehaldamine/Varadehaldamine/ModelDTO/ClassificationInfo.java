@@ -8,6 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class ClassificationInfo {
-    private String subclass;
+    private String subClass;
     private String mainClass;
 }

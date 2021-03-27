@@ -1,11 +1,8 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Classification;
-import ee.taltech.varadehaldamine.Varadehaldamine.Model.Person;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.ClassificationInfo;
-import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.PersonInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.ClassificationService;
-import ee.taltech.varadehaldamine.Varadehaldamine.Service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,7 +22,7 @@ public class ClassificationController {
     }
 
     @PostMapping
-    public Classification addClassification(ClassificationInfo classification){
+    public Classification addClassification(@RequestBody ClassificationInfo classification){
         return classificationService.addClassification(classification);
     }
 }

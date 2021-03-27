@@ -22,7 +22,7 @@ public class PossessorController {
     }
 
     @PostMapping
-    public Possessor addPerson(PossessorInfo possessor){
+    public Possessor addPerson(@RequestBody PossessorInfo possessor){
         return possessorService.addPossessor(possessor);
     }
 }

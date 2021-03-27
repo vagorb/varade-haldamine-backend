@@ -19,8 +19,11 @@ public class ClassificationService {
 
     public Classification addClassification(ClassificationInfo classificationInfo){
         try {
-            if (classificationInfo != null && !classificationInfo.getSubclass().isBlank() && !classificationInfo.getMainClass().isBlank()){
-                Classification classification = new Classification(classificationInfo.getSubclass(), classificationInfo.getMainClass());
+            if (classificationInfo != null
+                    && !classificationInfo.getSubClass().isBlank()
+                    && !classificationInfo.getMainClass().isBlank()){
+                Classification classification =
+                        new Classification(classificationInfo.getSubClass(), classificationInfo.getMainClass());
                 return classificationRepository.save(classification);
             }
         } catch (Exception ignored) {}

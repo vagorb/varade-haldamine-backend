@@ -20,8 +20,13 @@ public class PossessorService {
 
     public Possessor addPossessor(PossessorInfo possessorInfo){
         try {
-            if (possessorInfo != null && ((possessorInfo.getDivision() == null && possessorInfo.getInstitute() != null) || (possessorInfo.getDivision() != null && possessorInfo.getInstitute() == null))){
+            if (possessorInfo != null) {
                 Possessor possessor = new Possessor();
+                if (possessorInfo.getDivision() == null && possessorInfo.getInstitute() != null) {
+                    possessor.setInstitute(possessorInfo.getInstitute());
+                } else if (possessorInfo.getDivision() != null && possessorInfo.getInstitute() == null) {
+                    possessor.setDivision(possessorInfo.getDivision());
+                }
                 possessor.setSubdivision(possessorInfo.getSubdivision());
                 return possessorRepository.save(possessor);
             }
