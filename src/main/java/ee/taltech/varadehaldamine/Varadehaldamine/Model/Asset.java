@@ -22,7 +22,7 @@ public class Asset {
     @Id
     private String id;
     private String name;
-    private String subclass;
+    private String subClass;
     private Boolean active;
     private Long userId;
     private Long possessorId;
@@ -34,7 +34,7 @@ public class Asset {
     public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate, Boolean delicateCondition) {
         this.id = id;
         this.name = name;
-        this.subclass = subclass;
+        this.subClass = subclass;
         this.possessorId = possessorId;
         this.expirationDate = expirationDate;
         this.delicateCondition = delicateCondition;
