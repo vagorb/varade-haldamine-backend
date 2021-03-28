@@ -30,7 +30,9 @@ public class PossessorService {
                 possessor.setSubdivision(possessorInfo.getSubdivision());
                 return possessorRepository.save(possessor);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            System.out.println("Exception occurred: " + e.getMessage());
+        }
         return null;
     }
 }

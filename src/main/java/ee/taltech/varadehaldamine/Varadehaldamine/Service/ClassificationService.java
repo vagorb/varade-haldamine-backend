@@ -26,7 +26,9 @@ public class ClassificationService {
                         new Classification(classificationInfo.getSubClass(), classificationInfo.getMainClass());
                 return classificationRepository.save(classification);
             }
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            System.out.println("New exception occurred: " + e.getMessage());
+        }
         return null;
     }
 

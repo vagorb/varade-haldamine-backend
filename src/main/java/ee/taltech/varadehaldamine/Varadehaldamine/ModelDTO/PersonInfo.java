@@ -11,6 +11,6 @@ import javax.persistence.Column;
 @NoArgsConstructor
 public class PersonInfo {
     private String azureId;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
 }

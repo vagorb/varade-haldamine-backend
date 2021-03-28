@@ -36,7 +36,7 @@ public class AssetService {
         return assetRepository.findAll();
     }
 
-    //when adding new asset, the user and comments would not to be put
+    // when adding new asset, the user and comments would not to be put
     public Asset addAsset(AssetInfo assetInfo) {
         try {
             if (assetInfo != null && !assetInfo.getId().isBlank() && !assetInfo.getName().isBlank()
@@ -57,7 +57,8 @@ public class AssetService {
                     return dbAsset;
                 }
             }
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            System.out.println("New exception occurred: " + e.getMessage());
         }
         return null;
     }

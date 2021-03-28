@@ -20,8 +20,8 @@ public class PersonService {
 
     public Person addPerson(PersonInfo personInfo){
         try {
-            if (personInfo != null && !personInfo.getAzureId().isBlank() && !personInfo.getFirstName().isBlank() && !personInfo.getLastName().isBlank()){
-                Person person = new Person(personInfo.getAzureId(), personInfo.getFirstName(), personInfo.getLastName());
+            if (personInfo != null && !personInfo.getAzureId().isBlank() && !personInfo.getFirstname().isBlank() && !personInfo.getLastname().isBlank()){
+                Person person = new Person(personInfo.getAzureId(), personInfo.getFirstname(), personInfo.getLastname());
                 return personRepository.save(person);
             }
         } catch (Exception ignored) {}
