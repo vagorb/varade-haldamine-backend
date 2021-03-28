@@ -22,6 +22,7 @@ public class ClassificationService {
             if (classificationInfo != null
                     && !classificationInfo.getSubClass().isBlank()
                     && !classificationInfo.getMainClass().isBlank()){
+                System.out.println(classificationInfo);
                 Classification classification =
                         new Classification(classificationInfo.getSubClass(), classificationInfo.getMainClass());
                 return classificationRepository.save(classification);
