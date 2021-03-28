@@ -31,6 +31,7 @@ public class Asset {
     private Timestamp createdAt;
     private Timestamp modifiedAt;
 
+    
     public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate, Boolean delicateCondition) {
         this.id = id;
         this.name = name;
