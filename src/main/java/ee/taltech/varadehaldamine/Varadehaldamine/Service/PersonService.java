@@ -18,6 +18,10 @@ public class PersonService {
         return personRepository.findAll();
     }
 
+    public Person getPersonById(Long assetId){
+        return personRepository.findPersonById(assetId);
+    }
+
     public Person addPerson(PersonInfo personInfo){
         try {
             if (personInfo != null && !personInfo.getAzureId().isBlank() && !personInfo.getFirstname().isBlank() && !personInfo.getLastname().isBlank()){

@@ -21,6 +21,11 @@ public class PersonController {
         return personService.findAll();
     }
 
+    @GetMapping("id")
+    public Person getPersonById(@RequestParam Long id){
+        return personService.getPersonById(id);
+    }
+
     @PostMapping
     public Person addPerson(@RequestBody PersonInfo person){
         return personService.addPerson(person);
