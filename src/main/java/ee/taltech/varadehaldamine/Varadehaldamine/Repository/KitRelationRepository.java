@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface KitRelationRepository extends JpaRepository<KitRelation, String > {
+
+    KitRelation findKitRelationByComponentAssetId (String componentAssetId);
 }

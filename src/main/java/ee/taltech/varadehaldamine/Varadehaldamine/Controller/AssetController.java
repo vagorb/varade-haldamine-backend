@@ -1,7 +1,6 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
 
-import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.AssetService;
@@ -35,7 +34,7 @@ public class AssetController {
     }
 
     @GetMapping("id")
-    public Asset getAssetById(@RequestParam String assetId) {
+    public AssetInfo getAssetById(@RequestParam String assetId) {
         return assetService.getAssetById(assetId);
     }
 

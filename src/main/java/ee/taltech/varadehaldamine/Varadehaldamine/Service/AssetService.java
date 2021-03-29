@@ -28,11 +28,11 @@ public class AssetService {
     @Autowired
     private KitRelationRepository kitRelationRepository;
     @Autowired
-    private PersonRepository personRepository;
-    @Autowired
-    private PossessorRepository possessorRepository;
-    @Autowired
     private WorthRepository worthRepository;
+    @Autowired
+    private PersonService personService;
+    @Autowired
+    private PossessorService possessorService;
 
     public List<AssetInfoShort> findAll() {
         List<AssetInfoShort> assetInfoList = new ArrayList<>();
@@ -51,7 +51,7 @@ public class AssetService {
                 }
             }
             assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
-            Person person = personRepository.findPersonById(asset.getUserId());
+            Person person = personService.getPersonById(asset.getUserId());
             if (person != null){
                 assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
             }
@@ -87,8 +87,74 @@ public class AssetService {
         return null;
     }
 
-    public Asset getAssetById(String assetId){
-        return assetRepository.findAssetById(assetId);
+    public AssetInfo getAssetById(String assetId){
+        try {
+            Asset asset = assetRepository.findAssetById(assetId);
+            if (asset != null) {
+                AssetInfo assetInfo = new AssetInfo();
+                assetInfo.setId(asset.getId());
+                assetInfo.setName(asset.getName());
+
+                Person person = personService.getPersonById(asset.getUserId());
+                if (person != null) {
+                    assetInfo.setUserId(asset.getUserId());
+                    assetInfo.setFirstname(person.getFirstname());
+                    assetInfo.setLastname(person.getLastname());
+                }
+
+                assetInfo.setPossessorId(asset.getPossessorId());
+                Possessor possessor = possessorService.getPossesorById(asset.getPossessorId());
+                if (possessor == null) {
+                    throw new Exception();
+                }
+                assetInfo.setInstitute(possessor.getInstitute());
+                assetInfo.setDivision(possessor.getDivision());
+                assetInfo.setSubdivision(possessor.getSubdivision());
+
+                assetInfo.setExpirationDate(asset.getExpirationDate());
+                assetInfo.setDelicateCondition(asset.getDelicateCondition());
+                assetInfo.setCreatedAt(asset.getCreatedAt());
+                assetInfo.setModifiedAt(asset.getModifiedAt());
+
+                Worth worth = worthRepository.findWorthByAssetId(asset.getId());
+                if (worth != null) {
+                    assetInfo.setPrice(worth.getPrice());
+                    assetInfo.setResidualPrice(worth.getResidualPrice());
+                    assetInfo.setPurchaseDate(worth.getPurchaseDate());
+                }
+
+                Classification classification = classificationRepository
+                        .findClassificationBySubClass(asset.getSubClass());
+                if (classification == null) {
+                    throw new Exception();
+                }
+                assetInfo.setSubclass(classification.getSubClass());
+                assetInfo.setMainClass(classification.getMainClass());
+
+                KitRelation kitRelation = kitRelationRepository.findKitRelationByComponentAssetId(asset.getId());
+                if (kitRelation != null) {
+                    assetInfo.setComponentAssetId(kitRelation.getComponentAssetId());
+                    assetInfo.setMajorAssetId(kitRelation.getMajorAssetId());
+                }
+
+                Address address = addressRepository.findAddressByAssetId(asset.getId());
+                if (address == null) {
+                    throw new Exception();
+                }
+                assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
+                assetInfo.setRoom(address.getRoom());
+
+                Description description = descriptionRepository.findDescriptionByAssetId(asset.getId());
+                if (description != null) {
+                    assetInfo.setDescriptionText(description.getText());
+                }
+                return assetInfo;
+            }
+
+        } catch (Exception e) {
+            System.out.println("Exception: " + e.getMessage());
+        }
+        return null;
     }
 
     private void addAddress(AssetInfo assetInfo) {

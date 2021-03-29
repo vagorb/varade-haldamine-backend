@@ -29,6 +29,7 @@ public class AssetInfo {
 
     // table Classification
     private String subclass;
+    private String mainClass;
 
     // table Kit_relation
     private String componentAssetId;

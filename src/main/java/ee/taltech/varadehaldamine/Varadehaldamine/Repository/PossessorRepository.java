@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface PossessorRepository extends JpaRepository<Possessor, Long> {
+
+    Possessor findPossessorById(Long id);
 }

@@ -18,6 +18,10 @@ public class PossessorService {
         return possessorRepository.findAll();
     }
 
+    public Possessor getPossesorById(Long possessorId) {
+        return possessorRepository.findPossessorById(possessorId);
+    }
+
     public Possessor addPossessor(PossessorInfo possessorInfo){
         try {
             if (possessorInfo != null) {
