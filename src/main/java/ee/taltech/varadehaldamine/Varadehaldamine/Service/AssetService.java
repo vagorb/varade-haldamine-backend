@@ -77,7 +77,6 @@ public class AssetService {
                 KitRelation kit = new KitRelation(assetInfo.getComponentAssetId(), assetInfo.getMajorAssetId());
                 kitRelationRepository.save(kit);
             }
-
         } catch (Exception ignored) {
         }
     }
