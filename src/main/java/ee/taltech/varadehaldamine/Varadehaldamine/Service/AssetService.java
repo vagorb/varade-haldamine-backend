@@ -43,11 +43,10 @@ public class AssetService {
             assetInfo.setActive(asset.getActive());
             Address address = addressRepository.findAddressByAssetId(asset.getId());
             if (address != null){
-                assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
                 if (address.getRoom() != null) {
-                    assetInfo.setRoom(address.getRoom());
+                    assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature() + address.getRoom());
                 } else {
-                    assetInfo.setRoom("");
+                    assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature());
                 }
             }
             assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));

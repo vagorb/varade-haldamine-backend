@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -16,8 +15,7 @@ public class AssetInfoShort {
     private Boolean active;
 
     // Address data
-    private String buildingAbbreviation;
-    private String room;
+    private String buildingAbbreviationPlusRoom;
 
     // Person data
     private String personName;
