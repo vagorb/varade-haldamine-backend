@@ -19,8 +19,8 @@ public class CommentController {
     CommentService commentService;
 
     @GetMapping
-    public List<Comment> getAllByAssetId(@RequestParam String asset_id) {
-        return commentService.getAllByAssetId(asset_id);
+    public List<Comment> getAllByAssetId(@RequestParam String assetId) {
+        return commentService.getAllByAssetId(assetId);
     }
 
     @PostMapping

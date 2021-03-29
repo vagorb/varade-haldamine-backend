@@ -25,6 +25,11 @@ public class AssetController {
         return assetService.findAll();
     }
 
+    @GetMapping("id")
+    public Asset getAssetById(@RequestParam String assetId) {
+        return assetService.getAssetById(assetId);
+    }
+
     @PostMapping
     public ResponseEntity<Object> addAsset(@RequestBody AssetInfo asset){
         if (assetService.addAsset(asset) != null) {

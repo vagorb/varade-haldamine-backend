@@ -63,6 +63,10 @@ public class AssetService {
         return null;
     }
 
+    public Asset getAssetById(String assetId){
+        return assetRepository.findAssetById(assetId);
+    }
+
     private void addAddress(AssetInfo assetInfo) {
         try {
             Address address = new Address(assetInfo.getId(), assetInfo.getBuildingAbbreviation(), assetInfo.getRoom());
