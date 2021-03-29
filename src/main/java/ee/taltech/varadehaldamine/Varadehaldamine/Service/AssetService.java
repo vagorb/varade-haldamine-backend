@@ -32,6 +32,29 @@ public class AssetService {
     @Autowired
     private WorthRepository worthRepository;
 
+    public List<AssetInfo> findAll() {
+        List<AssetInfo> assetInfoList = new ArrayList<>();
+        for (Asset asset: assetRepository.findAll()){
+            AssetInfo assetInfo = new AssetInfo();
+            assetInfo.setId(asset.getId());
+            assetInfo.setName(asset.getName());
+            assetInfo.setActive(asset.getActive());
+            Address address = addressRepository.findAddressByAssetId(asset.getId());
+            if (address != null){
+                assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
+                assetInfo.setRoom(address.getRoom());
+            }
+            assetInfo.setModifiedAt(asset.getModifiedAt());
+            Person person = personRepository.findPersonById(asset.getUserId());
+            if (person != null){
+                assetInfo.setFirstname(person.getFirstname());
+                assetInfo.setLastname(person.getLastname());
+            }
+            assetInfoList.add(assetInfo);
+        }
+        return assetInfoList;
+    }
+
     // when adding new asset, the user and comments would not to be put
     public Asset addAsset(AssetInfo assetInfo) {
         try {
