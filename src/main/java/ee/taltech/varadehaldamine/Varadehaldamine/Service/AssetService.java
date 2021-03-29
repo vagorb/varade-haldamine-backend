@@ -2,10 +2,12 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Service;
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.*;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
+import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -32,10 +34,10 @@ public class AssetService {
     @Autowired
     private WorthRepository worthRepository;
 
-    public List<AssetInfo> findAll() {
-        List<AssetInfo> assetInfoList = new ArrayList<>();
+    public List<AssetInfoShort> findAll() {
+        List<AssetInfoShort> assetInfoList = new ArrayList<>();
         for (Asset asset: assetRepository.findAll()){
-            AssetInfo assetInfo = new AssetInfo();
+            AssetInfoShort assetInfo = new AssetInfoShort();
             assetInfo.setId(asset.getId());
             assetInfo.setName(asset.getName());
             assetInfo.setActive(asset.getActive());
@@ -44,11 +46,10 @@ public class AssetService {
                 assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
                 assetInfo.setRoom(address.getRoom());
             }
-            assetInfo.setModifiedAt(asset.getModifiedAt());
+            assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
             Person person = personRepository.findPersonById(asset.getUserId());
             if (person != null){
-                assetInfo.setFirstname(person.getFirstname());
-                assetInfo.setLastname(person.getLastname());
+                assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
             }
             assetInfoList.add(assetInfo);
         }

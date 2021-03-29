@@ -3,6 +3,7 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
+import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,8 +22,16 @@ public class AssetController {
     AssetService assetService;
 
     @GetMapping
-    public List<AssetInfo> getAll() {
+    public List<AssetInfoShort> getAll() {
         return assetService.findAll();
+    }
+
+    @GetMapping("search")
+    public List<AssetInfo> getAllSearch(@RequestParam(value = "name", required = false) String name,
+                                        @RequestParam(value = "active", required = false) Boolean active,
+                                        @RequestParam(value = "user", required = false) Long userId,
+                                        @RequestParam(value = "direction", defaultValue = "MAX") String direction){
+        return null;
     }
 
     @GetMapping("id")
