@@ -44,7 +44,11 @@ public class AssetService {
             Address address = addressRepository.findAddressByAssetId(asset.getId());
             if (address != null){
                 assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
-                assetInfo.setRoom(address.getRoom());
+                if (address.getRoom() != null) {
+                    assetInfo.setRoom(address.getRoom());
+                } else {
+                    assetInfo.setRoom("");
+                }
             }
             assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
             Person person = personRepository.findPersonById(asset.getUserId());
