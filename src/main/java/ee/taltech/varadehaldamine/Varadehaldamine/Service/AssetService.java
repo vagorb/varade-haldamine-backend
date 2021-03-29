@@ -6,6 +6,7 @@ import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,11 +31,6 @@ public class AssetService {
     private PossessorRepository possessorRepository;
     @Autowired
     private WorthRepository worthRepository;
-
-
-    public List<Asset> findAll() {
-        return assetRepository.findAll();
-    }
 
     // when adding new asset, the user and comments would not to be put
     public Asset addAsset(AssetInfo assetInfo) {

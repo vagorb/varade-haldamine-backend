@@ -20,10 +20,6 @@ public class AssetController {
     @Autowired
     AssetService assetService;
 
-    @GetMapping
-    public List<Asset> getAll() {
-        return assetService.findAll();
-    }
 
     @GetMapping("id")
     public Asset getAssetById(@RequestParam String assetId) {

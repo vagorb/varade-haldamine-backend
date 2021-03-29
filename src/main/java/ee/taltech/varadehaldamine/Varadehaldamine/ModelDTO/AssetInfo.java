@@ -44,4 +44,13 @@ public class AssetInfo {
     // table Comment
     private String commentText;
 
+    // Person data
+    private String firstname;
+    private String lastname;
+
+    // Possessor data
+    private Integer institute;
+    private Integer division;
+    private Integer subdivision;
+
 }
