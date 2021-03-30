@@ -1,6 +1,5 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
-import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Comment;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +17,9 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @GetMapping
-    public List<Comment> getAllByAssetId(@RequestParam String assetId) {
-        return commentService.getAllByAssetId(assetId);
+    @GetMapping("/{id}")
+    public List<Comment> getAllByAssetId(@PathVariable String id) {
+        return commentService.getAllByAssetId(id);
     }
 
     @PostMapping

@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Getter
 @Setter
@@ -18,7 +17,7 @@ public class AssetInfo {
     private Long userId;
     private Long possessorId;
     private Date expirationDate;
-    private Integer lifeMonthsLeft;
+    private Integer lifeMonthsLeft; //
     private Boolean delicateCondition;
     private Date createdAt;
     private Date modifiedAt;
@@ -36,7 +35,7 @@ public class AssetInfo {
     // table Kit_relation
     private String componentAssetId;
     private String majorAssetId;
-    private String kitPartName; //
+        private String kitPartName; //
 
     // table Address
     private String buildingAbbreviation;
