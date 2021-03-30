@@ -10,7 +10,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CommentInfo {
-    private Long id;
     private String assetId;
     private String text;
     private Long createdAt;

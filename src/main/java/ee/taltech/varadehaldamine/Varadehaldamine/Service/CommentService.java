@@ -7,6 +7,7 @@ import ee.taltech.varadehaldamine.Varadehaldamine.Repository.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,17 +20,20 @@ public class CommentService {
     @Autowired
     private AssetRepository assetRepository;
 
-    public List<CommentInfo> getAllByAssetId(String assetId){
+    public List<CommentInfo> getAllByAssetId(String assetId) {
         List<CommentInfo> comments = new LinkedList<>();
-        for (Comment comment: commentRepository.findAllByAssetId(assetId)){
-            comments.add(new CommentInfo(comment.getId(), comment.getAssetId(), comment.getText(), comment.getCreatedAt().getTime()));
+        for (Comment comment : commentRepository.findAllByAssetId(assetId)) {
+            CommentInfo commentInfo = new CommentInfo(comment.getAssetId(), comment.getText(), comment.getCreatedAt().getTime());
+            comments.add(commentInfo);
         }
         return comments;
     }
 
-    public Comment addComment(Comment comment){
-        if (!assetRepository.findAllById(Collections.singletonList(comment.getAssetId())).isEmpty() && !comment.getText().isBlank()){
-            return commentRepository.save(comment);
+    public CommentInfo addComment(CommentInfo commentInfo) {
+        if (!assetRepository.findAllById(Collections.singletonList(commentInfo.getAssetId())).isEmpty() && !commentInfo.getText().isBlank()) {
+            Comment comment = new Comment(commentInfo.getAssetId(), commentInfo.getText(), new Timestamp(System.currentTimeMillis()));
+            Comment newComment = commentRepository.save(comment);
+            return new CommentInfo(newComment.getAssetId(), newComment.getText(), newComment.getCreatedAt().getTime());
         }
         return null;
     }

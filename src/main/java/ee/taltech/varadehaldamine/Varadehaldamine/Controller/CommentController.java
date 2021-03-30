@@ -24,10 +24,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addComment(@RequestBody Comment comment){
-        if (commentService.addComment(comment) != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    public CommentInfo addComment(@RequestBody CommentInfo commentInfo){
+        return commentService.addComment(commentInfo);
     }
 }

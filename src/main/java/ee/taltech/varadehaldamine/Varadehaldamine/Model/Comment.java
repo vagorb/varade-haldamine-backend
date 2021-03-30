@@ -23,8 +23,9 @@ public class Comment {
     private String text;
     private Timestamp createdAt;
 
-    public Comment(String assetId, String text) {
+    public Comment(String assetId, String text, Timestamp createdAt) {
         this.assetId = assetId;
         this.text = text;
+        this.createdAt = createdAt;
     }
 }
