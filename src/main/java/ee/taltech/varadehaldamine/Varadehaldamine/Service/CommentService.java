@@ -4,6 +4,7 @@ import ee.taltech.varadehaldamine.Varadehaldamine.Model.Comment;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.CommentInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.AssetRepository;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.CommentRepository;
+import ee.taltech.varadehaldamine.Varadehaldamine.Service.exception.InvalidCommentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,10 +31,17 @@ public class CommentService {
     }
 
     public CommentInfo addComment(CommentInfo commentInfo) {
-        if (!assetRepository.findAllById(Collections.singletonList(commentInfo.getAssetId())).isEmpty() && !commentInfo.getText().isBlank()) {
-            Comment comment = new Comment(commentInfo.getAssetId(), commentInfo.getText(), new Timestamp(System.currentTimeMillis()));
-            Comment newComment = commentRepository.save(comment);
-            return new CommentInfo(newComment.getAssetId(), newComment.getText(), newComment.getCreatedAt().getTime());
+        try {
+            if (!assetRepository.findAllById(Collections.singletonList(commentInfo.getAssetId())).isEmpty()
+                    && !commentInfo.getText().isBlank()) {
+                Comment comment = new Comment(commentInfo.getAssetId(), commentInfo.getText(), new Timestamp(System.currentTimeMillis()));
+                Comment newComment = commentRepository.save(comment);
+                return new CommentInfo(newComment.getAssetId(), newComment.getText(), newComment.getCreatedAt().getTime());
+            } else {
+                throw new InvalidCommentException("Error when saving Comment");
+            }
+        } catch (InvalidCommentException e) {
+            System.out.println(e);
         }
         return null;
     }

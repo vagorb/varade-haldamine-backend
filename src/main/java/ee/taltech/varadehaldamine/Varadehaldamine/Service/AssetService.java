@@ -4,10 +4,10 @@ import ee.taltech.varadehaldamine.Varadehaldamine.Model.*;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
+import ee.taltech.varadehaldamine.Varadehaldamine.Service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -87,7 +87,7 @@ public class AssetService {
                 }
             }
         } catch (Exception e) {
-            System.out.println("New exception occurred: " + e.getMessage());
+            throw new InvalidAssetException("Error when adding asset");
         }
         return null;
     }
@@ -111,7 +111,7 @@ public class AssetService {
                 assetInfo.setPossessorId(asset.getPossessorId());
                 Possessor possessor = possessorService.getPossesorById(asset.getPossessorId());
                 if (possessor == null) {
-                    throw new Exception("null possessor");
+                    throw new PossessorNotFoundException();
                 }
                 assetInfo.setInstitute(possessor.getInstitute());
                 assetInfo.setDivision(possessor.getDivision());
@@ -141,14 +141,13 @@ public class AssetService {
                     } else {
                         assetInfo.setIsPurchased(false);
                     }
-
                 }
 
                 Classification classification = classificationRepository
                         .findClassificationBySubClass(asset.getSubClass());
                 System.out.println("Classification " + classification);
                 if (classification == null) {
-                    throw new Exception("classification");
+                    throw new ClassificationNotFoundException();
                 }
                 assetInfo.setSubclass(classification.getSubClass());
                 assetInfo.setMainClass(classification.getMainClass());
@@ -179,8 +178,12 @@ public class AssetService {
                 }
                 System.out.println(assetInfo);
                 return assetInfo;
+            } else {
+                throw new AssetNotFoundException();
             }
 
+        } catch (ClassificationNotFoundException | AssetNotFoundException | PossessorNotFoundException e) {
+            System.out.println(e);
         } catch (Exception e) {
             System.out.println("Exception: " + e.getMessage());
         }
@@ -201,8 +204,11 @@ public class AssetService {
             if (!assetInfo.getComponentAssetId().isBlank() && !assetInfo.getMajorAssetId().isBlank()) {
                 KitRelation kit = new KitRelation(assetInfo.getComponentAssetId(), assetInfo.getMajorAssetId());
                 kitRelationRepository.save(kit);
+            } else {
+                throw new InvalidKitRelationException("Error when adding KitRelation");
             }
-        } catch (Exception ignored) {
+        } catch (InvalidKitRelationException e) {
+            System.out.println(e);
         }
     }
 
@@ -211,8 +217,11 @@ public class AssetService {
             if (!assetInfo.getDescriptionText().isBlank()) {
                 Description description = new Description(assetInfo.getId(), assetInfo.getDescriptionText());
                 descriptionRepository.save(description);
+            } else {
+                throw new InvalidDescriptionException("Error when adding Description");
             }
-        } catch (Exception ignored) {
+        } catch (InvalidDescriptionException e) {
+            System.out.println(e);
         }
     }
 
@@ -222,8 +231,11 @@ public class AssetService {
                 Worth worth = new Worth(assetInfo.getId(), assetInfo.getPrice(),
                         assetInfo.getResidualPrice(), new Timestamp(assetInfo.getPurchaseDate().getTime()));
                 worthRepository.save(worth);
+            } else {
+                throw new InvalidWorthException("Error when adding Worth");
             }
-        } catch (Exception ignored) {
+        } catch (InvalidWorthException e) {
+            System.out.println(e);
         }
     }
 

@@ -3,6 +3,7 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Service;
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Possessor;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.PossessorInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.PossessorRepository;
+import ee.taltech.varadehaldamine.Varadehaldamine.Service.exception.InvalidPossessorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,9 +34,11 @@ public class PossessorService {
                 }
                 possessor.setSubdivision(possessorInfo.getSubdivision());
                 return possessorRepository.save(possessor);
+            } else {
+                throw new InvalidPossessorException("Error when saving Possessor");
             }
-        } catch (Exception e) {
-            System.out.println("Exception occurred: " + e.getMessage());
+        } catch (InvalidPossessorException e) {
+            System.out.println(e);
         }
         return null;
     }
