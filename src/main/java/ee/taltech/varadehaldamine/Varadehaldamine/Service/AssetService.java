@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -36,13 +39,13 @@ public class AssetService {
 
     public List<AssetInfoShort> findAll() {
         List<AssetInfoShort> assetInfoList = new ArrayList<>();
-        for (Asset asset: assetRepository.findAll()){
+        for (Asset asset : assetRepository.findAll()) {
             AssetInfoShort assetInfo = new AssetInfoShort();
             assetInfo.setId(asset.getId());
             assetInfo.setName(asset.getName());
             assetInfo.setActive(asset.getActive());
             Address address = addressRepository.findAddressByAssetId(asset.getId());
-            if (address != null){
+            if (address != null) {
                 if (address.getRoom() != null) {
                     assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature() + address.getRoom());
                 } else {
@@ -51,7 +54,7 @@ public class AssetService {
             }
             assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
             Person person = personService.getPersonById(asset.getUserId());
-            if (person != null){
+            if (person != null) {
                 assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
             }
             assetInfoList.add(assetInfo);
@@ -86,14 +89,15 @@ public class AssetService {
         return null;
     }
 
-    public AssetInfo getAssetById(String assetId){
+    public AssetInfo getAssetById(String assetId) {
         try {
             Asset asset = assetRepository.findAssetById(assetId);
             if (asset != null) {
+                System.out.println(asset);
                 AssetInfo assetInfo = new AssetInfo();
                 assetInfo.setId(asset.getId());
                 assetInfo.setName(asset.getName());
-
+                assetInfo.setActive(asset.getActive());
                 Person person = personService.getPersonById(asset.getUserId());
                 if (person != null) {
                     assetInfo.setUserId(asset.getUserId());
@@ -104,28 +108,44 @@ public class AssetService {
                 assetInfo.setPossessorId(asset.getPossessorId());
                 Possessor possessor = possessorService.getPossesorById(asset.getPossessorId());
                 if (possessor == null) {
-                    throw new Exception();
+                    throw new Exception("null possessor");
                 }
                 assetInfo.setInstitute(possessor.getInstitute());
                 assetInfo.setDivision(possessor.getDivision());
                 assetInfo.setSubdivision(possessor.getSubdivision());
 
-                assetInfo.setExpirationDate(asset.getExpirationDate());
+                System.out.println(asset.getExpirationDate() + " expiration date");
+                if (asset.getExpirationDate() != null) {
+                    long monthsBetween = ChronoUnit.MONTHS.between(
+                            LocalDate.parse((CharSequence) new java.util.Date()).withDayOfMonth(1),
+                            LocalDate.parse((CharSequence) asset.getExpirationDate()).withDayOfMonth(1));
+                    System.out.println(monthsBetween); //3
+                    assetInfo.setLifeMonthsLeft((int) monthsBetween);
+                } else {
+                    assetInfo.setLifeMonthsLeft(0);
+                }
                 assetInfo.setDelicateCondition(asset.getDelicateCondition());
-                assetInfo.setCreatedAt(asset.getCreatedAt());
-                assetInfo.setModifiedAt(asset.getModifiedAt());
+                assetInfo.setCreatedAt(new Date(asset.getCreatedAt().getTime()));
+                assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
 
                 Worth worth = worthRepository.findWorthByAssetId(asset.getId());
                 if (worth != null) {
                     assetInfo.setPrice(worth.getPrice());
                     assetInfo.setResidualPrice(worth.getResidualPrice());
-                    assetInfo.setPurchaseDate(worth.getPurchaseDate());
+                    if (worth.getPurchaseDate() != null) {
+                        assetInfo.setPurchaseDate(new Date(worth.getPurchaseDate().getTime()));
+                        assetInfo.setIsPurchased(true);
+                    } else {
+                        assetInfo.setIsPurchased(false);
+                    }
+
                 }
 
                 Classification classification = classificationRepository
                         .findClassificationBySubClass(asset.getSubClass());
+                System.out.println("Classification " + classification);
                 if (classification == null) {
-                    throw new Exception();
+                    throw new Exception("classification");
                 }
                 assetInfo.setSubclass(classification.getSubClass());
                 assetInfo.setMainClass(classification.getMainClass());
@@ -134,19 +154,27 @@ public class AssetService {
                 if (kitRelation != null) {
                     assetInfo.setComponentAssetId(kitRelation.getComponentAssetId());
                     assetInfo.setMajorAssetId(kitRelation.getMajorAssetId());
+                    if (kitRelation.getMajorAssetId().equals(asset.getId())) {
+                        assetInfo.setKitPartName("Peavara");
+                    } else {
+                        assetInfo.setKitPartName("Komponent");
+                    }
+                } else {
+                    assetInfo.setKitPartName("");
                 }
 
                 Address address = addressRepository.findAddressByAssetId(asset.getId());
-                if (address == null) {
-                    throw new Exception();
+                System.out.println("address " + address);
+                if (address != null) {
+                    assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
+                    assetInfo.setRoom(address.getRoom());
                 }
-                assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
-                assetInfo.setRoom(address.getRoom());
 
                 Description description = descriptionRepository.findDescriptionByAssetId(asset.getId());
                 if (description != null) {
                     assetInfo.setDescriptionText(description.getText());
                 }
+                System.out.println(assetInfo);
                 return assetInfo;
             }
 
@@ -188,7 +216,7 @@ public class AssetService {
         try {
             if (assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null) {
                 Worth worth = new Worth(assetInfo.getId(), assetInfo.getPrice(),
-                        assetInfo.getResidualPrice(), assetInfo.getPurchaseDate());
+                        assetInfo.getResidualPrice(), new Timestamp(assetInfo.getPurchaseDate().getTime()));
                 worthRepository.save(worth);
             }
         } catch (Exception ignored) {

@@ -18,14 +18,16 @@ public class AssetInfo {
     private Long userId;
     private Long possessorId;
     private Date expirationDate;
+    private Integer lifeMonthsLeft;
     private Boolean delicateCondition;
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+    private Date createdAt;
+    private Date modifiedAt;
 
     // table Worth
     private Double price;
     private Double residualPrice;
-    private Timestamp purchaseDate;
+    private Date purchaseDate;
+    private Boolean isPurchased; //
 
     // table Classification
     private String subclass;
@@ -34,6 +36,7 @@ public class AssetInfo {
     // table Kit_relation
     private String componentAssetId;
     private String majorAssetId;
+    private String kitPartName; //
 
     // table Address
     private String buildingAbbreviation;
