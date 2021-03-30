@@ -35,7 +35,7 @@ public class AssetInfo {
     // table Kit_relation
     private String componentAssetId;
     private String majorAssetId;
-        private String kitPartName; //
+    private String kitPartName; //
 
     // table Address
     private String buildingAbbreviation;

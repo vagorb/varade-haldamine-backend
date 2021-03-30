@@ -24,7 +24,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public CommentInfo addComment(@RequestBody CommentInfo commentInfo){
+    public List<CommentInfo> addComment(@RequestBody CommentInfo commentInfo){
         return commentService.addComment(commentInfo);
     }
 }

@@ -30,13 +30,13 @@ public class CommentService {
         return comments;
     }
 
-    public CommentInfo addComment(CommentInfo commentInfo) {
+    public List<CommentInfo> addComment(CommentInfo commentInfo) {
         try {
             if (!assetRepository.findAllById(Collections.singletonList(commentInfo.getAssetId())).isEmpty()
                     && !commentInfo.getText().isBlank()) {
                 Comment comment = new Comment(commentInfo.getAssetId(), commentInfo.getText(), new Timestamp(System.currentTimeMillis()));
                 Comment newComment = commentRepository.save(comment);
-                return new CommentInfo(newComment.getAssetId(), newComment.getText(), newComment.getCreatedAt().getTime());
+                return getAllByAssetId(newComment.getAssetId());
             } else {
                 throw new InvalidCommentException("Error when saving Comment");
             }
