@@ -39,5 +39,7 @@ public class Asset {
         this.possessorId = possessorId;
         this.expirationDate = expirationDate;
         this.delicateCondition = delicateCondition;
+        this.createdAt = new Timestamp(System.currentTimeMillis());
+        this.modifiedAt = new Timestamp(System.currentTimeMillis());
     }
 }

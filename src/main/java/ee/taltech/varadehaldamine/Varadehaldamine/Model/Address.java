@@ -16,7 +16,7 @@ import javax.persistence.Id;
 @Entity
 public class Address {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+
     private String assetId;
     private String buildingAbbreviature;
     private String room;

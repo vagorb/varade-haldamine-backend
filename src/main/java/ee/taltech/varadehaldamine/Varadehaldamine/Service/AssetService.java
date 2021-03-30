@@ -5,6 +5,9 @@ import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -39,11 +42,12 @@ public class AssetService {
 
     public List<AssetInfoShort> findAll() {
         List<AssetInfoShort> assetInfoList = new ArrayList<>();
+        System.out.println(assetRepository.findAll());
         for (Asset asset : assetRepository.findAll()) {
             AssetInfoShort assetInfo = new AssetInfoShort();
             assetInfo.setId(asset.getId());
             assetInfo.setName(asset.getName());
-            assetInfo.setActive(asset.getActive());
+            //assetInfo.setActive(asset.getActive());
             Address address = addressRepository.findAddressByAssetId(asset.getId());
             if (address != null) {
                 if (address.getRoom() != null) {
@@ -52,7 +56,7 @@ public class AssetService {
                     assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature());
                 }
             }
-            assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
+            //assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
             Person person = personService.getPersonById(asset.getUserId());
             if (person != null) {
                 assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
@@ -68,7 +72,6 @@ public class AssetService {
             if (assetInfo != null && !assetInfo.getId().isBlank() && !assetInfo.getName().isBlank()
                     && !assetInfo.getSubclass().isBlank() && assetInfo.getPossessorId() != null
                     && assetInfo.getDelicateCondition() != null && !assetInfo.getBuildingAbbreviation().isBlank()) {
-                System.out.println(classificationRepository.findAll());
                 Optional<Classification> classification = classificationRepository.findById(assetInfo.getSubclass());
                 if (classification.isPresent()) {
                     String subclass = classification.get().getSubClass();
@@ -184,11 +187,12 @@ public class AssetService {
         return null;
     }
 
-    private void addAddress(AssetInfo assetInfo) {
+    private void addAddress(AssetInfo assetInfo) throws Exception {
         try {
             Address address = new Address(assetInfo.getId(), assetInfo.getBuildingAbbreviation(), assetInfo.getRoom());
             addressRepository.save(address);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            throw new Exception(e);
         }
     }
 
@@ -221,5 +225,12 @@ public class AssetService {
             }
         } catch (Exception ignored) {
         }
+    }
+
+
+    public Page<Asset> getAssetsList(int page, int size) {
+        PageRequest pageReq
+                = PageRequest.of(page, size);
+        return assetRepository.findAll(pageReq);
     }
 }
