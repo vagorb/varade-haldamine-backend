@@ -4,6 +4,8 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetSearchCriteria;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +21,33 @@ import java.util.stream.Collectors;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AssetController {
 
+//    private AssetService assetService;
+//    private final EmployeeService employeeService;
+//
+//
+//    @GetMapping
+//    public ResponseEntity<Page<Employee>> getEmployees(EmployeePage employeePage,
+//                                                       EmployeeSearchCriteria employeeSearchCriteria){
+//        return new ResponseEntity<>(employeeService.getEmployees(employeePage, employeeSearchCriteria),
+//                HttpStatus.OK);
+//    }
+//
+
+    public AssetController(AssetService assetService) {
+        this.assetService = assetService;
+    }
+
+
+    @GetMapping("/{test}")
+    public ResponseEntity<Page<Asset>> getPosts(AssetPage assetPage,
+                                                AssetSearchCriteria assetSearchCriteria, @PathVariable String test) {
+//            @PathVariable("page" ) int page,
+//            @PathVariable("size") int size,
+//            AssetSearchCriteria assetSearchCriteria) {
+
+        return new ResponseEntity<>(assetService.getAssetsList(assetPage, assetSearchCriteria), HttpStatus.OK);
+
+    }
 
     @Autowired
     AssetService assetService;
@@ -84,13 +113,13 @@ public class AssetController {
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
-    @GetMapping("{page}/{size}")
-    @ResponseBody
-    public Page<Asset> getPosts(
-            @PathVariable("page" ) int page,
-            @PathVariable("size") int size) {
-
-        return assetService.getAssetsList(page, size);
-
-    }
+//    @GetMapping("{page}/{size}")
+//    @ResponseBody
+//    public Page<Asset> getPosts(
+//            @PathVariable("page" ) int page,
+//            @PathVariable("size") int size) {
+//
+//        return assetService.getAssetsList(page, size);
+//
+//    }
 }

@@ -4,6 +4,9 @@ import ee.taltech.varadehaldamine.Varadehaldamine.Model.*;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetCriteriaRepository;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -20,6 +23,9 @@ import java.util.Optional;
 
 @Service
 public class AssetService {
+
+    private AssetSearchCriteria assetSearchCriteria;
+    private AssetCriteriaRepository assetCriteriaRepository;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -228,9 +234,10 @@ public class AssetService {
     }
 
 
-    public Page<Asset> getAssetsList(int page, int size) {
-        PageRequest pageReq
-                = PageRequest.of(page, size);
-        return assetRepository.findAll(pageReq);
+//    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
+    public Page<Asset> getAssetsList(AssetPage assetPage, AssetSearchCriteria assetSearchCriteria) {
+//        PageRequest pageReq
+//                = PageRequest.of(page, size);
+        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
     }
 }
