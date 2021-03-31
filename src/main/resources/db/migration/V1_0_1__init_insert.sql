@@ -19,3 +19,8 @@ INSERT INTO Asset (id, name, sub_class, user_id, possessor_id) VALUES ('AK1122',
 INSERT INTO Worth (asset_id, price, residual_price) VALUES ('AK1122', 55.00, 55.00);
 INSERT INTO Address (asset_id, building_abbreviature, room) VALUES ('AK1122', 'SOC', '203');
 INSERT INTO Kit_relation (component_asset_id, major_asset_id) VALUES ('AK1122', 'AK1122');
+
+INSERT INTO Asset (id, name, sub_class, user_id, possessor_id) VALUES ('AK1123', 'Arvutihiir HP 2210', 'hiir', 1, 1);
+INSERT INTO Worth (asset_id, price, residual_price) VALUES ('AK1123', 15.00, 15.00);
+INSERT INTO Address (asset_id, building_abbreviature, room) VALUES ('AK1123', 'SOC', '203');
+INSERT INTO Kit_relation (component_asset_id, major_asset_id) VALUES ('AK1123', 'AK1123');

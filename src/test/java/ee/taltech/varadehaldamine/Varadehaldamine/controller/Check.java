@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 @SpringBootTest
 public class Check {
-    @Test
-    public void basicTest() {
-        System.out.println("I DON'T CARE");
-
-    }
+//    @Test
+//    public void basicTest() {
+//        System.out.println("I DON'T CARE");
+//
+//    }
 
 }

@@ -1,9 +1,11 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
 
+import javax.persistence.Id;
 import java.sql.Date;
 import java.sql.Timestamp;
 
 public class AssetSearchCriteria {
+    @Id
     private String id;
     private String name;
     private String subClass;
@@ -12,8 +14,8 @@ public class AssetSearchCriteria {
     private Long possessorId;
     private Date expirationDate;
     private Boolean delicateCondition;
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
+//    private Timestamp createdAt;
+//    private Timestamp modifiedAt;
 
     public String getId() {
         return id;
@@ -79,21 +81,21 @@ public class AssetSearchCriteria {
         this.delicateCondition = delicateCondition;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public void setModifiedAt(Timestamp modifiedAt) {
-        this.modifiedAt = modifiedAt;
-    }
+//    public Timestamp getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    public void setCreatedAt(Timestamp createdAt) {
+//        this.createdAt = createdAt;
+//    }
+//
+//    public Timestamp getModifiedAt() {
+//        return modifiedAt;
+//    }
+//
+//    public void setModifiedAt(Timestamp modifiedAt) {
+//        this.modifiedAt = modifiedAt;
+//    }
     //    public String getFirstName() {
 //        return firstName;
 //    }

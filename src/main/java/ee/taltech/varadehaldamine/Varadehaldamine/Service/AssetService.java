@@ -24,8 +24,24 @@ import java.util.Optional;
 @Service
 public class AssetService {
 
-    private AssetSearchCriteria assetSearchCriteria;
+//    private AssetSearchCriteria assetSearchCriteria;
+//    private AssetCriteriaRepository assetCriteriaRepository;
+
+//    private final EmployeeRepository employeeRepository;
+//    private final EmployeeCriteriaRepository employeeCriteriaRepository;
+//    private AssetRepository
+//public EmployeeService(EmployeeRepository employeeRepository,
+//                       EmployeeCriteriaRepository employeeCriteriaRepository) {
+//    this.employeeRepository = employeeRepository;
+//    this.employeeCriteriaRepository = employeeCriteriaRepository;
+//}
+
+    @Autowired
     private AssetCriteriaRepository assetCriteriaRepository;
+
+//    public AssetService(AssetCriteriaRepository assetCriteriaRepository) {
+//        this.assetCriteriaRepository = assetCriteriaRepository;
+//    }
 
     @Autowired
     private AddressRepository addressRepository;

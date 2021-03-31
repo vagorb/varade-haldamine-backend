@@ -38,9 +38,9 @@ public class AssetController {
     }
 
 
-    @GetMapping("/{test}")
+    @GetMapping("/")
     public ResponseEntity<Page<Asset>> getPosts(AssetPage assetPage,
-                                                AssetSearchCriteria assetSearchCriteria, @PathVariable String test) {
+                                                AssetSearchCriteria assetSearchCriteria) {
 //            @PathVariable("page" ) int page,
 //            @PathVariable("size") int size,
 //            AssetSearchCriteria assetSearchCriteria) {
