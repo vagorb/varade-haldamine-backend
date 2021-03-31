@@ -33,9 +33,9 @@ public class AssetController {
 //    }
 //
 
-    public AssetController(AssetService assetService) {
-        this.assetService = assetService;
-    }
+//    public AssetController(AssetService assetService) {
+//        this.assetService = assetService;
+//    }
 
 
     @GetMapping("/")

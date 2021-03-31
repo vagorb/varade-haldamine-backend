@@ -73,6 +73,36 @@ public class AssetCriteriaRepository {
                     criteriaBuilder.like(assetRoot.get("subClass"),
                             "%" + assetSearchCriteria.getSubClass() + "%"));
         }
+        if (Objects.nonNull(assetSearchCriteria.getId())) {
+            predicates.add(
+                    criteriaBuilder.like(assetRoot.get("id"),
+                            "%" + assetSearchCriteria.getId() + "%"));
+        }
+        if (Objects.nonNull(assetSearchCriteria.getUserId())) {
+            predicates.add(
+                    criteriaBuilder.like(assetRoot.get("userId"),
+                            "%" + assetSearchCriteria.getId() + "%"));
+        }
+        if (Objects.nonNull(assetSearchCriteria.getPossessorId())) {
+            predicates.add(
+                    criteriaBuilder.like(assetRoot.get("possessorId"),
+                            "%" + assetSearchCriteria.getPossessorId() + "%"));
+        }
+        if (Objects.nonNull(assetSearchCriteria.getActive())) {
+            predicates.add(
+                    criteriaBuilder.like(assetRoot.get("active"),
+                            "%" + assetSearchCriteria.getActive() + "%"));
+        }
+        if (Objects.nonNull(assetSearchCriteria.getExpirationDate())) {
+            predicates.add(
+                    criteriaBuilder.like(assetRoot.get("expirationDate"),
+                            "%" + assetSearchCriteria.getExpirationDate() + "%"));
+        }
+        if (Objects.nonNull(assetSearchCriteria.getDelicateCondition())) {
+            predicates.add(
+                    criteriaBuilder.like(assetRoot.get("delicateCondition"),
+                            "%" + assetSearchCriteria.getDelicateCondition() + "%"));
+        }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 
