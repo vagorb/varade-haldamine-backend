@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class InvalidWorthException extends RuntimeException {
 
     public InvalidWorthException() {
+
     }
 
     public InvalidWorthException(String message) {

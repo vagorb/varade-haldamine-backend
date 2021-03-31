@@ -16,7 +16,7 @@ import javax.persistence.Id;
 @Entity
 public class Possessor {
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Integer institute;
     private Integer division;

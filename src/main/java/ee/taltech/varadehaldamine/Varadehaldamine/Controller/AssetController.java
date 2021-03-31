@@ -12,7 +12,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("asset")
 @RestController
@@ -87,7 +86,7 @@ public class AssetController {
     @GetMapping("{page}/{size}")
     @ResponseBody
     public Page<Asset> getPosts(
-            @PathVariable("page" ) int page,
+            @PathVariable("page") int page,
             @PathVariable("size") int size) {
 
         return assetService.getAssetsList(page, size);

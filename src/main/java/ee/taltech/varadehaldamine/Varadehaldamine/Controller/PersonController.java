@@ -22,12 +22,12 @@ public class PersonController {
     }
 
     @GetMapping("id")
-    public Person getPersonById(@RequestParam Long id){
+    public Person getPersonById(@RequestParam Long id) {
         return personService.getPersonById(id);
     }
 
     @PostMapping
-    public Person addPerson(@RequestBody PersonInfo person){
+    public Person addPerson(@RequestBody PersonInfo person) {
         return personService.addPerson(person);
     }
 }

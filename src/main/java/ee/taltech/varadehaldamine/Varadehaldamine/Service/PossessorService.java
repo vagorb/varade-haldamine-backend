@@ -15,7 +15,7 @@ public class PossessorService {
     @Autowired
     private PossessorRepository possessorRepository;
 
-    public List<Possessor> findAll(){
+    public List<Possessor> findAll() {
         return possessorRepository.findAll();
     }
 
@@ -23,7 +23,7 @@ public class PossessorService {
         return possessorRepository.findPossessorById(possessorId);
     }
 
-    public Possessor addPossessor(PossessorInfo possessorInfo){
+    public Possessor addPossessor(PossessorInfo possessorInfo) {
         try {
             if (possessorInfo != null) {
                 Possessor possessor = new Possessor();

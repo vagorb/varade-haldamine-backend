@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DescriptionRepository extends JpaRepository<Description, String> {
 
-    Description findDescriptionByAssetId (String assetId);
+    Description findDescriptionByAssetId(String assetId);
 }

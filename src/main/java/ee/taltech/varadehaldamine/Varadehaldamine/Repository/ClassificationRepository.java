@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface ClassificationRepository extends JpaRepository<Classification, String> {
 
-    Classification findClassificationBySubClass (String subClass);
+    Classification findClassificationBySubClass(String subClass);
 }

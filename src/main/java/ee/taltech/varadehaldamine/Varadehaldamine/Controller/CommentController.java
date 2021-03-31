@@ -1,11 +1,8 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 
-import ee.taltech.varadehaldamine.Varadehaldamine.Model.Comment;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.CommentInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,7 +21,7 @@ public class CommentController {
     }
 
     @PostMapping
-    public List<CommentInfo> addComment(@RequestBody CommentInfo commentInfo){
+    public List<CommentInfo> addComment(@RequestBody CommentInfo commentInfo) {
         return commentService.addComment(commentInfo);
     }
 }

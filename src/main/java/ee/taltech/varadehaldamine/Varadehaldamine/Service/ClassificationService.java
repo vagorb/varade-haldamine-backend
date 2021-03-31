@@ -14,15 +14,15 @@ public class ClassificationService {
     @Autowired
     private ClassificationRepository classificationRepository;
 
-    public List<Classification> findAll(){
+    public List<Classification> findAll() {
         return classificationRepository.findAll();
     }
 
-    public Classification addClassification(ClassificationInfo classificationInfo){
+    public Classification addClassification(ClassificationInfo classificationInfo) {
         try {
             if (classificationInfo != null
                     && !classificationInfo.getSubClass().isBlank()
-                    && !classificationInfo.getMainClass().isBlank()){
+                    && !classificationInfo.getMainClass().isBlank()) {
                 Classification classification =
                         new Classification(classificationInfo.getSubClass(), classificationInfo.getMainClass());
                 return classificationRepository.save(classification);

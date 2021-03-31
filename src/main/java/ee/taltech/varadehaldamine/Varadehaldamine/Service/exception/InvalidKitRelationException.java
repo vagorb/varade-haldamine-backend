@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 public class InvalidKitRelationException extends RuntimeException {
 
     public InvalidKitRelationException() {
+
     }
 
     public InvalidKitRelationException(String message) {
