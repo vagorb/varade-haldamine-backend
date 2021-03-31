@@ -37,11 +37,11 @@ dependencies {
     implementation 'junit:junit:4.12'
 }
 
-//flyway {
-//	url = 'jdbc:postgresql://localhost:5432/postgres'
-//	user = 'postgres'
-//	password = 'postgres'
-//}
+flyway {
+	url = 'jdbc:postgresql://localhost:5432/postgres'
+	user = 'postgres'
+	password = 'postgres'
+}
 
 test {
 	useJUnitPlatform()
