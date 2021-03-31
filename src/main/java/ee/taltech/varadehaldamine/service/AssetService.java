@@ -28,8 +28,6 @@ public class AssetService {
     @Autowired
     private ClassificationRepository classificationRepository;
     @Autowired
-    private CommentRepository commentRepository;
-    @Autowired
     private DescriptionRepository descriptionRepository;
     @Autowired
     private KitRelationRepository kitRelationRepository;
@@ -42,7 +40,7 @@ public class AssetService {
 
     public List<AssetInfoShort> findAll() {
         List<AssetInfoShort> assetInfoList = new ArrayList<>();
-        System.out.println(assetRepository.findAll());
+
         for (Asset asset : assetRepository.findAll()) {
             AssetInfoShort assetInfo = new AssetInfoShort();
             assetInfo.setId(asset.getId());

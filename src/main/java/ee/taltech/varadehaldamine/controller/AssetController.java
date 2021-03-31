@@ -24,7 +24,8 @@ public class AssetController {
 
     @GetMapping
     public List<AssetInfoShort> getAll() {
-        return assetService.findAll();
+        throw new ApiRequestException("Oops, something went wrong");
+//        return assetService.findAll();
     }
 
 //    @GetMapping
