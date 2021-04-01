@@ -113,8 +113,7 @@ public class AssetService {
                 if (possessor == null) {
                     throw new PossessorNotFoundException();
                 }
-                assetInfo.setInstitute(possessor.getInstitute());
-                assetInfo.setDivision(possessor.getDivision());
+                assetInfo.setStructuralUnit(possessor.getStructuralUnit());
                 assetInfo.setSubdivision(possessor.getSubdivision());
 
                 System.out.println(asset.getExpirationDate() + " expiration date");

@@ -25,17 +25,13 @@ public class PossessorService {
 
     public Possessor addPossessor(PossessorInfo possessorInfo){
         try {
-            if (possessorInfo != null) {
+            if (possessorInfo != null && possessorInfo.getStructuralUnit() != null) {
                 Possessor possessor = new Possessor();
-                if (possessorInfo.getDivision() == null && possessorInfo.getInstitute() != null) {
-                    possessor.setInstitute(possessorInfo.getInstitute());
-                } else if (possessorInfo.getDivision() != null && possessorInfo.getInstitute() == null) {
-                    possessor.setDivision(possessorInfo.getDivision());
-                }
+                possessor.setStructuralUnit(possessorInfo.getStructuralUnit());
                 possessor.setSubdivision(possessorInfo.getSubdivision());
                 return possessorRepository.save(possessor);
             } else {
-                throw new InvalidPossessorException("Error when saving Possessor");
+                throw new InvalidPossessorException("Error when saving Possessor, insufficient data");
             }
         } catch (InvalidPossessorException e) {
             System.out.println(e);

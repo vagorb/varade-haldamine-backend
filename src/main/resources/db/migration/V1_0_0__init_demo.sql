@@ -18,8 +18,7 @@ CREATE TABLE IF NOT EXISTS Person (
 
 CREATE TABLE IF NOT EXISTS Possessor (
     id SERIAL PRIMARY KEY,
-    institute SMALLINT,
-    division SMALLINT,
+    structural_unit SMALLINT,
     subdivision SMALLINT
 );
 

@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class PossessorInfo {
-    private Integer institute;
-    private Integer division;
+    private Integer structuralUnit;
     private Integer subdivision;
 }

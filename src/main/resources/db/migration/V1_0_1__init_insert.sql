@@ -1,5 +1,5 @@
 INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW1234561', 'VASJA', 'GORB');
-INSERT INTO Possessor(institute, division, subdivision) VALUES (112, 111, 110);
+INSERT INTO Possessor(structural_unit, subdivision) VALUES (112, 110);
 INSERT INTO Classification (sub_class, main_class) VALUES ('hiir', 'arvutikomponent');
 INSERT INTO Asset (id, name, sub_class, user_id, possessor_id) VALUES ('AK1120', 'Arvutihiir HP 2210', 'hiir', 1, 1);
 INSERT INTO Worth (asset_id, price, residual_price) VALUES ('AK1120', 15.00, 15.00);

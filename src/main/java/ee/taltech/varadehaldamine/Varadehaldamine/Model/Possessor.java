@@ -18,7 +18,6 @@ public class Possessor {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    private Integer institute;
-    private Integer division;
+    private Integer structuralUnit;
     private Integer subdivision;
 }

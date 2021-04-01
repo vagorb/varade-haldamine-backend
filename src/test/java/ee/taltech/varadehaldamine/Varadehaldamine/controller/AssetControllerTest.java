@@ -33,7 +33,7 @@ public class AssetControllerTest {
         newClassification.setMainClass("Arvutikomponent");
         newClassification.setSubClass("Hiir");
 
-        newPossessor.setDivision(1122);
+        newPossessor.setStructuralUnit(1122);
 
         newAsset.setId("LC1121");
         newAsset.setName("Hiir Trust");

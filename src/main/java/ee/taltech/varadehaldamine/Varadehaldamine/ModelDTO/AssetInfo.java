@@ -52,8 +52,7 @@ public class AssetInfo {
     private String lastname;
 
     // Possessor data
-    private Integer institute;
-    private Integer division;
+    private Integer structuralUnit;
     private Integer subdivision;
 
 }

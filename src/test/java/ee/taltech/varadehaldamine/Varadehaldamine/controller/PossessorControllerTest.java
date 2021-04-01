@@ -23,7 +23,7 @@ public class PossessorControllerTest {
     public void testAddPossessor() throws Exception {
         PossessorInfo newPossessor = new PossessorInfo();
 
-        newPossessor.setDivision(1122);
+        newPossessor.setStructuralUnit(1122);
 
         mvc.perform(MockMvcRequestBuilders.post("/possessor").contentType(MediaType.APPLICATION_JSON)
         .content(JsonParser.asJsonString(newPossessor)).accept(MediaType.APPLICATION_JSON)).andExpect(status().isCreated());
