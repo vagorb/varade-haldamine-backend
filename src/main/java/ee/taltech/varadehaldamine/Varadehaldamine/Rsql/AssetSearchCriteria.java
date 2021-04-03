@@ -1,22 +1,9 @@
-package ee.taltech.varadehaldamine.Varadehaldamine.Model;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
 
-import javax.persistence.*;
+import javax.persistence.Id;
 import java.sql.Date;
-import java.sql.Timestamp;
 
-@AllArgsConstructor
-@NoArgsConstructor
-//@Getter
-//@Setter
-@ToString
-@EqualsAndHashCode
-@Entity
-public class Asset {
-
+public class AssetSearchCriteria {
     @Id
     private String id;
     private String name;
@@ -26,20 +13,8 @@ public class Asset {
     private Long possessorId;
     private Date expirationDate;
     private Boolean delicateCondition;
-    private Timestamp createdAt;
-    private Timestamp modifiedAt;
-
-
-    public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate, Boolean delicateCondition) {
-        this.id = id;
-        this.name = name;
-        this.subClass = subclass;
-        this.possessorId = possessorId;
-        this.expirationDate = expirationDate;
-        this.delicateCondition = delicateCondition;
-        this.createdAt = new Timestamp(System.currentTimeMillis());
-        this.modifiedAt = new Timestamp(System.currentTimeMillis());
-    }
+//    private Timestamp createdAt;
+//    private Timestamp modifiedAt;
 
     public String getId() {
         return id;
@@ -105,19 +80,34 @@ public class Asset {
         this.delicateCondition = delicateCondition;
     }
 
-    public Timestamp getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Timestamp createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Timestamp getModifiedAt() {
-        return modifiedAt;
-    }
-
-    public void setModifiedAt(Timestamp modifiedAt) {
-        this.modifiedAt = modifiedAt;
-    }
+//    public Timestamp getCreatedAt() {
+//        return createdAt;
+//    }
+//
+//    public void setCreatedAt(Timestamp createdAt) {
+//        this.createdAt = createdAt;
+//    }
+//
+//    public Timestamp getModifiedAt() {
+//        return modifiedAt;
+//    }
+//
+//    public void setModifiedAt(Timestamp modifiedAt) {
+//        this.modifiedAt = modifiedAt;
+//    }
+    //    public String getFirstName() {
+//        return firstName;
+//    }
+//
+//    public void setFirstName(String firstName) {
+//        this.firstName = firstName;
+//    }
+//
+//    public String getLastName() {
+//        return lastName;
+//    }
+//
+//    public void setLastName(String lastName) {
+//        this.lastName = lastName;
+//    }
 }

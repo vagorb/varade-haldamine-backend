@@ -4,9 +4,13 @@ import ee.taltech.varadehaldamine.Varadehaldamine.Model.*;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetCriteriaRepository;
+//import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
+import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetSearchCriteria;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +24,25 @@ import java.util.Optional;
 
 @Service
 public class AssetService {
+
+//    private AssetSearchCriteria assetSearchCriteria;
+//    private AssetCriteriaRepository assetCriteriaRepository;
+
+//    private final EmployeeRepository employeeRepository;
+//    private final EmployeeCriteriaRepository employeeCriteriaRepository;
+//    private AssetRepository
+//public EmployeeService(EmployeeRepository employeeRepository,
+//                       EmployeeCriteriaRepository employeeCriteriaRepository) {
+//    this.employeeRepository = employeeRepository;
+//    this.employeeCriteriaRepository = employeeCriteriaRepository;
+//}
+
+    @Autowired
+    private AssetCriteriaRepository assetCriteriaRepository;
+
+//    public AssetService(AssetCriteriaRepository assetCriteriaRepository) {
+//        this.assetCriteriaRepository = assetCriteriaRepository;
+//    }
 
     @Autowired
     private AddressRepository addressRepository;
@@ -239,9 +262,27 @@ public class AssetService {
     }
 
 
-    public Page<Asset> getAssetsList(int page, int size) {
-        PageRequest pageReq
-                = PageRequest.of(page, size);
-        return assetRepository.findAll(pageReq);
+//    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
+    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
+//        AssetSearchCriteria assetSearchCriteria = new AssetSearchCriteria();
+//        assetSearchCriteria.setActive(true);
+//        assetSearchCriteria.setDelicateCondition(true);
+//        assetSearchCriteria.setExpirationDate(Date.valueOf("1988-09-29"));
+//        assetSearchCriteria.setId("name");
+//        assetSearchCriteria.setName("name");
+//        assetSearchCriteria.setPossessorId(5L);
+//        assetSearchCriteria.setSubClass("name");
+//        assetSearchCriteria.setUserId(5L);
+        PageRequest pageReq = PageRequest.of(page, size);
+//        PageRequest pageReq
+//                = PageRequest.of(page, size);
+//        Pageable pageable = PageRequest.of(page, size);
+        List<AssetInfoShort> assetInfoList = findAll();
+        final int start = (int)pageReq.getOffset();
+        final int end = Math.min((start + pageReq.getPageSize()), assetInfoList.size());
+//        return new PageImpl<>(assetInfoList.subList(start, end), pageable, assetInfoList.size());
+        PageImpl<AssetInfoShort> imp = new PageImpl<>(assetInfoList.subList(start, end), pageReq, assetInfoList.size());
+        return assetCriteriaRepository.findAllWithFilters(imp , assetSearchCriteria, order, sortBy);
+//        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
     }
 }
