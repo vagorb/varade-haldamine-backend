@@ -54,10 +54,10 @@ public class AssetController {
     @ResponseBody
     public ResponseEntity<Page<Asset>> getPosts(
                                                 AssetSearchCriteria assetSearchCriteria,
-                                                @PathVariable(required = false, value = "page") int page,
+                                                @RequestParam(required = false, value = "page", defaultValue = "0") int page,
                                                 // Using default value of 10 instead of a pathVariable
-                                                @PathVariable(value = "order", required = false) String order,
-                                                @PathVariable(value = "sortBy", required = false) String sortBy) {
+                                                @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
+                                                @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
 //            @PathVariable("page" ) int page,
 //            @PathVariable("size") int size,
 //            AssetSearchCriteria assetSearchCriteria) {
