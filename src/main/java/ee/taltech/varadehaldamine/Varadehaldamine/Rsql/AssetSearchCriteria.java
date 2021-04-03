@@ -2,7 +2,6 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
 
 import javax.persistence.Id;
 import java.sql.Date;
-import java.sql.Timestamp;
 
 public class AssetSearchCriteria {
     @Id

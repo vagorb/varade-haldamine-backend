@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
 
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
+import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
@@ -30,33 +31,40 @@ public class AssetCriteriaRepository {
     }
 
 
-    public Page<Asset> findAllWithFilters(AssetPage assetPage,
-                                          AssetSearchCriteria assetSearchCriteria) {
+    public Page<Asset> findAllWithFilters(PageImpl<AssetInfoShort> assetPage,
+                                          AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
         CriteriaQuery<Asset> criteriaQuery = criteriaBuilder.createQuery(Asset.class);
         Root<Asset> assetRoot = criteriaQuery.from(Asset.class);
         Predicate predicate = getPredicate(assetSearchCriteria, assetRoot);
         criteriaQuery.where(predicate);
-        setOrder(assetPage, criteriaQuery, assetRoot);
+        setOrder(assetPage, criteriaQuery, assetRoot, order, sortBy);
 
         TypedQuery<Asset> typedQuery = entityManager.createQuery(criteriaQuery);
-        typedQuery.setFirstResult(assetPage.getPageNumber() * assetPage.getPageSize());
-        typedQuery.setMaxResults(assetPage.getPageSize());
+        typedQuery.setFirstResult(assetPage.getNumber() * assetPage.getSize());
+        typedQuery.setMaxResults(assetPage.getSize());
+//        typedQuery.setFirstResult(assetPage.getPageNumber() * assetPage.getPageSize());
+//        typedQuery.setMaxResults(assetPage.getPageSize());
 
-        Pageable pageable = getPageable(assetPage);
+        Pageable pageable = getPageable(assetPage, order, sortBy);
 
         long assetsCount = getAssetsCount(predicate);
 
         return new PageImpl<>(typedQuery.getResultList(), pageable, assetsCount);
     }
 
-    public void setOrder(AssetPage assetPage,
+    public void setOrder(PageImpl<AssetInfoShort> assetPage,
                          CriteriaQuery<Asset> criteriaQuery,
-                         Root<Asset> assetRoot) {
-        if (assetPage.getSortDirection().equals(Sort.Direction.ASC)) {
-            criteriaQuery.orderBy(criteriaBuilder.asc(assetRoot.get(assetPage.getSortBy())));
+                         Root<Asset> assetRoot, String order, String sortBy) {
+        if (order.equals("DESC")) {
+            criteriaQuery.orderBy(criteriaBuilder.desc(assetRoot.get(sortBy)));
         } else {
-            criteriaQuery.orderBy(criteriaBuilder.desc(assetRoot.get(assetPage.getSortBy())));
+            criteriaQuery.orderBy(criteriaBuilder.asc(assetRoot.get(sortBy)));
         }
+//        if (assetPage.getSortDirection().equals(Sort.Direction.ASC)) {
+//            criteriaQuery.orderBy(criteriaBuilder.asc(assetRoot.get(assetPage.getSortBy())));
+//        } else {
+//            criteriaQuery.orderBy(criteriaBuilder.desc(assetRoot.get(assetPage.getSortBy())));
+//        }
     }
 
     private Predicate getPredicate(AssetSearchCriteria assetSearchCriteria,
@@ -107,9 +115,17 @@ public class AssetCriteriaRepository {
     }
 
 
-    public Pageable getPageable(AssetPage assetPage) {
-        Sort sort = Sort.by(assetPage.getSortDirection(), assetPage.getSortBy());
-        return PageRequest.of(assetPage.getPageNumber(), assetPage.getPageSize(), sort);
+    public Pageable getPageable(PageImpl<AssetInfoShort> assetPage, String order, String sortBy) {
+//        Sort sort = Sort.by(assetPage.getSortDirection(), assetPage.getSortBy());
+        Sort sort;
+        if (order.equals("DESC")) {
+             sort = Sort.by(Sort.Direction.DESC, sortBy);
+        } else {
+             sort = Sort.by(Sort.Direction.ASC, sortBy);
+        }
+//         Change this to have a variable that decides which way to sory by, (ASC, DESC) instead of doing this in a single function with no parameters
+//        Sort sort = Sort.by(assetPage.getSort(), );
+        return PageRequest.of(assetPage.getNumber(), assetPage.getSize(), sort);
     }
 
     private long getAssetsCount(Predicate predicate) {
@@ -119,32 +135,6 @@ public class AssetCriteriaRepository {
         return entityManager.createQuery(countQuery).getSingleResult();
     }
 
-//    public Page<Employee> findAllWithFilters(EmployeePage employeePage,
-//                                             EmployeeSearchCriteria employeeSearchCriteria){
-//        CriteriaQuery<Employee> criteriaQuery = criteriaBuilder.createQuery(Employee.class);
-//        Root<Employee> employeeRoot = criteriaQuery.from(Employee.class);
-//        Predicate predicate = getPredicate(employeeSearchCriteria, employeeRoot);
-//        criteriaQuery.where(predicate);
-//        setOrder(employeePage, criteriaQuery, employeeRoot);
-//
-//        TypedQuery<Employee> typedQuery = entityManager.createQuery(criteriaQuery);
-//        typedQuery.setFirstResult(employeePage.getPageNumber() * employeePage.getPageSize());
-//        typedQuery.setMaxResults(employeePage.getPageSize());
-//
-//        Pageable pageable = getPageable(employeePage);
-//
-//        long employeesCount = getEmployeesCount(predicate);
-//
-//        return new PageImpl<>(typedQuery.getResultList(), pageable, employeesCount);
-//    }
-
-
-//    private long getEmployeesCount(Predicate predicate) {
-//        CriteriaQuery<Long> countQuery = criteriaBuilder.createQuery(Long.class);
-//        Root<Employee> countRoot = countQuery.from(Employee.class);
-//        countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
-//        return entityManager.createQuery(countQuery).getSingleResult();
-//    }
 
 
 

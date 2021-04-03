@@ -4,7 +4,7 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
-import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
+//import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
 import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetSearchCriteria;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RequestMapping("asset")
 @RestController
@@ -38,14 +37,35 @@ public class AssetController {
 //    }
 
 
-    @GetMapping("/")
-    public ResponseEntity<Page<Asset>> getPosts(AssetPage assetPage,
-                                                AssetSearchCriteria assetSearchCriteria) {
+    //    @GetMapping("{page}/{size}")
+//    @ResponseBody
+//    public Page<Asset> getPosts(
+//            @PathVariable("page" ) int page,
+//            @PathVariable("size") int size) {
+//
+//        return assetService.getAssetsList(page, size);
+//
+//    }
+
+
+
+
+
+    @GetMapping("/{page}/{order}/{sortBy}")
+    @ResponseBody
+    public ResponseEntity<Page<Asset>> getPosts(
+
+                                                AssetSearchCriteria assetSearchCriteria,
+//                                                @PathVariable("criteria") List<String> criteria,
+                                                @PathVariable(value = "page", required = false) int page,
+//                                                @PathVariable(value = "size", required = false) int size,
+                                                // Using default value of 10 instead of a pathVariable
+                                                @PathVariable(value = "order", required = false) String order,
+                                                @PathVariable(value = "sortBy", required = false) String sortBy) {
 //            @PathVariable("page" ) int page,
 //            @PathVariable("size") int size,
 //            AssetSearchCriteria assetSearchCriteria) {
-
-        return new ResponseEntity<>(assetService.getAssetsList(assetPage, assetSearchCriteria), HttpStatus.OK);
+        return new ResponseEntity<>(assetService.getAssetsList(page, 10, assetSearchCriteria, order, sortBy), HttpStatus.OK);
 
     }
 
@@ -113,13 +133,4 @@ public class AssetController {
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
-//    @GetMapping("{page}/{size}")
-//    @ResponseBody
-//    public Page<Asset> getPosts(
-//            @PathVariable("page" ) int page,
-//            @PathVariable("size") int size) {
-//
-//        return assetService.getAssetsList(page, size);
-//
-//    }
 }

@@ -5,12 +5,12 @@ import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.Varadehaldamine.Repository.*;
 import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetCriteriaRepository;
-import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
+//import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
 import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
@@ -251,9 +251,26 @@ public class AssetService {
 
 
 //    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
-    public Page<Asset> getAssetsList(AssetPage assetPage, AssetSearchCriteria assetSearchCriteria) {
+    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
+//        AssetSearchCriteria assetSearchCriteria = new AssetSearchCriteria();
+//        assetSearchCriteria.setActive(true);
+//        assetSearchCriteria.setDelicateCondition(true);
+//        assetSearchCriteria.setExpirationDate(Date.valueOf("1988-09-29"));
+//        assetSearchCriteria.setId("name");
+//        assetSearchCriteria.setName("name");
+//        assetSearchCriteria.setPossessorId(5L);
+//        assetSearchCriteria.setSubClass("name");
+//        assetSearchCriteria.setUserId(5L);
+        PageRequest pageReq = PageRequest.of(page, size);
 //        PageRequest pageReq
 //                = PageRequest.of(page, size);
-        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
+//        Pageable pageable = PageRequest.of(page, size);
+        List<AssetInfoShort> assetInfoList = findAll();
+        final int start = (int)pageReq.getOffset();
+        final int end = Math.min((start + pageReq.getPageSize()), assetInfoList.size());
+//        return new PageImpl<>(assetInfoList.subList(start, end), pageable, assetInfoList.size());
+        PageImpl<AssetInfoShort> imp = new PageImpl<>(assetInfoList.subList(start, end), pageReq, assetInfoList.size());
+        return assetCriteriaRepository.findAllWithFilters(imp , assetSearchCriteria, order, sortBy);
+//        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
     }
 }
