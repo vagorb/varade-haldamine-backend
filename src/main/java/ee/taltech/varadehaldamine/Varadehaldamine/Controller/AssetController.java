@@ -4,7 +4,6 @@ package ee.taltech.varadehaldamine.Varadehaldamine.Controller;
 import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
-//import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetPage;
 import ee.taltech.varadehaldamine.Varadehaldamine.Rsql.AssetSearchCriteria;
 import ee.taltech.varadehaldamine.Varadehaldamine.Service.AssetService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,11 +53,8 @@ public class AssetController {
     @GetMapping("/{page}/{order}/{sortBy}")
     @ResponseBody
     public ResponseEntity<Page<Asset>> getPosts(
-
                                                 AssetSearchCriteria assetSearchCriteria,
-//                                                @PathVariable("criteria") List<String> criteria,
-                                                @PathVariable(value = "page", required = false) int page,
-//                                                @PathVariable(value = "size", required = false) int size,
+                                                @PathVariable(required = false, value = "page") int page,
                                                 // Using default value of 10 instead of a pathVariable
                                                 @PathVariable(value = "order", required = false) String order,
                                                 @PathVariable(value = "sortBy", required = false) String sortBy) {

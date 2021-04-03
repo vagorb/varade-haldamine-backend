@@ -1,8 +1,12 @@
 package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
 
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.Id;
 import java.sql.Date;
-
+@Getter
+@Setter
 public class AssetSearchCriteria {
     @Id
     private String id;
@@ -16,69 +20,7 @@ public class AssetSearchCriteria {
 //    private Timestamp createdAt;
 //    private Timestamp modifiedAt;
 
-    public String getId() {
-        return id;
-    }
 
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSubClass() {
-        return subClass;
-    }
-
-    public void setSubClass(String subClass) {
-        this.subClass = subClass;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
-    public Long getPossessorId() {
-        return possessorId;
-    }
-
-    public void setPossessorId(Long possessorId) {
-        this.possessorId = possessorId;
-    }
-
-    public Date getExpirationDate() {
-        return expirationDate;
-    }
-
-    public void setExpirationDate(Date expirationDate) {
-        this.expirationDate = expirationDate;
-    }
-
-    public Boolean getDelicateCondition() {
-        return delicateCondition;
-    }
-
-    public void setDelicateCondition(Boolean delicateCondition) {
-        this.delicateCondition = delicateCondition;
-    }
 
 //    public Timestamp getCreatedAt() {
 //        return createdAt;

@@ -88,18 +88,18 @@ public class AssetCriteriaRepository {
         }
         if (Objects.nonNull(assetSearchCriteria.getUserId())) {
             predicates.add(
-                    criteriaBuilder.like(assetRoot.get("userId"),
-                            "%" + assetSearchCriteria.getId() + "%"));
+                    criteriaBuilder.equal(assetRoot.get("userId"),
+                            assetSearchCriteria.getUserId()));
         }
         if (Objects.nonNull(assetSearchCriteria.getPossessorId())) {
             predicates.add(
-                    criteriaBuilder.like(assetRoot.get("possessorId"),
-                            "%" + assetSearchCriteria.getPossessorId() + "%"));
+                    criteriaBuilder.equal(assetRoot.get("possessorId"),
+                            assetSearchCriteria.getPossessorId()));
         }
         if (Objects.nonNull(assetSearchCriteria.getActive())) {
             predicates.add(
-                    criteriaBuilder.like(assetRoot.get("active"),
-                            "%" + assetSearchCriteria.getActive() + "%"));
+                    criteriaBuilder.equal(assetRoot.get("active"),
+                              assetSearchCriteria.getActive()));
         }
         if (Objects.nonNull(assetSearchCriteria.getExpirationDate())) {
             predicates.add(
@@ -108,8 +108,8 @@ public class AssetCriteriaRepository {
         }
         if (Objects.nonNull(assetSearchCriteria.getDelicateCondition())) {
             predicates.add(
-                    criteriaBuilder.like(assetRoot.get("delicateCondition"),
-                            "%" + assetSearchCriteria.getDelicateCondition() + "%"));
+                    criteriaBuilder.equal(assetRoot.get("delicateCondition"),
+                             assetSearchCriteria.getDelicateCondition()));
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
