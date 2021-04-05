@@ -152,7 +152,7 @@ public class AssetCriteriaRepository {
 //                    criteriaBuilder.equal(assetRoot.get("delicateCondition"),
 //                            assetSearchCriteria.getDelicateCondition()));
 //        }
-        for ()
+
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 

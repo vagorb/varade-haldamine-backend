@@ -11,15 +11,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.Predicate;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AssetService {
@@ -67,8 +74,9 @@ public class AssetService {
             AssetInfoShort assetInfo = new AssetInfoShort();
             assetInfo.setId(asset.getId());
             assetInfo.setName(asset.getName());
-            //assetInfo.setActive(asset.getActive());
+            assetInfo.setActive(asset.getActive());
             Address address = addressRepository.findAddressByAssetId(asset.getId());
+            System.out.println(address);
             if (address != null) {
                 if (address.getRoom() != null) {
                     assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature() + address.getRoom());
@@ -76,12 +84,25 @@ public class AssetService {
                     assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature());
                 }
             }
-            //assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
-//            Person person = personService.getPersonById(asset.getUserId());
-//            if (person != null) {
-//                assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
-//            }
-//            assetInfoList.add(assetInfo);
+            if (asset.getUserId() != null) {
+                Possessor possessor = possessorService.getPossesorById(asset.getPossessorId());
+                assetInfo.setStructuralUnitPlusSubdivision(possessor.getStructuralUnit().toString()
+                        + possessor.getSubdivision().toString());
+            }
+            if (asset.getSubClass() != null) {
+                Classification classification = classificationRepository.findClassificationBySubClass(asset.getSubClass());
+                assetInfo.setMainClassPlusSubclass(classification.getMainClass() + " " + classification.getSubClass());
+            }
+            if (asset.getExpirationDate() != null) {
+                long minutes = (asset.getExpirationDate().getTime() / 60000) - (System.currentTimeMillis() / 60000);
+                long month = minutes / 43800;
+                if (month >= 0) {
+                    assetInfo.setLifeMonthsLeft((int) month);
+                } else {
+                    assetInfo.setLifeMonthsLeft(0);
+                }
+            }
+            assetInfoList.add(assetInfo);
         }
         return assetInfoList;
     }
@@ -261,25 +282,68 @@ public class AssetService {
 
     //    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
     public Page<AssetInfoShort> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
-//        AssetSearchCriteria assetSearchCriteria = new AssetSearchCriteria();
-//        assetSearchCriteria.setActive(true);
-//        assetSearchCriteria.setDelicateCondition(true);
-//        assetSearchCriteria.setExpirationDate(Date.valueOf("1988-09-29"));
-//        assetSearchCriteria.setId("name");
-//        assetSearchCriteria.setName("name");
-//        assetSearchCriteria.setPossessorId(5L);
-//        assetSearchCriteria.setSubClass("name");
-//        assetSearchCriteria.setUserId(5L);
-        PageRequest pageReq = PageRequest.of(page, size);
-//        PageRequest pageReq
-//                = PageRequest.of(page, size);
-//        Pageable pageable = PageRequest.of(page, size);
         List<AssetInfoShort> assetInfoList = findAll();
+        if (assetSearchCriteria.getId() != null) {
+            assetInfoList = assetInfoList.stream().filter(assetInfoShort -> assetInfoShort.getId() != null)
+                    .filter(assetInfoShort -> assetInfoShort.getId().contains(assetSearchCriteria.getId())).collect(Collectors.toList());
+        } if (assetSearchCriteria.getName() != null) {
+            assetInfoList = assetInfoList.stream().filter(assetInfoShort -> assetInfoShort.getName() != null)
+                    .filter(assetInfoShort -> assetInfoShort.getName().contains(assetSearchCriteria.getName())).collect(Collectors.toList());
+        } if (assetSearchCriteria.getMainClassPlusSubclass() != null) {
+            assetInfoList = assetInfoList.stream().filter(assetInfoShort -> assetInfoShort.getMainClassPlusSubclass() != null)
+                    .filter(assetInfoShort -> assetInfoShort.getMainClassPlusSubclass().contains(assetSearchCriteria.getMainClassPlusSubclass())).collect(Collectors.toList());
+        } if (assetSearchCriteria.getBuildingAbbreviationPlusRoom() != null) {
+            assetInfoList = assetInfoList.stream().filter(assetInfoShort -> assetInfoShort.getBuildingAbbreviationPlusRoom() != null)
+                    .filter(assetInfoShort -> assetInfoShort.getBuildingAbbreviationPlusRoom().contains(assetSearchCriteria.getBuildingAbbreviationPlusRoom())).collect(Collectors.toList());
+        } if (assetSearchCriteria.getActive() != null) {
+            assetInfoList = assetInfoList.stream().filter(assetInfoShort -> assetInfoShort.getActive() != null)
+                    .filter(assetInfoShort -> assetInfoShort.getActive().equals(assetSearchCriteria.getActive())).collect(Collectors.toList());
+        } if (assetSearchCriteria.getStructuralUnitPlusSubdivision() != null) {
+            assetInfoList = assetInfoList.stream().filter(assetInfoShort -> assetInfoShort.getStructuralUnitPlusSubdivision() != null)
+                    .filter(assetInfoShort -> assetInfoShort.getStructuralUnitPlusSubdivision().contains(assetSearchCriteria.getStructuralUnitPlusSubdivision())).collect(Collectors.toList());
+        }
+        if (sortBy.equalsIgnoreCase("Id")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getId));
+            } else {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getId).reversed());
+            }
+        } else if (sortBy.equalsIgnoreCase("ExpirationDate")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getLifeMonthsLeft));
+            } else {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getLifeMonthsLeft).reversed());
+            }
+        } else if (sortBy.equalsIgnoreCase("Name")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getName));
+            } else {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getName).reversed());
+            }
+        } else if (sortBy.equalsIgnoreCase("BuildingAbbreviationPlusRoom")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getBuildingAbbreviationPlusRoom));
+            } else {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getBuildingAbbreviationPlusRoom).reversed());
+            }
+        }  else if (sortBy.equalsIgnoreCase("MainClassPlusSubclass")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getMainClassPlusSubclass));
+            } else {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getMainClassPlusSubclass).reversed());
+            }
+        }  else if (sortBy.equalsIgnoreCase("StructuralUnitPlusSubdivision")) {
+            if (order.equalsIgnoreCase("ASC")) {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getStructuralUnitPlusSubdivision));
+            } else {
+                assetInfoList.sort(Comparator.comparing(AssetInfoShort::getStructuralUnitPlusSubdivision).reversed());
+            }
+        }
+        PageRequest pageReq = PageRequest.of(page, size);
+        Pageable pageable = PageRequest.of(page, size);
         final int start = (int) pageReq.getOffset();
         final int end = Math.min((start + pageReq.getPageSize()), assetInfoList.size());
-//        return new PageImpl<>(assetInfoList.subList(start, end), pageable, assetInfoList.size());
-        PageImpl<AssetInfoShort> imp = new PageImpl<>(assetInfoList.subList(start, end), pageReq, assetInfoList.size());
-        return assetCriteriaRepository.findAllWithFilters(imp, assetSearchCriteria, order, sortBy);
-//        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
+        return new PageImpl<>(assetInfoList.subList(start, end), pageable, assetInfoList.size());
+
     }
 }

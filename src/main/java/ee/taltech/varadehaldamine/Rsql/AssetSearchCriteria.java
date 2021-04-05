@@ -2,12 +2,14 @@ package ee.taltech.varadehaldamine.Rsql;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import javax.persistence.Id;
 import java.sql.Date;
 
 @Getter
 @Setter
+@ToString
 public class AssetSearchCriteria {
 //    @Id
 //    private String id;
