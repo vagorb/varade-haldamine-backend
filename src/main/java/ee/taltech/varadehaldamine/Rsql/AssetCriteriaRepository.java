@@ -38,8 +38,6 @@ public class AssetCriteriaRepository {
         TypedQuery<Asset> typedQuery = entityManager.createQuery(criteriaQuery);
         typedQuery.setFirstResult(assetPage.getNumber() * assetPage.getSize());
         typedQuery.setMaxResults(assetPage.getSize());
-//        typedQuery.setFirstResult(assetPage.getPageNumber() * assetPage.getPageSize());
-//        typedQuery.setMaxResults(assetPage.getPageSize());
 
         Pageable pageable = getPageable(assetPage, order, sortBy);
 
@@ -56,11 +54,6 @@ public class AssetCriteriaRepository {
         } else {
             criteriaQuery.orderBy(criteriaBuilder.asc(assetRoot.get(sortBy)));
         }
-//        if (assetPage.getSortDirection().equals(Sort.Direction.ASC)) {
-//            criteriaQuery.orderBy(criteriaBuilder.asc(assetRoot.get(assetPage.getSortBy())));
-//        } else {
-//            criteriaQuery.orderBy(criteriaBuilder.desc(assetRoot.get(assetPage.getSortBy())));
-//        }
     }
 
     private Predicate getPredicate(AssetSearchCriteria assetSearchCriteria,
@@ -112,15 +105,13 @@ public class AssetCriteriaRepository {
 
 
     public Pageable getPageable(PageImpl<AssetInfoShort> assetPage, String order, String sortBy) {
-//        Sort sort = Sort.by(assetPage.getSortDirection(), assetPage.getSortBy());
+
         Sort sort;
         if (order.equals("DESC")) {
             sort = Sort.by(Sort.Direction.DESC, sortBy);
         } else {
             sort = Sort.by(Sort.Direction.ASC, sortBy);
         }
-//         Change this to have a variable that decides which way to sory by, (ASC, DESC) instead of doing this in a single function with no parameters
-//        Sort sort = Sort.by(assetPage.getSort(), );
         return PageRequest.of(assetPage.getNumber(), assetPage.getSize(), sort);
     }
 

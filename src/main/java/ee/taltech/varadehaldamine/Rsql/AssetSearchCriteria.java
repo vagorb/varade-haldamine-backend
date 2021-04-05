@@ -21,35 +21,4 @@ public class AssetSearchCriteria {
 //    private Timestamp createdAt;
 //    private Timestamp modifiedAt;
 
-
-//    public Timestamp getCreatedAt() {
-//        return createdAt;
-//    }
-//
-//    public void setCreatedAt(Timestamp createdAt) {
-//        this.createdAt = createdAt;
-//    }
-//
-//    public Timestamp getModifiedAt() {
-//        return modifiedAt;
-//    }
-//
-//    public void setModifiedAt(Timestamp modifiedAt) {
-//        this.modifiedAt = modifiedAt;
-//    }
-    //    public String getFirstName() {
-//        return firstName;
-//    }
-//
-//    public void setFirstName(String firstName) {
-//        this.firstName = firstName;
-//    }
-//
-//    public String getLastName() {
-//        return lastName;
-//    }
-//
-//    public void setLastName(String lastName) {
-//        this.lastName = lastName;
-//    }
 }
