@@ -77,11 +77,11 @@ public class AssetService {
                 }
             }
             //assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
-            Person person = personService.getPersonById(asset.getUserId());
-            if (person != null) {
-                assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
-            }
-            assetInfoList.add(assetInfo);
+//            Person person = personService.getPersonById(asset.getUserId());
+//            if (person != null) {
+//                assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
+//            }
+//            assetInfoList.add(assetInfo);
         }
         return assetInfoList;
     }
@@ -260,7 +260,7 @@ public class AssetService {
 
 
     //    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
-    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
+    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
 //        AssetSearchCriteria assetSearchCriteria = new AssetSearchCriteria();
 //        assetSearchCriteria.setActive(true);
 //        assetSearchCriteria.setDelicateCondition(true);

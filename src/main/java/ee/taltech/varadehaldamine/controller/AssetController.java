@@ -24,14 +24,15 @@ public class AssetController {
 
     @GetMapping("/filtered")
     @ResponseBody
-    public ResponseEntity<Page<Asset>> getAssets(
+    public ResponseEntity<Page<AssetInfoShort>> getAssets(
             AssetSearchCriteria assetSearchCriteria,
             @RequestParam(required = false, value = "page", defaultValue = "0") int page,
             // Using default value of 10 instead of a pathVariable
+            @RequestParam(required = false, value = "size", defaultValue = "10") int size,
+
             @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
             @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
-        return new ResponseEntity<>(assetService.getAssetsList(page, 10, assetSearchCriteria, order, sortBy), HttpStatus.OK);
-
+        return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy), HttpStatus.OK);
     }
 
     @GetMapping
