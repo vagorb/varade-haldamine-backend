@@ -98,8 +98,12 @@ public class AssetService {
                 Optional<Classification> classification = classificationRepository.findById(assetInfo.getSubclass());
                 if (classification.isPresent()) {
                     String subclass = classification.get().getSubClass();
+                    Date purchaseDate = assetInfo.getExpirationDate();
+                    LocalDate expirationDate = purchaseDate.toLocalDate()
+                            .plusMonths(assetInfo.getLifeMonthsLeft().longValue());
+                    System.out.println(expirationDate);
                     Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), subclass,
-                            assetInfo.getPossessorId(), assetInfo.getExpirationDate(),
+                            assetInfo.getPossessorId(), Date.valueOf(expirationDate),
                             assetInfo.getDelicateCondition());
                     Asset dbAsset = assetRepository.save(asset);
                     addAddress(assetInfo);
@@ -139,13 +143,11 @@ public class AssetService {
                 assetInfo.setStructuralUnit(possessor.getStructuralUnit());
                 assetInfo.setSubdivision(possessor.getSubdivision());
 
-                System.out.println(asset.getExpirationDate() + " expiration date");
                 if (asset.getExpirationDate() != null) {
-                    long monthsBetween = ChronoUnit.MONTHS.between(
-                            LocalDate.parse((CharSequence) new java.util.Date()).withDayOfMonth(1),
-                            LocalDate.parse((CharSequence) asset.getExpirationDate()).withDayOfMonth(1));
-                    System.out.println(monthsBetween); //3
-                    assetInfo.setLifeMonthsLeft((int) monthsBetween);
+                    assetInfo.setExpirationDate(asset.getExpirationDate());
+                    long monthsBetween = ChronoUnit.MONTHS.between(LocalDate.now(),
+                            asset.getExpirationDate().toLocalDate());
+                    assetInfo.setLifeMonthsLeft(Math.max((int) monthsBetween, 0));
                 } else {
                     assetInfo.setLifeMonthsLeft(0);
                 }
