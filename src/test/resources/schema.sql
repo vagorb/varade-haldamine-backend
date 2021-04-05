@@ -1,12 +1,13 @@
--- DROP TABLE IF EXISTS Asset;
--- DROP TABLE IF EXISTS Person;
--- DROP TABLE IF EXISTS Possessor;
--- DROP TABLE IF EXISTS Worth;
--- DROP TABLE IF EXISTS Kit_relation;
--- DROP TABLE IF EXISTS Address;
--- DROP TABLE IF EXISTS Classification;
--- DROP TABLE IF EXISTS Comment;
--- DROP TABLE IF EXISTS Description;
+
+DROP TABLE IF EXISTS Asset;
+DROP TABLE IF EXISTS Person;
+DROP TABLE IF EXISTS Possessor;
+DROP TABLE IF EXISTS Worth;
+DROP TABLE IF EXISTS Kit_relation;
+DROP TABLE IF EXISTS Address;
+DROP TABLE IF EXISTS Classification;
+DROP TABLE IF EXISTS Comment;
+DROP TABLE IF EXISTS Description;
 
 
 CREATE TABLE IF NOT EXISTS Person (
@@ -18,7 +19,8 @@ CREATE TABLE IF NOT EXISTS Person (
 
 CREATE TABLE IF NOT EXISTS Possessor (
     id SERIAL PRIMARY KEY,
-    structural_unit SMALLINT,
+    institute SMALLINT,
+    division SMALLINT,
     subdivision SMALLINT
 );
 
@@ -27,13 +29,6 @@ CREATE TABLE IF NOT EXISTS Classification (
     main_class VARCHAR(20) NOT NULL
 );
 
-CREATE OR REPLACE FUNCTION trigger_set_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-  NEW.modified_at = NOW();
-  RETURN NEW;
-END;
-$$ LANGUAGE plpgsql;
 
 
 CREATE TABLE IF NOT EXISTS Asset (
@@ -45,14 +40,10 @@ CREATE TABLE IF NOT EXISTS Asset (
     possessor_id INT NOT NULL REFERENCES Possessor(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     expiration_date DATE,
     delicate_condition BOOLEAN NOT NULL DEFAULT FALSE,
-    created_at TIMESTAMP NOT NULL DEFAULT NOW(),
+    created_at TIMESTAMP DEFAULT NOW(),
     modified_at TIMESTAMP DEFAULT NOW()
 );
 
-CREATE TRIGGER set_timestamp
-BEFORE UPDATE ON Asset
-FOR EACH ROW
-EXECUTE PROCEDURE trigger_set_timestamp();
 
 
 CREATE TABLE IF NOT EXISTS Worth (
@@ -81,6 +72,5 @@ CREATE TABLE IF NOT EXISTS Description (
 CREATE TABLE IF NOT EXISTS Comment (
     id SERIAL PRIMARY KEY,
     asset_id VARCHAR(20) REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    text VARCHAR(255) NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
-    );
+    text VARCHAR(255) NOT NULL
+);
