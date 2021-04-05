@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.controller;
 
 
+import ee.taltech.varadehaldamine.Rsql.AssetSearchCriteria;
 import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
@@ -17,6 +18,9 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class AssetController {
+
+    @Autowired
+    AssetService assetService;
 
 //    private AssetService assetService;
 //    private final EmployeeService employeeService;
@@ -46,26 +50,20 @@ public class AssetController {
 //    }
 
 
-
-
-
     @GetMapping("/{page}/{order}/{sortBy}")
     @ResponseBody
     public ResponseEntity<Page<Asset>> getPosts(
-                                                AssetSearchCriteria assetSearchCriteria,
-                                                @RequestParam(required = false, value = "page", defaultValue = "0") int page,
-                                                // Using default value of 10 instead of a pathVariable
-                                                @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
-                                                @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
+            AssetSearchCriteria assetSearchCriteria,
+            @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+            // Using default value of 10 instead of a pathVariable
+            @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
+            @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
 //            @PathVariable("page" ) int page,
 //            @PathVariable("size") int size,
 //            AssetSearchCriteria assetSearchCriteria) {
         return new ResponseEntity<>(assetService.getAssetsList(page, 10, assetSearchCriteria, order, sortBy), HttpStatus.OK);
 
     }
-
-    @Autowired
-    AssetService assetService;
 
     @GetMapping
     public List<AssetInfoShort> getAll() {
@@ -126,15 +124,5 @@ public class AssetController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
-    }
-
-    @GetMapping("{page}/{size}")
-    @ResponseBody
-    public Page<Asset> getPosts(
-            @PathVariable("page") int page,
-            @PathVariable("size") int size) {
-
-        return assetService.getAssetsList(page, size);
-
     }
 }

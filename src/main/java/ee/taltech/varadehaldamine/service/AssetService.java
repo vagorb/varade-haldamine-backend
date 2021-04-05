@@ -1,10 +1,12 @@
 package ee.taltech.varadehaldamine.service;
 
+import ee.taltech.varadehaldamine.Rsql.AssetCriteriaRepository;
+import ee.taltech.varadehaldamine.Rsql.AssetSearchCriteria;
+import ee.taltech.varadehaldamine.exception.*;
 import ee.taltech.varadehaldamine.model.*;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.*;
-import ee.taltech.varadehaldamine.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -257,7 +259,7 @@ public class AssetService {
     }
 
 
-//    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
+    //    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
     public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
 //        AssetSearchCriteria assetSearchCriteria = new AssetSearchCriteria();
 //        assetSearchCriteria.setActive(true);
@@ -273,11 +275,11 @@ public class AssetService {
 //                = PageRequest.of(page, size);
 //        Pageable pageable = PageRequest.of(page, size);
         List<AssetInfoShort> assetInfoList = findAll();
-        final int start = (int)pageReq.getOffset();
+        final int start = (int) pageReq.getOffset();
         final int end = Math.min((start + pageReq.getPageSize()), assetInfoList.size());
 //        return new PageImpl<>(assetInfoList.subList(start, end), pageable, assetInfoList.size());
         PageImpl<AssetInfoShort> imp = new PageImpl<>(assetInfoList.subList(start, end), pageReq, assetInfoList.size());
-        return assetCriteriaRepository.findAllWithFilters(imp , assetSearchCriteria, order, sortBy);
+        return assetCriteriaRepository.findAllWithFilters(imp, assetSearchCriteria, order, sortBy);
 //        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
     }
 }

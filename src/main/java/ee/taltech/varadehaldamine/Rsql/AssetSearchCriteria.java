@@ -1,10 +1,11 @@
-package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
+package ee.taltech.varadehaldamine.Rsql;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Id;
 import java.sql.Date;
+
 @Getter
 @Setter
 public class AssetSearchCriteria {
@@ -19,7 +20,6 @@ public class AssetSearchCriteria {
     private Boolean delicateCondition;
 //    private Timestamp createdAt;
 //    private Timestamp modifiedAt;
-
 
 
 //    public Timestamp getCreatedAt() {

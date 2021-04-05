@@ -1,9 +1,9 @@
 package ee.taltech.varadehaldamine.service;
 
+import ee.taltech.varadehaldamine.exception.InvalidClassificationException;
 import ee.taltech.varadehaldamine.model.Classification;
 import ee.taltech.varadehaldamine.modelDTO.ClassificationInfo;
 import ee.taltech.varadehaldamine.repository.ClassificationRepository;
-import ee.taltech.varadehaldamine.exception.InvalidClassificationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

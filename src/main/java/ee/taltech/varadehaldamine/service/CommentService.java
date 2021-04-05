@@ -1,10 +1,10 @@
 package ee.taltech.varadehaldamine.service;
 
+import ee.taltech.varadehaldamine.exception.InvalidCommentException;
 import ee.taltech.varadehaldamine.model.Comment;
 import ee.taltech.varadehaldamine.modelDTO.CommentInfo;
 import ee.taltech.varadehaldamine.repository.AssetRepository;
 import ee.taltech.varadehaldamine.repository.CommentRepository;
-import ee.taltech.varadehaldamine.exception.InvalidCommentException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

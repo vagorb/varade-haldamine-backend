@@ -1,9 +1,9 @@
 package ee.taltech.varadehaldamine.service;
 
+import ee.taltech.varadehaldamine.exception.InvalidPossessorException;
 import ee.taltech.varadehaldamine.model.Possessor;
 import ee.taltech.varadehaldamine.modelDTO.PossessorInfo;
 import ee.taltech.varadehaldamine.repository.PossessorRepository;
-import ee.taltech.varadehaldamine.exception.InvalidPossessorException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

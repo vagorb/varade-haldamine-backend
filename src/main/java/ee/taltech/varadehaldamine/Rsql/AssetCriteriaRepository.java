@@ -1,12 +1,8 @@
-package ee.taltech.varadehaldamine.Varadehaldamine.Rsql;
+package ee.taltech.varadehaldamine.Rsql;
 
-import ee.taltech.varadehaldamine.Varadehaldamine.Model.Asset;
-import ee.taltech.varadehaldamine.Varadehaldamine.ModelDTO.AssetInfoShort;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
+import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
@@ -99,7 +95,7 @@ public class AssetCriteriaRepository {
         if (Objects.nonNull(assetSearchCriteria.getActive())) {
             predicates.add(
                     criteriaBuilder.equal(assetRoot.get("active"),
-                              assetSearchCriteria.getActive()));
+                            assetSearchCriteria.getActive()));
         }
         if (Objects.nonNull(assetSearchCriteria.getExpirationDate())) {
             predicates.add(
@@ -109,7 +105,7 @@ public class AssetCriteriaRepository {
         if (Objects.nonNull(assetSearchCriteria.getDelicateCondition())) {
             predicates.add(
                     criteriaBuilder.equal(assetRoot.get("delicateCondition"),
-                             assetSearchCriteria.getDelicateCondition()));
+                            assetSearchCriteria.getDelicateCondition()));
         }
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
@@ -119,9 +115,9 @@ public class AssetCriteriaRepository {
 //        Sort sort = Sort.by(assetPage.getSortDirection(), assetPage.getSortBy());
         Sort sort;
         if (order.equals("DESC")) {
-             sort = Sort.by(Sort.Direction.DESC, sortBy);
+            sort = Sort.by(Sort.Direction.DESC, sortBy);
         } else {
-             sort = Sort.by(Sort.Direction.ASC, sortBy);
+            sort = Sort.by(Sort.Direction.ASC, sortBy);
         }
 //         Change this to have a variable that decides which way to sory by, (ASC, DESC) instead of doing this in a single function with no parameters
 //        Sort sort = Sort.by(assetPage.getSort(), );
@@ -134,8 +130,6 @@ public class AssetCriteriaRepository {
         countQuery.select(criteriaBuilder.count(countRoot)).where(predicate);
         return entityManager.createQuery(countQuery).getSingleResult();
     }
-
-
 
 
 }
