@@ -159,11 +159,13 @@ public class AssetService {
 
                 System.out.println(asset.getExpirationDate() + " expiration date");
                 if (asset.getExpirationDate() != null) {
-                    long monthsBetween = ChronoUnit.MONTHS.between(
-                            LocalDate.parse((CharSequence) new java.util.Date()).withDayOfMonth(1),
-                            LocalDate.parse((CharSequence) asset.getExpirationDate()).withDayOfMonth(1));
-                    System.out.println(monthsBetween); //3
-                    assetInfo.setLifeMonthsLeft((int) monthsBetween);
+                    long minutes = (asset.getExpirationDate().getTime() / 60000) - (System.currentTimeMillis() / 60000);
+                    long month = minutes / 43800;
+                    if (month >= 0) {
+                        assetInfo.setLifeMonthsLeft((int) month);
+                    } else {
+                        assetInfo.setLifeMonthsLeft(0);
+                    }
                 } else {
                     assetInfo.setLifeMonthsLeft(0);
                 }
