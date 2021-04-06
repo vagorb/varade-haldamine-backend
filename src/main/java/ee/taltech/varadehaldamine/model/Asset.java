@@ -25,12 +25,15 @@ public class Asset {
     private Long possessorId;
     private Date expirationDate;
     private Boolean delicateCondition;
+    private Boolean checked;
     private Timestamp createdAt;
     private Timestamp modifiedAt;
 
-    public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate, Boolean delicateCondition) {
+    public Asset(String id, Boolean active, String name, String subclass, Long possessorId, Date expirationDate,
+                 Boolean delicateCondition) {
         this.id = id;
         this.name = name;
+        this.active = active;
         this.subClass = subclass;
         this.possessorId = possessorId;
         this.expirationDate = expirationDate;

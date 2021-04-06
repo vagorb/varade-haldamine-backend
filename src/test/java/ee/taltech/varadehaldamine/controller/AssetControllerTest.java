@@ -12,9 +12,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
-import java.sql.Date;
-import java.time.LocalDate;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -39,7 +36,6 @@ public class AssetControllerTest {
         newAsset.setName("Hiir Trust");
         newAsset.setSubclass("Hiir");
         newAsset.setPossessorId(Long.valueOf("1"));
-        newAsset.setExpirationDate(Date.valueOf(LocalDate.of(2021, 5, 11)));
         newAsset.setDelicateCondition(Boolean.FALSE);
         newAsset.setBuildingAbbreviation("UusHoone");
         newAsset.setRoom("U04-223");
