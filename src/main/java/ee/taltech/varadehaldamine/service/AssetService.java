@@ -6,17 +6,15 @@ import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.util.NumberUtils;
-import org.springframework.util.StringUtils;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -69,14 +67,17 @@ public class AssetService {
                 Optional<Classification> classification = classificationRepository.findById(assetInfo.getSubclass());
                 if (classification.isPresent()) {
                     String subclass = classification.get().getSubClass();
-                    Date purchaseDate = assetInfo.getExpirationDate();
-                    LocalDate expirationDate = purchaseDate.toLocalDate()
-                            .plusMonths(assetInfo.getLifeMonthsLeft().longValue());
-                    System.out.println(expirationDate);
-                    Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), subclass,
-                            assetInfo.getPossessorId(), Date.valueOf(expirationDate),
+                    Date purchaseDate = assetInfo.getPurchaseDate();
+                    Date expirationDate = null;
+                    if (purchaseDate != null) {
+                        expirationDate = Date.valueOf(purchaseDate.toLocalDate()
+                                .plusMonths(assetInfo.getLifeMonthsLeft().longValue()));
+                    }
+                    Asset asset = new Asset(assetInfo.getId(), assetInfo.getActive(), assetInfo.getName(), subclass,
+                            assetInfo.getPossessorId(), expirationDate,
                             assetInfo.getDelicateCondition());
                     Asset dbAsset = assetRepository.save(asset);
+                    System.out.println(dbAsset);
                     addAddress(assetInfo);
                     addKitRelation(assetInfo);
                     addDescription(assetInfo);
@@ -94,11 +95,11 @@ public class AssetService {
         try {
             Asset asset = assetRepository.findAssetById(assetId);
             if (asset != null) {
-                System.out.println(asset);
                 AssetInfo assetInfo = new AssetInfo();
                 assetInfo.setId(asset.getId());
                 assetInfo.setName(asset.getName());
                 assetInfo.setActive(asset.getActive());
+                assetInfo.setChecked(asset.getChecked());
                 Person person = personService.getPersonById(asset.getUserId());
                 if (person != null) {
                     assetInfo.setUserId(asset.getUserId());
@@ -115,7 +116,6 @@ public class AssetService {
                 assetInfo.setSubdivision(possessor.getSubdivision());
 
                 if (asset.getExpirationDate() != null) {
-                    assetInfo.setExpirationDate(asset.getExpirationDate());
                     long monthsBetween = ChronoUnit.MONTHS.between(LocalDate.now(),
                             asset.getExpirationDate().toLocalDate());
                     assetInfo.setLifeMonthsLeft(Math.max((int) monthsBetween, 0));
@@ -140,7 +140,6 @@ public class AssetService {
 
                 Classification classification = classificationRepository
                         .findClassificationBySubClass(asset.getSubClass());
-                System.out.println("Classification " + classification);
                 if (classification == null) {
                     throw new ClassificationNotFoundException();
                 }
@@ -161,7 +160,6 @@ public class AssetService {
                 }
 
                 Address address = addressRepository.findAddressByAssetId(asset.getId());
-                System.out.println("address " + address);
                 if (address != null) {
                     assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
                     assetInfo.setRoom(address.getRoom());
@@ -171,7 +169,6 @@ public class AssetService {
                 if (description != null) {
                     assetInfo.setDescriptionText(description.getText());
                 }
-                System.out.println(assetInfo);
                 return assetInfo;
             } else {
                 throw new AssetNotFoundException();

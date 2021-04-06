@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS Asset (
     possessor_id INT NOT NULL REFERENCES Possessor(id) ON DELETE RESTRICT ON UPDATE CASCADE,
     expiration_date DATE,
     delicate_condition BOOLEAN NOT NULL DEFAULT FALSE,
+    checked BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
     modified_at TIMESTAMP DEFAULT NOW()
 );

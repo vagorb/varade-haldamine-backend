@@ -16,9 +16,9 @@ public class AssetInfo {
     private Boolean active;
     private Long userId;
     private Long possessorId;
-    private Date expirationDate;
     private Integer lifeMonthsLeft; //
     private Boolean delicateCondition;
+    private Boolean checked;
     private Date createdAt;
     private Date modifiedAt;
 
