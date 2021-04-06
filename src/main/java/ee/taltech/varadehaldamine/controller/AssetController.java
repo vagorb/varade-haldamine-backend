@@ -1,8 +1,6 @@
 package ee.taltech.varadehaldamine.controller;
 
 
-import ee.taltech.varadehaldamine.Rsql.AssetSearchCriteria;
-import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.service.AssetService;
@@ -12,7 +10,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.LinkedList;
 import java.util.List;
 
 @RequestMapping("asset")
@@ -26,7 +23,7 @@ public class AssetController {
     @GetMapping("/filtered")
     @ResponseBody
     public ResponseEntity<Page<AssetInfoShort>> getAssets(
-            AssetSearchCriteria assetSearchCriteria,
+            AssetInfoShort assetSearchCriteria,
             @RequestParam(required = false, value = "page", defaultValue = "0") int page,
             // Using default value of 10 instead of a pathVariable
             @RequestParam(required = false, value = "size", defaultValue = "10") int size,

@@ -1,7 +1,5 @@
 package ee.taltech.varadehaldamine.service;
 
-import ee.taltech.varadehaldamine.Rsql.AssetCriteriaRepository;
-import ee.taltech.varadehaldamine.Rsql.AssetSearchCriteria;
 import ee.taltech.varadehaldamine.exception.*;
 import ee.taltech.varadehaldamine.model.*;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
@@ -36,9 +34,6 @@ public class AssetService {
 //    this.employeeRepository = employeeRepository;
 //    this.employeeCriteriaRepository = employeeCriteriaRepository;
 //}
-
-    @Autowired
-    private AssetCriteriaRepository assetCriteriaRepository;
 
 //    public AssetService(AssetCriteriaRepository assetCriteriaRepository) {
 //        this.assetCriteriaRepository = assetCriteriaRepository;
@@ -238,7 +233,7 @@ public class AssetService {
     }
 
 
-    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
+    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy) {
 
         String id = "%%";
         String name = "%%";
