@@ -269,16 +269,15 @@ public class AssetService {
         if (order.equals("ASC")) {
             pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
         }
-        return null;
-//
-//        if (division != null && active != null) {
-//            return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, active, division, pageRequest);
-//        } else if (division == null && active == null) {
-//            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, pageRequest);
-//        } else if (division == null) {
-//            return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, active, pageRequest);
-//        } else {
-//            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, division, pageRequest);
-//        }
+
+        if (division != null && active != null) {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, active, division, pageRequest);
+        } else if (division == null && active == null) {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, pageRequest);
+        } else if (division == null) {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, active, pageRequest);
+        } else {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, division, pageRequest);
+        }
     }
 }
