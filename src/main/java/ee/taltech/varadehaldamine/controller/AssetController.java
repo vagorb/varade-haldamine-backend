@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @RequestMapping("asset")
@@ -39,49 +40,6 @@ public class AssetController {
     public List<AssetInfoShort> getAll() {
         return assetService.findAll();
     }
-
-//    @GetMapping
-//    public List<AssetInfoShort> getAll(@RequestParam(value = "name", required = false) String name,
-//                                       @RequestParam(value = "active", required = false) Boolean active,
-//                                       @RequestParam(value = "user", required = false) Long userId,
-//                                       @RequestParam(value = "possessor", required = false) Long possessorId,
-//                                       @RequestParam(value = "delicate", required = false) Boolean delicateCondition,
-//                                       @RequestParam(value = "subclass", required = false) String subclass,
-//                                       @RequestParam(value = "class", required = false) String mainClass,
-//                                       @RequestParam(value = "building", required = false) String building,
-//                                       @RequestParam(value = "institute", required = false) Integer institute,
-//                                       @RequestParam(value = "division", required = false) Integer division,
-//                                       @RequestParam(value = "subdivision", required = false) Integer subdivision) {
-//        if (name != null) {
-//            //some
-//        }
-//        if (active != null) {
-//            //some
-//        }
-//        if (userId != null) {
-//            //some
-//        }
-//        if (possessorId != null) {
-//            //some
-//        }
-//        if (delicateCondition != null) {
-//            //some
-//        }
-//        if (subclass != null) {
-//            //some
-//        }
-//        if (mainClass != null) {
-//            //some
-//        }
-//        if (building != null) {
-//            //some
-//        }
-//        if (institute != null) {
-//            //some
-//        }
-//        return assetService.findAll();
-//    }
-
 
     @GetMapping("/{id}")
     public AssetInfo getAssetById(@PathVariable String id) {

@@ -1,14 +1,16 @@
 package ee.taltech.varadehaldamine.modelDTO;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+import javax.persistence.Id;
 import java.sql.Date;
+import java.time.LocalDate;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class AssetInfoShort {
 //    private String id;
 //    private String name;
@@ -22,6 +24,7 @@ public class AssetInfoShort {
 //
 //    private Date modifiedAt;
 
+    @Id
     private String id;
     private String name;
     private String structuralUnitPlusSubdivision;

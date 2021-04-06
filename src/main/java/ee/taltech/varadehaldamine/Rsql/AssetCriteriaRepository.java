@@ -32,31 +32,32 @@ public class AssetCriteriaRepository {
 
     public Page<AssetInfoShort> findAllWithFilters(PageImpl<AssetInfoShort> assetPage,
                                           AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
-        CriteriaQuery<Asset> criteriaQuery = criteriaBuilder.createQuery(Asset.class);
-        CriteriaQuery<Address> addressCriteriaQuery = criteriaBuilder.createQuery(Address.class);
-        CriteriaQuery<Possessor> possessorCriteriaQuery = criteriaBuilder.createQuery(Possessor.class);
-        CriteriaQuery<Classification> classificationCriteriaQuery = criteriaBuilder.createQuery(Classification.class);
-        Root<Asset> assetRoot = criteriaQuery.from(Asset.class);
-        Root<Possessor> possessorRoot = possessorCriteriaQuery.from(Possessor.class);
-        Root<Address> addressRoot = addressCriteriaQuery.from(Address.class);
-        Root<Classification> classificationRoot = classificationCriteriaQuery.from(Classification.class);
-        Predicate predicate = getPredicate(assetSearchCriteria, assetRoot, possessorRoot, addressRoot, classificationRoot);
 
-
-        CriteriaQuery<AssetInfoShort> assetInfoCriteriaQuery = criteriaBuilder.createQuery(AssetInfoShort.class);
-        assetInfoCriteriaQuery.where(predicate);
+        CriteriaQuery<AssetInfoShort> criteriaQuery = criteriaBuilder.createQuery(AssetInfoShort.class);
+//        CriteriaQuery<Address> addressCriteriaQuery = criteriaBuilder.createQuery(Address.class);
+//        CriteriaQuery<Possessor> possessorCriteriaQuery = criteriaBuilder.createQuery(Possessor.class);
+//        CriteriaQuery<Classification> classificationCriteriaQuery = criteriaBuilder.createQuery(Classification.class);
+        Root<AssetInfoShort> assetRoot = criteriaQuery.from(AssetInfoShort.class);
+//        Root<Possessor> possessorRoot = possessorCriteriaQuery.from(Possessor.class);
+//        Root<Address> addressRoot = addressCriteriaQuery.from(Address.class);
+//        Root<Classification> classificationRoot = classificationCriteriaQuery.from(Classification.class);
+        Predicate predicate = getPredicate(assetSearchCriteria, assetRoot);
+//
+//
+//        CriteriaQuery<AssetInfoShort> assetInfoCriteriaQuery = criteriaBuilder.createQuery(AssetInfoShort.class);
+//        assetInfoCriteriaQuery.where(predicate);
 
 
         //setOrder(criteriaQuery, assetRoot, order, sortBy);
 
-        TypedQuery<AssetInfoShort> typedQuery = entityManager.createQuery(assetInfoCriteriaQuery);
+        TypedQuery<AssetInfoShort> typedQuery = entityManager.createQuery(criteriaQuery);
         typedQuery.setFirstResult(assetPage.getNumber() * assetPage.getSize());
         typedQuery.setMaxResults(assetPage.getSize());
-
+//
         Pageable pageable = getPageable(assetPage, order, sortBy);
-
+//
         long assetsCount = getAssetsCount(predicate);
-
+//
         return new PageImpl<>(typedQuery.getResultList(), pageable, assetsCount);
     }
 
@@ -70,10 +71,7 @@ public class AssetCriteriaRepository {
     }
 
     private Predicate getPredicate(AssetSearchCriteria assetSearchCriteria,
-                                   Root<Asset> assetRoot,
-                                   Root<Possessor> possessorRoot,
-                                   Root<Address> addressRoot,
-                                   Root<Classification> classificationRoot) {
+                                   Root<AssetInfoShort> assetRoot) {
         List<Predicate> predicates = new ArrayList<>();
 
         if (Objects.nonNull(assetSearchCriteria.getId())) {
@@ -88,32 +86,32 @@ public class AssetCriteriaRepository {
         }
         if (Objects.nonNull(assetSearchCriteria.getStructuralUnitPlusSubdivision())) {
             predicates.add(
-                    criteriaBuilder.equal(possessorRoot.get("structuralUnit"),
+                    criteriaBuilder.equal(assetRoot.get("structuralUnit"),
                             assetSearchCriteria.getStructuralUnitPlusSubdivision()));
         }
         if (Objects.nonNull(assetSearchCriteria.getStructuralUnitPlusSubdivision())) {
             predicates.add(
-                    criteriaBuilder.equal(possessorRoot.get("subdivision"),
+                    criteriaBuilder.equal(assetRoot.get("subdivision"),
                             assetSearchCriteria.getStructuralUnitPlusSubdivision()));
         }
         if (Objects.nonNull(assetSearchCriteria.getMainClassPlusSubclass())) {
             predicates.add(
-                    criteriaBuilder.like(classificationRoot.get("mainClass"),
+                    criteriaBuilder.like(assetRoot.get("mainClass"),
                             "%" + assetSearchCriteria.getMainClassPlusSubclass() + "%"));
         }
         if (Objects.nonNull(assetSearchCriteria.getMainClassPlusSubclass())) {
             predicates.add(
-                    criteriaBuilder.like(classificationRoot.get("subClass"),
+                    criteriaBuilder.like(assetRoot.get("subClass"),
                             "%" + assetSearchCriteria.getMainClassPlusSubclass() + "%"));
         }
         if (Objects.nonNull(assetSearchCriteria.getBuildingAbbreviationPlusRoom())) {
             predicates.add(
-                    criteriaBuilder.like(addressRoot.get("buildingAbbreviature"),
+                    criteriaBuilder.like(assetRoot.get("buildingAbbreviature"),
                             "%" + assetSearchCriteria.getBuildingAbbreviationPlusRoom() + "%"));
         }
         if (Objects.nonNull(assetSearchCriteria.getBuildingAbbreviationPlusRoom())) {
             predicates.add(
-                    criteriaBuilder.like(addressRoot.get("room"),
+                    criteriaBuilder.like(assetRoot.get("room"),
                             "%" + assetSearchCriteria.getBuildingAbbreviationPlusRoom() + "%"));
         }
         if (Objects.nonNull(assetSearchCriteria.getActive())) {
@@ -152,7 +150,6 @@ public class AssetCriteriaRepository {
 //                    criteriaBuilder.equal(assetRoot.get("delicateCondition"),
 //                            assetSearchCriteria.getDelicateCondition()));
 //        }
-        for ()
         return criteriaBuilder.and(predicates.toArray(new Predicate[0]));
     }
 

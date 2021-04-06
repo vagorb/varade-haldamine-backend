@@ -8,16 +8,17 @@ import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
+import org.springframework.util.NumberUtils;
+import org.springframework.util.StringUtils;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -61,29 +62,7 @@ public class AssetService {
     private PossessorService possessorService;
 
     public List<AssetInfoShort> findAll() {
-        List<AssetInfoShort> assetInfoList = new ArrayList<>();
-        System.out.println(assetRepository.findAll());
-        for (Asset asset : assetRepository.findAll()) {
-            AssetInfoShort assetInfo = new AssetInfoShort();
-            assetInfo.setId(asset.getId());
-            assetInfo.setName(asset.getName());
-            //assetInfo.setActive(asset.getActive());
-            Address address = addressRepository.findAddressByAssetId(asset.getId());
-            if (address != null) {
-                if (address.getRoom() != null) {
-                    assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature() + address.getRoom());
-                } else {
-                    assetInfo.setBuildingAbbreviationPlusRoom(address.getBuildingAbbreviature());
-                }
-            }
-            //assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
-//            Person person = personService.getPersonById(asset.getUserId());
-//            if (person != null) {
-//                assetInfo.setPersonName(person.getFirstname() + " " + person.getLastname());
-//            }
-//            assetInfoList.add(assetInfo);
-        }
-        return assetInfoList;
+        return assetRepository.getAll();
     }
 
     // when adding new asset, the user and comments would not to be put
@@ -259,27 +238,51 @@ public class AssetService {
     }
 
 
-    //    public Page<Asset> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria) {
     public Page<AssetInfoShort> getAssetsList(int page, int size, AssetSearchCriteria assetSearchCriteria, String order, String sortBy) {
-//        AssetSearchCriteria assetSearchCriteria = new AssetSearchCriteria();
-//        assetSearchCriteria.setActive(true);
-//        assetSearchCriteria.setDelicateCondition(true);
-//        assetSearchCriteria.setExpirationDate(Date.valueOf("1988-09-29"));
-//        assetSearchCriteria.setId("name");
-//        assetSearchCriteria.setName("name");
-//        assetSearchCriteria.setPossessorId(5L);
-//        assetSearchCriteria.setSubClass("name");
-//        assetSearchCriteria.setUserId(5L);
-        PageRequest pageReq = PageRequest.of(page, size);
-//        PageRequest pageReq
-//                = PageRequest.of(page, size);
-//        Pageable pageable = PageRequest.of(page, size);
-        List<AssetInfoShort> assetInfoList = findAll();
-        final int start = (int) pageReq.getOffset();
-        final int end = Math.min((start + pageReq.getPageSize()), assetInfoList.size());
-//        return new PageImpl<>(assetInfoList.subList(start, end), pageable, assetInfoList.size());
-        PageImpl<AssetInfoShort> imp = new PageImpl<>(assetInfoList.subList(start, end), pageReq, assetInfoList.size());
-        return assetCriteriaRepository.findAllWithFilters(imp, assetSearchCriteria, order, sortBy);
-//        return assetCriteriaRepository.findAllWithFilters(assetPage, assetSearchCriteria);
+
+        String id = "%%";
+        String name = "%%";
+        Integer division = null;
+        String classification = "%%";
+        String address = "%%";
+        Boolean active = null;
+
+        if (assetSearchCriteria.getId() != null) {
+            id = "%" + assetSearchCriteria.getId().toLowerCase() + "%";
+        }
+        if (assetSearchCriteria.getName() != null) {
+            name = "%" + assetSearchCriteria.getName().toLowerCase() + "%";
+        }
+        if (assetSearchCriteria.getStructuralUnitPlusSubdivision() != null) {
+            try {
+                division = Integer.parseInt(assetSearchCriteria.getStructuralUnitPlusSubdivision());
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Given not integer in division filter field");
+            }
+        }
+        if (assetSearchCriteria.getMainClassPlusSubclass() != null) {
+            classification = "%" + assetSearchCriteria.getMainClassPlusSubclass().toLowerCase() + "%";
+        }
+        if (assetSearchCriteria.getBuildingAbbreviationPlusRoom() != null) {
+            address = "%" + assetSearchCriteria.getBuildingAbbreviationPlusRoom().toLowerCase() + "%";
+        }
+        if (assetSearchCriteria.getActive() != null) {
+            active = assetSearchCriteria.getActive();
+        }
+
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy).descending());
+        if (order.equals("ASC")) {
+            pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
+        }
+
+        if (division != null && active != null) {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, active, division, pageRequest);
+        } else if (division == null && active == null) {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, pageRequest);
+        } else if (division == null) {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, active, pageRequest);
+        } else {
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, division, pageRequest);
+        }
     }
 }
