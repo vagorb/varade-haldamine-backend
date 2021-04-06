@@ -14,7 +14,6 @@ import javax.persistence.Id;
 @Entity
 public class Address {
     @Id
-
     private String assetId;
     private String buildingAbbreviature;
     private String room;
