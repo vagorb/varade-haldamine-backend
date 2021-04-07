@@ -2,7 +2,6 @@ INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW1234561', 'Vassili-
 INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW192883', 'Nikita-Bird', 'Birjukovs');
 INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW111111', 'Artur-Sex-Instruktor', 'Hurgada');
 
-SELECT * FROM Person;
 
 INSERT INTO Possessor(structural_unit, subdivision) VALUES (112, 110);
 INSERT INTO Possessor(structural_unit, subdivision) VALUES (234, 229);
