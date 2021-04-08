@@ -2,8 +2,7 @@ package ee.taltech.varadehaldamine.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -41,5 +40,4 @@ public class Asset {
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.modifiedAt = new Timestamp(System.currentTimeMillis());
     }
-
 }

@@ -13,30 +13,11 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class AssetService {
-
-//    private AssetSearchCriteria assetSearchCriteria;
-//    private AssetCriteriaRepository assetCriteriaRepository;
-
-//    private final EmployeeRepository employeeRepository;
-//    private final EmployeeCriteriaRepository employeeCriteriaRepository;
-//    private AssetRepository
-//public EmployeeService(EmployeeRepository employeeRepository,
-//                       EmployeeCriteriaRepository employeeCriteriaRepository) {
-//    this.employeeRepository = employeeRepository;
-//    this.employeeCriteriaRepository = employeeCriteriaRepository;
-//}
-
-//    public AssetService(AssetCriteriaRepository assetCriteriaRepository) {
-//        this.assetCriteriaRepository = assetCriteriaRepository;
-//    }
-
     @Autowired
     private AddressRepository addressRepository;
     @Autowired
@@ -92,94 +73,7 @@ public class AssetService {
     }
 
     public AssetInfo getAssetById(String assetId) {
-        try {
-            Asset asset = assetRepository.findAssetById(assetId);
-            if (asset != null) {
-                AssetInfo assetInfo = new AssetInfo();
-                assetInfo.setId(asset.getId());
-                assetInfo.setName(asset.getName());
-                assetInfo.setActive(asset.getActive());
-                assetInfo.setChecked(asset.getChecked());
-                Person person = personService.getPersonById(asset.getUserId());
-                if (person != null) {
-                    assetInfo.setUserId(asset.getUserId());
-                    assetInfo.setFirstname(person.getFirstname());
-                    assetInfo.setLastname(person.getLastname());
-                }
-
-                assetInfo.setPossessorId(asset.getPossessorId());
-                Possessor possessor = possessorService.getPossesorById(asset.getPossessorId());
-                if (possessor == null) {
-                    throw new PossessorNotFoundException();
-                }
-                assetInfo.setStructuralUnit(possessor.getStructuralUnit());
-                assetInfo.setSubdivision(possessor.getSubdivision());
-
-                if (asset.getExpirationDate() != null) {
-                    long monthsBetween = ChronoUnit.MONTHS.between(LocalDate.now(),
-                            asset.getExpirationDate().toLocalDate());
-                    assetInfo.setLifeMonthsLeft(Math.max((int) monthsBetween, 0));
-                } else {
-                    assetInfo.setLifeMonthsLeft(0);
-                }
-                assetInfo.setDelicateCondition(asset.getDelicateCondition());
-                assetInfo.setCreatedAt(new Date(asset.getCreatedAt().getTime()));
-                assetInfo.setModifiedAt(new Date(asset.getModifiedAt().getTime()));
-
-                Worth worth = worthRepository.findWorthByAssetId(asset.getId());
-                if (worth != null) {
-                    assetInfo.setPrice(worth.getPrice());
-                    assetInfo.setResidualPrice(worth.getResidualPrice());
-                    if (worth.getPurchaseDate() != null) {
-                        assetInfo.setPurchaseDate(new Date(worth.getPurchaseDate().getTime()));
-                        assetInfo.setIsPurchased(true);
-                    } else {
-                        assetInfo.setIsPurchased(false);
-                    }
-                }
-
-                Classification classification = classificationRepository
-                        .findClassificationBySubClass(asset.getSubClass());
-                if (classification == null) {
-                    throw new ClassificationNotFoundException();
-                }
-                assetInfo.setSubclass(classification.getSubClass());
-                assetInfo.setMainClass(classification.getMainClass());
-
-                KitRelation kitRelation = kitRelationRepository.findKitRelationByComponentAssetId(asset.getId());
-                if (kitRelation != null) {
-                    assetInfo.setComponentAssetId(kitRelation.getComponentAssetId());
-                    assetInfo.setMajorAssetId(kitRelation.getMajorAssetId());
-                    if (kitRelation.getMajorAssetId().equals(asset.getId())) {
-                        assetInfo.setKitPartName("Peavara");
-                    } else {
-                        assetInfo.setKitPartName("Komponent");
-                    }
-                } else {
-                    assetInfo.setKitPartName("");
-                }
-
-                Address address = addressRepository.findAddressByAssetId(asset.getId());
-                if (address != null) {
-                    assetInfo.setBuildingAbbreviation(address.getBuildingAbbreviature());
-                    assetInfo.setRoom(address.getRoom());
-                }
-
-                Description description = descriptionRepository.findDescriptionByAssetId(asset.getId());
-                if (description != null) {
-                    assetInfo.setDescriptionText(description.getText());
-                }
-                return assetInfo;
-            } else {
-                throw new AssetNotFoundException();
-            }
-
-        } catch (ClassificationNotFoundException | AssetNotFoundException | PossessorNotFoundException e) {
-            System.out.println(e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Exception: " + e.getMessage());
-        }
-        return null;
+        return assetRepository.getAssetInfoById(assetId);
     }
 
     private void addAddress(AssetInfo assetInfo) throws Exception {

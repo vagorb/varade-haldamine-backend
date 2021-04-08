@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.repository;
 
 import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -42,5 +43,11 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 
     @Query(assetInfoCreate + table + where + checkId + andStr + checkName + andStr + checkClass + andStr + checkAddress + andStr + checkActive + andStr + " (P.structuralUnit = ?6 OR P.subdivision = ?6)")
     Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsAll(String id, String name, String classification, String address, Boolean active, Integer division, PageRequest pageRequest);
+
+    @Query("SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfo(A.id, A.name, A.active, A.userId, A.possessorId, " +
+            "A.expirationDate, A.delicateCondition, A.checked, A.createdAt, A.modifiedAt, W.price, W.residualPrice, " +
+            "W.purchaseDate, C.subClass, C.mainClass, K.majorAssetId, Ad.buildingAbbreviature, Ad.room, D.text," +
+            " P.firstname, P.lastname, Po.structuralUnit, Po.subdivision) FROM Asset AS A LEFT JOIN Worth AS W ON A.id = W.assetId LEFT JOIN Classification AS C ON A.subClass = C.subClass LEFT JOIN KitRelation AS K ON A.id = K.componentAssetId LEFT JOIN Address AS Ad ON A.id = Ad.assetId LEFT JOIN Description AS D ON A.id = D.assetId LEFT JOIN Person AS P ON A.userId = P.id LEFT JOIN Possessor AS Po ON A.possessorId = Po.id WHERE A.id = ?1")
+    AssetInfo getAssetInfoById(String id);
 
 }
