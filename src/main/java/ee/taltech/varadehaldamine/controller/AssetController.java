@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.controller;
 
 
+import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.service.AssetService;
@@ -43,11 +44,16 @@ public class AssetController {
         return assetService.getAssetById(id);
     }
 
+//    @PostMapping
+//    public ResponseEntity<Object> addAsset(@RequestBody AssetInfo asset) {
+//        if (assetService.addAsset(asset) != null) {
+//            return ResponseEntity.status(HttpStatus.CREATED).build();
+//        }
+//        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+//    }
+
     @PostMapping
-    public ResponseEntity<Object> addAsset(@RequestBody AssetInfo asset) {
-        if (assetService.addAsset(asset) != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).build();
-        }
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    public AssetInfo addAsset(@RequestBody AssetInfo asset) {
+        return assetService.addAsset(asset);
     }
 }
