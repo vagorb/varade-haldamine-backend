@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RequestMapping("comment")
+@RequestMapping("kit")
 @RestController
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class KitRelationController {
@@ -16,8 +16,8 @@ public class KitRelationController {
     @Autowired
     KitRelationService kitRelationService;
 
-    @GetMapping
-    public List<String> getAllComments() {
+    @GetMapping("majorAssets")
+    public List<String> getAllMajorAssets() {
         return kitRelationService.findAllMajorAssets();
     }
 
