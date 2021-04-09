@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AssetService {
@@ -39,34 +38,24 @@ public class AssetService {
         return assetRepository.getAll();
     }
 
-    // when adding new asset, the user and comments would not to be put assetInfo.getPossessorId() > 0     assetRepository.findById(assetInfo.getId()).isEmpty()
+    // when adding new asset, the user and comments would not to be put
     public AssetInfo addAsset(AssetInfo assetInfo) {
         try {
-            if (assetInfo != null && assetInfo.getId() != null && !assetInfo.getId().isBlank() && assetRepository.findById(assetInfo.getId()).isEmpty() && assetInfo.getId().length() <= 20 && assetInfo.getName() != null && !assetInfo.getName().isBlank() && assetInfo.getName().length() <= 100
-                    && assetInfo.getSubclass() != null && !assetInfo.getSubclass().isBlank() && assetInfo.getSubclass().length() <= 30 && assetInfo.getPossessorId() != null && assetInfo.getPossessorId() > 0 && (assetInfo.getDescriptionText() == null || assetInfo.getDescriptionText().length() <= 255)
-                    && assetInfo.getDelicateCondition() != null && assetInfo.getBuildingAbbreviation() != null && !assetInfo.getBuildingAbbreviation().isBlank() && assetInfo.getBuildingAbbreviation().length() <= 10 && (assetInfo.getRoom() == null || assetInfo.getRoom().length() <= 10)
-                    && classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()) != null && (assetInfo.getMajorAssetId() == null || kitRelationRepository.findKitRelationByComponentAssetId(assetInfo.getMajorAssetId()) != null || assetInfo.getMajorAssetId().equals(assetInfo.getId()))) {
+            if (checkAssetInfoBeforeAdding(assetInfo)) {
                 Date purchaseDate = assetInfo.getPurchaseDate();
                 Date expirationDate = null;
                 if (purchaseDate != null && assetInfo.getLifeMonthsLeft() != null && assetInfo.getLifeMonthsLeft() >= 0) {
                     expirationDate = Date.valueOf(purchaseDate.toLocalDate()
                             .plusMonths(assetInfo.getLifeMonthsLeft().longValue()));
                 }
-                System.out.println(assetInfo.getId() + " " + assetInfo.getName() + " " + assetInfo.getSubclass() + " " + assetInfo.getPossessorId() + " " + expirationDate + " " + assetInfo.getDelicateCondition());
                 Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), assetInfo.getSubclass(),
                         assetInfo.getPossessorId(), expirationDate,
                         assetInfo.getDelicateCondition());
-                System.out.println(asset);
                 assetRepository.save(asset);
-                System.out.println(1);
                 addAddress(assetInfo);
-                System.out.println(2);
                 addKitRelation(assetInfo);
-                System.out.println(3);
                 addDescription(assetInfo);
-                System.out.println(4);
                 addWorth(assetInfo);
-                System.out.println(assetRepository.getAssetInfoById(assetInfo.getId()));
                 return assetRepository.getAssetInfoById(assetInfo.getId());
             }
         } catch (Exception e) {
@@ -82,7 +71,6 @@ public class AssetService {
     private void addAddress(AssetInfo assetInfo) throws Exception {
         try {
             Address address = new Address(assetInfo.getId(), assetInfo.getBuildingAbbreviation(), assetInfo.getRoom());
-            System.out.println(address);
             addressRepository.save(address);
         } catch (Exception e) {
             throw new Exception("Address adding error: " + e);
@@ -90,17 +78,14 @@ public class AssetService {
     }
 
     private void addKitRelation(AssetInfo assetInfo) {
-        System.out.println("reeee");
         try {
             if (assetInfo.getMajorAssetId() != null) {
                 KitRelation kit = new KitRelation(assetInfo.getId(), assetInfo.getMajorAssetId());
-                System.out.println(kit);
                 kitRelationRepository.save(kit);
             }
         } catch (InvalidKitRelationException e) {
             System.out.println(e.getMessage());
         }
-        System.out.println("reeee2");
     }
 
     private void addDescription(AssetInfo assetInfo) {
@@ -183,5 +168,23 @@ public class AssetService {
         } else {
             return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, division, pageRequest);
         }
+    }
+
+    private boolean checkAssetInfoBeforeAdding(AssetInfo assetInfo){
+        return assetInfo != null && assetInfo.getId() != null && !assetInfo.getId().isBlank()
+                && assetRepository.findById(assetInfo.getId()).isEmpty() && assetInfo.getId().length() <= 20
+                && assetInfo.getName() != null && !assetInfo.getName().isBlank()
+                && assetInfo.getName().length() <= 100
+                && assetInfo.getSubclass() != null && !assetInfo.getSubclass().isBlank()
+                && assetInfo.getSubclass().length() <= 30 && assetInfo.getPossessorId() != null
+                && assetInfo.getPossessorId() > 0 && (assetInfo.getDescriptionText() == null
+                || assetInfo.getDescriptionText().length() <= 255) && assetInfo.getDelicateCondition() != null
+                && assetInfo.getBuildingAbbreviation() != null && !assetInfo.getBuildingAbbreviation().isBlank()
+                && assetInfo.getBuildingAbbreviation().length() <= 10 && (assetInfo.getRoom() == null
+                || assetInfo.getRoom().length() <= 10)
+                && classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()) != null
+                && (assetInfo.getMajorAssetId() == null
+                || kitRelationRepository.findKitRelationByComponentAssetId(assetInfo.getMajorAssetId()) != null
+                || assetInfo.getMajorAssetId().equals(assetInfo.getId()));
     }
 }
