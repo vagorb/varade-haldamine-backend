@@ -47,7 +47,13 @@ CREATE TABLE IF NOT EXISTS Asset (
     delicate_condition BOOLEAN NOT NULL DEFAULT FALSE,
     checked BOOLEAN DEFAULT FALSE,
     created_at TIMESTAMP NOT NULL DEFAULT NOW(),
-    modified_at TIMESTAMP DEFAULT NOW()
+    modified_at TIMESTAMP DEFAULT NOW(),
+    price NUMERIC(12, 2) NOT NULL,
+    residual_price NUMERIC(12, 2) NOT NULL,
+    purchase_date TIMESTAMP,
+    building_abbreviature VARCHAR(10) NOT NULL,
+    room VARCHAR(10),
+    description VARCHAR(255)
 );
 
 CREATE TRIGGER set_timestamp
@@ -56,27 +62,9 @@ FOR EACH ROW
 EXECUTE PROCEDURE trigger_set_timestamp();
 
 
-CREATE TABLE IF NOT EXISTS Worth (
-    asset_id VARCHAR(20) PRIMARY KEY REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    price NUMERIC(12, 2) NOT NULL,
-    residual_price NUMERIC(12, 2) NOT NULL,
-    purchase_date TIMESTAMP
-);
-
 CREATE TABLE IF NOT EXISTS Kit_relation (
     component_asset_id VARCHAR(20) PRIMARY KEY REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE,
     major_asset_id VARCHAR(20) REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
-
-CREATE TABLE IF NOT EXISTS Address (
-    asset_id VARCHAR(20) PRIMARY KEY REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    building_abbreviature VARCHAR(10) NOT NULL,
-    room VARCHAR(10)
-);
-
-CREATE TABLE IF NOT EXISTS Description (
-    asset_id VARCHAR(20) PRIMARY KEY REFERENCES Asset(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    text VARCHAR(255) NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Comment (

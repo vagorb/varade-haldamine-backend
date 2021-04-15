@@ -1,7 +1,9 @@
 package ee.taltech.varadehaldamine.service;
 
-import ee.taltech.varadehaldamine.exception.*;
-import ee.taltech.varadehaldamine.model.*;
+import ee.taltech.varadehaldamine.exception.InvalidAssetException;
+import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
+import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.model.KitRelation;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.*;
@@ -18,17 +20,11 @@ import java.util.List;
 @Service
 public class AssetService {
     @Autowired
-    private AddressRepository addressRepository;
-    @Autowired
     private AssetRepository assetRepository;
     @Autowired
     private ClassificationRepository classificationRepository;
     @Autowired
-    private DescriptionRepository descriptionRepository;
-    @Autowired
     private KitRelationRepository kitRelationRepository;
-    @Autowired
-    private WorthRepository worthRepository;
     @Autowired
     private PersonService personService;
     @Autowired
@@ -48,14 +44,18 @@ public class AssetService {
                     expirationDate = Date.valueOf(purchaseDate.toLocalDate()
                             .plusMonths(assetInfo.getLifeMonthsLeft().longValue()));
                 }
+                Timestamp dbPurchaseDate = null;
+                if (assetInfo.getPurchaseDate() != null) {
+                    dbPurchaseDate = new Timestamp(assetInfo.getPurchaseDate().getTime());
+                }
                 Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), assetInfo.getSubclass(),
                         assetInfo.getPossessorId(), expirationDate,
-                        assetInfo.getDelicateCondition());
+                        assetInfo.getDelicateCondition(), assetInfo.getChecked(),
+                        assetInfo.getPrice(), assetInfo.getResidualPrice(), dbPurchaseDate,
+                        assetInfo.getBuildingAbbreviation(), assetInfo.getRoom(),
+                        assetInfo.getDescriptionText());
                 assetRepository.save(asset);
-                addAddress(assetInfo);
                 addKitRelation(assetInfo);
-                addDescription(assetInfo);
-                addWorth(assetInfo);
                 return assetRepository.getAssetInfoById(assetInfo.getId());
             }
         } catch (Exception e) {
@@ -68,15 +68,6 @@ public class AssetService {
         return assetRepository.getAssetInfoById(assetId);
     }
 
-    private void addAddress(AssetInfo assetInfo) throws Exception {
-        try {
-            Address address = new Address(assetInfo.getId(), assetInfo.getBuildingAbbreviation(), assetInfo.getRoom());
-            addressRepository.save(address);
-        } catch (Exception e) {
-            throw new Exception("Address adding error: " + e);
-        }
-    }
-
     private void addKitRelation(AssetInfo assetInfo) {
         try {
             if (assetInfo.getMajorAssetId() != null) {
@@ -87,40 +78,6 @@ public class AssetService {
             System.out.println(e.getMessage());
         }
     }
-
-    private void addDescription(AssetInfo assetInfo) {
-        try {
-            if (assetInfo.getDescriptionText() != null) {
-                Description description = new Description(assetInfo.getId(), assetInfo.getDescriptionText());
-                descriptionRepository.save(description);
-            } else {
-                throw new InvalidDescriptionException("Error when adding Description");
-            }
-        } catch (InvalidDescriptionException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private void addWorth(AssetInfo assetInfo) {
-        try {
-            if (assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null) {
-                Worth worth = null;
-                if (assetInfo.getPurchaseDate() != null) {
-                    worth = new Worth(assetInfo.getId(), assetInfo.getPrice(),
-                            assetInfo.getResidualPrice(), new Timestamp(assetInfo.getPurchaseDate().getTime()));
-                } else {
-                    worth = new Worth(assetInfo.getId(), assetInfo.getPrice(),
-                            assetInfo.getResidualPrice());
-                }
-                worthRepository.save(worth);
-            } else {
-                throw new InvalidWorthException("Error when adding Worth");
-            }
-        } catch (InvalidWorthException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
 
     public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy) {
 
@@ -185,6 +142,7 @@ public class AssetService {
                 && classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()) != null
                 && (assetInfo.getMajorAssetId() == null
                 || kitRelationRepository.findKitRelationByComponentAssetId(assetInfo.getMajorAssetId()) != null
-                || assetInfo.getMajorAssetId().equals(assetInfo.getId()));
+                || assetInfo.getMajorAssetId().equals(assetInfo.getId())
+                && assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null);
     }
 }
