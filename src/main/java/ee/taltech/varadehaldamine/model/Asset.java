@@ -28,14 +28,14 @@ public class Asset {
     private Timestamp createdAt;
     private Timestamp modifiedAt;
     private Double price;
-    private Double residual_price;
+    private Double residualPrice;
     private Timestamp purchaseDate;
     private String buildingAbbreviature;
     private String room;
     private String description;
 
     public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate,
-                 Boolean delicateCondition, Boolean checked, Double price, Double residual_price, Timestamp
+                 Boolean delicateCondition, Boolean checked, Double price, Double residualPrice, Timestamp
                          purchaseDate, String buildingAbbreviature, String room, String description) {
         this.id = id;
         this.name = name;
@@ -49,7 +49,7 @@ public class Asset {
         this.modifiedAt = new Timestamp(System.currentTimeMillis());
         this.checked = checked;
         this.price = price;
-        this.residual_price = residual_price;
+        this.residualPrice = residualPrice;
         this.purchaseDate = purchaseDate;
         this.buildingAbbreviature = buildingAbbreviature;
         this.room = room;
