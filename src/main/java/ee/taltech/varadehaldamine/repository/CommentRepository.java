@@ -1,5 +1,6 @@
 package ee.taltech.varadehaldamine.repository;
 
+import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -10,5 +11,8 @@ import java.util.List;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByAssetId(String assetId);
+
+    Comment findAssetById(Long id);
+
 
 }

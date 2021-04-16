@@ -1,10 +1,14 @@
 package ee.taltech.varadehaldamine.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.envers.Audited;
+import org.hibernate.envers.NotAudited;
 
 import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,16 +16,24 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Audited
 @Entity
 public class Asset {
 
     @Id
     private String id;
     private String name;
-    private String subClass;
+
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "sub_class")
+    private Classification subClass;
+
     private Boolean active;
     private Long userId;
+    
     private Long possessorId;
+
     private Date expirationDate;
     private Boolean delicateCondition;
     private Boolean checked;
@@ -34,15 +46,18 @@ public class Asset {
     private String room;
     private String description;
 
-    public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate,
+    @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments;
+
+    public Asset(String id, String name, Classification sub_class, Long possessor, Date expirationDate,
                  Boolean delicateCondition, Boolean checked, Double price, Double residualPrice, Timestamp
                          purchaseDate, String buildingAbbreviature, String room, String description) {
         this.id = id;
         this.name = name;
         this.active = true;
         this.checked = false;
-        this.subClass = subclass;
-        this.possessorId = possessorId;
+        this.subClass = sub_class;
+        this.possessorId = possessor;
         this.expirationDate = expirationDate;
         this.delicateCondition = delicateCondition;
         this.createdAt = new Timestamp(System.currentTimeMillis());

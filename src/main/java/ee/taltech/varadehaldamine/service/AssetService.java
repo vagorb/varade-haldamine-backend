@@ -26,6 +26,8 @@ public class AssetService {
     @Autowired
     private KitRelationRepository kitRelationRepository;
     @Autowired
+    private PossessorRepository possessorRepository;
+    @Autowired
     private PersonService personService;
     @Autowired
     private PossessorService possessorService;
@@ -48,7 +50,7 @@ public class AssetService {
                 if (assetInfo.getPurchaseDate() != null) {
                     dbPurchaseDate = new Timestamp(assetInfo.getPurchaseDate().getTime());
                 }
-                Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), assetInfo.getSubclass(),
+                Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()),
                         assetInfo.getPossessorId(), expirationDate,
                         assetInfo.getDelicateCondition(), assetInfo.getChecked(),
                         assetInfo.getPrice(), assetInfo.getResidualPrice(), dbPurchaseDate,
@@ -63,6 +65,7 @@ public class AssetService {
         }
         return null;
     }
+
 
     public AssetInfo getAssetById(String assetId) {
         return assetRepository.getAssetInfoById(assetId);
@@ -127,14 +130,21 @@ public class AssetService {
         }
     }
 
+    public Asset update(Asset asset, String id) {
+        Asset dbAsset = assetRepository.findAssetById(id);
+        dbAsset.setName(asset.getName());
+        return assetRepository.save(dbAsset);
+    }
+
+
     private boolean checkAssetInfoBeforeAdding(AssetInfo assetInfo){
         return assetInfo != null && assetInfo.getId() != null && !assetInfo.getId().isBlank()
                 && assetRepository.findById(assetInfo.getId()).isEmpty() && assetInfo.getId().length() <= 20
                 && assetInfo.getName() != null && !assetInfo.getName().isBlank()
                 && assetInfo.getName().length() <= 100
-                && assetInfo.getSubclass() != null && !assetInfo.getSubclass().isBlank()
+                && assetInfo.getSubclass() != null
                 && assetInfo.getSubclass().length() <= 30 && assetInfo.getPossessorId() != null
-                && assetInfo.getPossessorId() > 0 && (assetInfo.getDescriptionText() == null
+                && (assetInfo.getDescriptionText() == null
                 || assetInfo.getDescriptionText().length() <= 255) && assetInfo.getDelicateCondition() != null
                 && assetInfo.getBuildingAbbreviation() != null && !assetInfo.getBuildingAbbreviation().isBlank()
                 && assetInfo.getBuildingAbbreviation().length() <= 10 && (assetInfo.getRoom() == null

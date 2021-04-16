@@ -1,5 +1,7 @@
 package ee.taltech.varadehaldamine.controller;
 
+import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.model.Comment;
 import ee.taltech.varadehaldamine.modelDTO.CommentInfo;
 import ee.taltech.varadehaldamine.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,5 +25,10 @@ public class CommentController {
     @PostMapping
     public List<CommentInfo> addComment(@RequestBody CommentInfo commentInfo) {
         return commentService.addComment(commentInfo);
+    }
+
+    @PutMapping("/{id}")
+    public Comment updateComment(@RequestBody Comment comment, @PathVariable Long id) {
+        return commentService.update(comment, id);
     }
 }
