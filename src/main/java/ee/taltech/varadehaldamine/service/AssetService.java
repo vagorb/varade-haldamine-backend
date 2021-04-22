@@ -6,7 +6,10 @@ import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.KitRelation;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
-import ee.taltech.varadehaldamine.repository.*;
+import ee.taltech.varadehaldamine.repository.AssetRepository;
+import ee.taltech.varadehaldamine.repository.ClassificationRepository;
+import ee.taltech.varadehaldamine.repository.KitRelationRepository;
+import ee.taltech.varadehaldamine.repository.PossessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,6 +18,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -132,8 +136,71 @@ public class AssetService {
 
     public Asset update(AssetInfo assetInfo, String id) {
         Asset dbAsset = assetRepository.findAssetById(id);
-        dbAsset.setName(assetInfo.getName());
-        return assetRepository.save(dbAsset);
+        try {
+            if (assetInfo != null && dbAsset != null) {
+                String newName = assetInfo.getName();
+                if (newName != null && !newName.isBlank() && newName.length() <= 100) {
+                    dbAsset.setName(newName);
+                }
+                if (assetInfo.getActive() != null) {
+                    dbAsset.setActive(assetInfo.getActive());
+                }
+                if (assetInfo.getSubclass() != null && assetInfo.getSubclass().length() <= 30
+                        && classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()) != null) {
+                    dbAsset.setSubClass(classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()));
+                }
+                // IMPORTANT, if we need USER THEN ADD IT ALSO HERE
+                if (assetInfo.getPossessorId() != null
+                        && possessorRepository.findPossessorById(assetInfo.getPossessorId()) != null) {
+                    dbAsset.setPossessorId(assetInfo.getPossessorId());
+                }
+                if (assetInfo.getLifeMonthsLeft() != null && assetInfo.getLifeMonthsLeft() >= 0) {
+                    LocalDate currentTime = LocalDate.now();
+                    dbAsset.setExpirationDate(Date.valueOf(currentTime
+                            .plusMonths(assetInfo.getLifeMonthsLeft().longValue())));
+                }
+                if (assetInfo.getDelicateCondition() != null) {
+                    dbAsset.setDelicateCondition(assetInfo.getDelicateCondition());
+                }
+                if (assetInfo.getChecked() != null) {
+                    dbAsset.setChecked(assetInfo.getChecked());
+                }
+                if (assetInfo.getPrice() != null) {
+                    dbAsset.setPrice(assetInfo.getPrice());
+                }
+                if (assetInfo.getResidualPrice() != null) {
+                    dbAsset.setResidualPrice(assetInfo.getResidualPrice());
+                }
+                if (assetInfo.getPurchaseDate() != null) {
+                    dbAsset.setPurchaseDate(new Timestamp(assetInfo.getPurchaseDate().getTime()));
+                }
+                String buildingAbbreviation = assetInfo.getBuildingAbbreviation();
+                if (buildingAbbreviation != null && !buildingAbbreviation.isBlank()
+                        && buildingAbbreviation.length() <= 10) {
+                    dbAsset.setBuildingAbbreviature(buildingAbbreviation);
+                }
+                String room = assetInfo.getRoom();
+                if (room != null && room.length() <= 10) {
+                    dbAsset.setRoom(room);
+                }
+                String descritpion = assetInfo.getDescriptionText();
+                if (descritpion != null && descritpion.length() <= 255) {
+                    dbAsset.setDescription(descritpion);
+                }
+                if (assetInfo.getMajorAssetId() != null) {
+                    KitRelation existingKit = kitRelationRepository
+                            .findKitRelationByComponentAssetId(assetInfo.getComponentAssetId());
+                    if (existingKit != null) {
+                        existingKit.setMajorAssetId(assetInfo.getMajorAssetId());
+                        kitRelationRepository.save(existingKit);
+                    }
+                }
+                return assetRepository.save(dbAsset);
+            }
+        } catch (NumberFormatException e) {
+            throw new InvalidAssetException("Error when updating asset: " + e);
+        }
+        return null;
     }
 
 
