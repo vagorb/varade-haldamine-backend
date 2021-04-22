@@ -15,6 +15,14 @@ CREATE TABLE IF NOT EXISTS Comment_audit (
    CONSTRAINT idfk_asset_revinfo_rev_id FOREIGN KEY (revision_id) REFERENCES Revision_info (revision_id)
 );
 
+CREATE OR REPLACE FUNCTION trigger_set_timestamp()
+    RETURNS TRIGGER AS $$
+BEGIN
+    NEW.modified_at = NOW();
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
 CREATE TABLE IF NOT EXISTS Asset_audit (
     revision_id INTEGER NOT NULL,
     id VARCHAR(20) NOT NULL,
@@ -38,6 +46,11 @@ CREATE TABLE IF NOT EXISTS Asset_audit (
     PRIMARY KEY (revision_id, id),
     CONSTRAINT idfk_asset_revinfo_rev_id FOREIGN KEY (revision_id) REFERENCES Revision_info (revision_id)
 );
+
+CREATE TRIGGER set_timestamp
+    BEFORE UPDATE ON Asset_audit
+    FOR EACH ROW
+EXECUTE PROCEDURE trigger_set_timestamp();
 
 CREATE TABLE IF NOT EXISTS Classification_audit (
     revision_id INTEGER NOT NULL,

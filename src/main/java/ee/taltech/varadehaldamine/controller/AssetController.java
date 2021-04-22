@@ -44,8 +44,8 @@ public class AssetController {
     }
 
     @PutMapping("/{id}")
-    public Asset updateAsset(@RequestBody Asset asset, @PathVariable String id) {
-        return assetService.update(asset, id);
+    public Asset updateAsset(@RequestBody AssetInfo assetInfo, @PathVariable String id) {
+        return assetService.update(assetInfo, id);
     }
 
 

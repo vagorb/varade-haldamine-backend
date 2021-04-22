@@ -130,9 +130,9 @@ public class AssetService {
         }
     }
 
-    public Asset update(Asset asset, String id) {
+    public Asset update(AssetInfo assetInfo, String id) {
         Asset dbAsset = assetRepository.findAssetById(id);
-        dbAsset.setName(asset.getName());
+        dbAsset.setName(assetInfo.getName());
         return assetRepository.save(dbAsset);
     }
 
