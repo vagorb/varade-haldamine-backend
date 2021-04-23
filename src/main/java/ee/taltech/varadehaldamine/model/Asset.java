@@ -3,6 +3,9 @@ package ee.taltech.varadehaldamine.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.envers.Audited;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Date;
@@ -17,6 +20,7 @@ import java.util.List;
 @EqualsAndHashCode
 @Audited
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Asset {
 
     @Id
@@ -30,13 +34,15 @@ public class Asset {
 
     private Boolean active;
     private Long userId;
-    
     private Long possessorId;
 
     private Date expirationDate;
     private Boolean delicateCondition;
     private Boolean checked;
+
+    @CreatedDate
     private Timestamp createdAt;
+    @LastModifiedDate
     private Timestamp modifiedAt;
     private Double price;
     private Double residualPrice;
