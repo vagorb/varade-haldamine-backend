@@ -3,26 +3,38 @@ package ee.taltech.varadehaldamine.service;
 import ee.taltech.varadehaldamine.exception.InvalidAssetException;
 import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
 import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.model.Classification;
 import ee.taltech.varadehaldamine.model.KitRelation;
+import ee.taltech.varadehaldamine.model.Possessor;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.AssetRepository;
 import ee.taltech.varadehaldamine.repository.ClassificationRepository;
 import ee.taltech.varadehaldamine.repository.KitRelationRepository;
 import ee.taltech.varadehaldamine.repository.PossessorRepository;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class AssetService {
+
+    @PersistenceUnit
+    EntityManagerFactory emf;
+
     @Autowired
     private AssetRepository assetRepository;
     @Autowired
@@ -39,7 +51,6 @@ public class AssetService {
     public List<AssetInfoShort> findAll() {
         return assetRepository.getAll();
     }
-
     // when adding new asset, the user and comments would not to be put
     public AssetInfo addAsset(AssetInfo assetInfo) {
         try {
@@ -54,7 +65,7 @@ public class AssetService {
                 if (assetInfo.getPurchaseDate() != null) {
                     dbPurchaseDate = new Timestamp(assetInfo.getPurchaseDate().getTime());
                 }
-                Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()),
+                Asset asset = new Asset(assetInfo.getId(), assetInfo.getName(), assetInfo.getSubclass(),
                         assetInfo.getPossessorId(), expirationDate,
                         assetInfo.getDelicateCondition(), assetInfo.getChecked(),
                         assetInfo.getPrice(), assetInfo.getResidualPrice(), dbPurchaseDate,
@@ -147,7 +158,7 @@ public class AssetService {
                 }
                 if (assetInfo.getSubclass() != null && assetInfo.getSubclass().length() <= 30
                         && classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()) != null) {
-                    dbAsset.setSubClass(classificationRepository.findClassificationBySubClass(assetInfo.getSubclass()));
+                    dbAsset.setSubClass(assetInfo.getSubclass());
                 }
                 // IMPORTANT, if we need USER THEN ADD IT ALSO HERE
                 if (assetInfo.getPossessorId() != null
@@ -201,6 +212,33 @@ public class AssetService {
             throw new InvalidAssetException("Error when updating asset: " + e);
         }
         return null;
+    }
+
+    public Page<AssetInfoShort> getAuditById(String id) {
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        AuditReader auditReader = AuditReaderFactory.get(em);
+
+        AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
+        q.add(AuditEntity.id().eq(id));
+        List<Asset> audit = q.getResultList();
+        List<AssetInfoShort> assetInfoShorts = new ArrayList<>();
+        for (Asset a : audit) {
+            Possessor possessor = possessorRepository.findPossessorById(a.getPossessorId());
+            Classification classification = classificationRepository.findClassificationBySubClass(a.getSubClass());
+            AssetInfoShort assetInfoShort = new AssetInfoShort(a.getId(), a.getName(),
+                    possessor.getStructuralUnit() + " " + possessor.getSubdivision(),
+                    classification.getMainClass() + " " + classification.getSubClass(),
+                    a.getBuildingAbbreviature() + " " + a.getRoom(),
+                    a.getExpirationDate(), a.getActive());
+            assetInfoShorts.add(assetInfoShort);
+        }
+
+        em.getTransaction().commit();
+        em.close();
+        Pageable pageable = PageRequest.of(0, 10);
+        return new PageImpl<>(assetInfoShorts, pageable, assetInfoShorts.size());
     }
 
 

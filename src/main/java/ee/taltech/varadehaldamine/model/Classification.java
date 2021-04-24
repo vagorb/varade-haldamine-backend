@@ -23,6 +23,6 @@ public class Classification {
     private String mainClass;
 
 
-    @OneToMany(mappedBy = "subClass", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Asset> assets;
+//    @OneToMany(mappedBy = "subClass", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Asset> assets;
 }

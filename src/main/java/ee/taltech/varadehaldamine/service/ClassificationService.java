@@ -26,7 +26,7 @@ public class ClassificationService {
                     && !classificationInfo.getSubClass().isBlank()
                     && !classificationInfo.getMainClass().isBlank()) {
                 Classification classification =
-                        new Classification(classificationInfo.getSubClass(), classificationInfo.getMainClass(), null);
+                        new Classification(classificationInfo.getSubClass(), classificationInfo.getMainClass());
                 return classificationRepository.save(classification);
             } else {
                 throw new InvalidClassificationException("Error when saving Classification");

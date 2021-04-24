@@ -1,6 +1,5 @@
 package ee.taltech.varadehaldamine.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 import org.hibernate.envers.Audited;
 import org.springframework.data.annotation.CreatedDate;
@@ -27,10 +26,10 @@ public class Asset {
     private String id;
     private String name;
 
-    @JsonIgnore
-    @ManyToOne
-    @JoinColumn(name = "sub_class")
-    private Classification subClass;
+//    @JsonIgnore
+//    @ManyToOne
+//    @JoinColumn(name = "sub_class")
+    private String subClass;
 
     private Boolean active;
     private Long userId;
@@ -54,7 +53,7 @@ public class Asset {
     @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
 
-    public Asset(String id, String name, Classification sub_class, Long possessor, Date expirationDate,
+    public Asset(String id, String name, String sub_class, Long possessor, Date expirationDate,
                  Boolean delicateCondition, Boolean checked, Double price, Double residualPrice, Timestamp
                          purchaseDate, String buildingAbbreviature, String room, String description) {
         this.id = id;

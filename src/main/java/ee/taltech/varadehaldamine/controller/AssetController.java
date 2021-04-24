@@ -2,15 +2,22 @@ package ee.taltech.varadehaldamine.controller;
 
 
 import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.service.AssetService;
+import org.hibernate.envers.AuditReader;
+import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.query.AuditEntity;
+import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.*;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RequestMapping("asset")
@@ -31,6 +38,12 @@ public class AssetController {
             @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
             @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
         return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy), HttpStatus.OK);
+    }
+
+    @Transactional
+    @GetMapping("/audit/{id}")
+    public Page<AssetInfoShort> getAuditById(@PathVariable String id) {
+        return assetService.getAuditById(id);
     }
 
     @GetMapping
