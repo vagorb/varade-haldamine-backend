@@ -1,4 +1,4 @@
-package ee.taltech.varadehaldamine.exception;
+package ee.taltech.varadehaldamine.controller;
 
 public class ApiRequestException extends RuntimeException {
 
