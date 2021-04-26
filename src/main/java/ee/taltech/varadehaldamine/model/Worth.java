@@ -19,4 +19,10 @@ public class Worth {
     private Double price;
     private Double residualPrice;
     private Timestamp purchaseDate;
+
+    public Worth(String assetId, Double price, Double residualPrice) {
+        this.assetId = assetId;
+        this.price = price;
+        this.residualPrice = residualPrice;
+    }
 }
