@@ -2,8 +2,7 @@ package ee.taltech.varadehaldamine.model;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 
@@ -29,11 +28,12 @@ public class Asset {
     private Timestamp createdAt;
     private Timestamp modifiedAt;
 
-    public Asset(String id, Boolean active, String name, String subclass, Long possessorId, Date expirationDate,
+    public Asset(String id, String name, String subclass, Long possessorId, Date expirationDate,
                  Boolean delicateCondition) {
         this.id = id;
         this.name = name;
-        this.active = active;
+        this.active = true;
+        this.checked = false;
         this.subClass = subclass;
         this.possessorId = possessorId;
         this.expirationDate = expirationDate;
@@ -41,5 +41,4 @@ public class Asset {
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.modifiedAt = new Timestamp(System.currentTimeMillis());
     }
-
 }
