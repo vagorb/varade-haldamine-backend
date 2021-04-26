@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.InvalidPossessorException;
+import ee.taltech.varadehaldamine.model.Comment;
 import ee.taltech.varadehaldamine.model.Possessor;
 import ee.taltech.varadehaldamine.modelDTO.PossessorInfo;
 import ee.taltech.varadehaldamine.repository.PossessorRepository;
@@ -37,6 +38,12 @@ public class PossessorService {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+    public Possessor update(Possessor possessor, Long id) {
+        Possessor dbPossessor = possessorRepository.findPossessorById(id);
+        dbPossessor.setStructuralUnit(possessor.getStructuralUnit());
+        return possessorRepository.save(dbPossessor);
     }
 
 }

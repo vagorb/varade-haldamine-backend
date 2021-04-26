@@ -33,6 +33,7 @@ dependencies {
 
 	compile 'io.springfox:springfox-boot-starter:3.0.0'
 	compileOnly 'org.projectlombok:lombok:1.18.12'
+	compile 'org.hibernate:hibernate-envers:5.4.25.Final'
 
 	annotationProcessor 'org.projectlombok:lombok:1.18.12'
 	annotationProcessor "org.springframework.boot:spring-boot-configuration-processor"

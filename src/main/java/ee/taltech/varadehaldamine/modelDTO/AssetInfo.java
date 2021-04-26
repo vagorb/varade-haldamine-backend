@@ -30,23 +30,23 @@ public class AssetInfo {
     private Double price;
     private Double residualPrice;
     private Date purchaseDate;
-    private Boolean isPurchased; //
+    private Boolean isPurchased;
 
     // table Classification
-    private String subclass;
-    private String mainClass;
-
     // table Kit_relation
-    private String componentAssetId;
-    private String majorAssetId;
-    private String kitPartName; //
-
     // table Address
     private String buildingAbbreviation;
     private String room;
 
     // table Description
     private String descriptionText;
+
+    private String subclass;
+    private String mainClass;
+
+    private String componentAssetId;
+    private String majorAssetId;
+    private String kitPartName;
 
     // table Comment
     private String commentText;

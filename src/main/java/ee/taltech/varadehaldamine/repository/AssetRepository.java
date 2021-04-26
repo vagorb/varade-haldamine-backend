@@ -18,23 +18,22 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 
     String assetInfoShortCreate = "SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfoShort(A.id, A.name, " +
             "CONCAT(P.structuralUnit, ' ', P.subdivision), CONCAT(C.mainClass, ' ', C.subClass)," +
-            " CONCAT(Ad.buildingAbbreviature, ' ', Ad.room) , A.expirationDate, A.active)";
+            " CONCAT(A.buildingAbbreviature, ' ', A.room) , A.expirationDate, A.active)";
     String assetInfoCreate = "SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfo(A.id, A.name, A.active, A.userId, A.possessorId, " +
-            "A.expirationDate, A.delicateCondition, A.checked, A.createdAt, A.modifiedAt, W.price, W.residualPrice, " +
-            "W.purchaseDate, C.subClass, C.mainClass, K.majorAssetId, Ad.buildingAbbreviature, Ad.room, D.text," +
-            " P.firstname, P.lastname, Po.structuralUnit, Po.subdivision)";
+            "A.expirationDate, A.delicateCondition, A.checked, A.createdAt, A.modifiedAt, A.price, A.residualPrice, " +
+            "A.purchaseDate, C.subClass, C.mainClass, K.majorAssetId, A.buildingAbbreviature, A.room, A.description, " +
+            "P.firstname, P.lastname, Po.structuralUnit, Po.subdivision)";
 
-    String tableFromAssetAddressClassPossessor = " FROM Asset AS A JOIN Address AS Ad ON A.id = Ad.assetId " +
+    String tableFromAssetAddressClassPossessor = " FROM Asset AS A " +
             "JOIN Classification AS C ON A.subClass = C.subClass JOIN Possessor AS P ON A.possessorId = P.id";
-    String tableFromAllTables = " FROM Asset AS A LEFT JOIN Worth AS W ON A.id = W.assetId LEFT JOIN Classification" +
-            " AS C ON A.subClass = C.subClass LEFT JOIN KitRelation AS K ON A.id = K.componentAssetId LEFT JOIN" +
-            " Address AS Ad ON A.id = Ad.assetId LEFT JOIN Description AS D ON A.id = D.assetId LEFT JOIN Person " +
-            "AS P ON A.userId = P.id LEFT JOIN Possessor AS Po ON A.possessorId = Po.id";
+    String tableFromAllTables = " FROM Asset AS A LEFT JOIN Classification AS C ON A.subClass = C.subClass " +
+            "LEFT JOIN KitRelation AS K ON A.id = K.componentAssetId " +
+            "LEFT JOIN Person AS P ON A.userId = P.id LEFT JOIN Possessor AS Po ON A.possessorId = Po.id";
 
     String checkId = " WHERE LOWER(A.id) LIKE ?1";
     String checkName = " AND LOWER(A.name) LIKE ?2";
     String checkClass = " AND (LOWER(C.subClass) LIKE ?3 OR LOWER(C.mainClass) LIKE ?3)";
-    String checkAddress = " AND (LOWER(Ad.buildingAbbreviature) LIKE ?4 OR LOWER(Ad.room) LIKE ?4)";
+    String checkAddress = " AND (LOWER(A.buildingAbbreviature) LIKE ?4 OR LOWER(A.room) LIKE ?4)";
     String checkActive = " AND A.active = ?5";
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor)

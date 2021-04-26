@@ -1,9 +1,11 @@
 package ee.taltech.varadehaldamine.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
+import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -12,7 +14,9 @@ import javax.persistence.Id;
 @ToString
 @EqualsAndHashCode
 @Entity
-public class KitRelation {
+public class KitRelation implements Serializable {
+
+
     @Id
     private String componentAssetId;
     private String majorAssetId;
