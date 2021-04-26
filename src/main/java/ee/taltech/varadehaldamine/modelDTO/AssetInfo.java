@@ -1,14 +1,19 @@
 package ee.taltech.varadehaldamine.modelDTO;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class AssetInfo {
 
     private String id;
@@ -20,29 +25,29 @@ public class AssetInfo {
     private Boolean delicateCondition;
     private Boolean checked;
     private Date createdAt;
-    private Date modifiedAt;
+    private Timestamp modifiedAt;
 
     // table Worth
     private Double price;
     private Double residualPrice;
     private Date purchaseDate;
-    private Boolean isPurchased; //
+    private Boolean isPurchased;
 
     // table Classification
-    private String subclass;
-    private String mainClass;
-
     // table Kit_relation
-    private String componentAssetId;
-    private String majorAssetId;
-    private String kitPartName; //
-
     // table Address
     private String buildingAbbreviation;
     private String room;
 
     // table Description
     private String descriptionText;
+
+    private String subclass;
+    private String mainClass;
+
+    private String componentAssetId;
+    private String majorAssetId;
+    private String kitPartName;
 
     // table Comment
     private String commentText;
@@ -54,5 +59,40 @@ public class AssetInfo {
     // Possessor data
     private Integer structuralUnit;
     private Integer subdivision;
+
+    public AssetInfo(String id, String name, Boolean active, Long userId, Long possessorId, java.util.Date date, Boolean delicateCondition, Boolean checked, java.util.Date createdAt, java.util.Date modifiedAt, Double price, Double residualPrice, java.util.Date purchaseDate, String subclass, String mainClass, String majorAssetId, String buildingAbbreviation, String room, String descriptionText, String firstname, String lastname, Integer structuralUnit, Integer subdivision) {
+    this.id = id;
+    this.name = name;
+    this.active = active;
+    this.userId = userId;
+    this.possessorId = possessorId;
+    this.lifeMonthsLeft = 0;
+    if (date != null){
+        int months = (int) ChronoUnit.MONTHS.between(LocalDate.now(), Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+        if (months < 0) {
+            months = 0;
+        }
+        this.lifeMonthsLeft = months;
+    }
+    this.delicateCondition = delicateCondition;
+    this.checked = checked;
+    this.createdAt = new Date(createdAt.getTime());
+    this.modifiedAt = new Timestamp(modifiedAt.getTime());
+    this.price = price;
+    this.residualPrice = residualPrice;
+    if (purchaseDate != null){
+        this.purchaseDate = new Date(purchaseDate.getTime());
+    }
+    this.subclass = subclass;
+    this.mainClass = mainClass;
+    this.majorAssetId = majorAssetId;
+    this.buildingAbbreviation = buildingAbbreviation;
+    this.room = room;
+    this.descriptionText = descriptionText;
+    this.firstname = firstname;
+    this.lastname = lastname;
+    this.structuralUnit = structuralUnit;
+    this.subdivision = subdivision;
+}
 
 }

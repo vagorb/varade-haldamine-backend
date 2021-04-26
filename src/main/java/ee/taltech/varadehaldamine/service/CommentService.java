@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.InvalidCommentException;
+import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Comment;
 import ee.taltech.varadehaldamine.modelDTO.CommentInfo;
 import ee.taltech.varadehaldamine.repository.AssetRepository;
@@ -24,7 +25,8 @@ public class CommentService {
     public List<CommentInfo> getAllByAssetId(String assetId) {
         List<CommentInfo> comments = new LinkedList<>();
         for (Comment comment : commentRepository.findAllByAssetId(assetId)) {
-            CommentInfo commentInfo = new CommentInfo(comment.getAssetId(), comment.getText(), comment.getCreatedAt().getTime());
+            CommentInfo commentInfo = new CommentInfo(comment.getAsset().getId(), comment.getText(),
+                    comment.getCreatedAt().getTime());
             comments.add(commentInfo);
         }
         return comments;
@@ -34,9 +36,10 @@ public class CommentService {
         try {
             if (!assetRepository.findAllById(Collections.singletonList(commentInfo.getAssetId())).isEmpty()
                     && !commentInfo.getText().isBlank()) {
-                Comment comment = new Comment(commentInfo.getAssetId(), commentInfo.getText(), new Timestamp(System.currentTimeMillis()));
+                Comment comment = new Comment(assetRepository.findAssetById(commentInfo.getAssetId()),
+                        commentInfo.getText(), new Timestamp(System.currentTimeMillis()));
                 Comment newComment = commentRepository.save(comment);
-                return getAllByAssetId(newComment.getAssetId());
+                return getAllByAssetId(newComment.getAsset().getId());
             } else {
                 throw new InvalidCommentException("Error when saving Comment");
             }
@@ -44,6 +47,13 @@ public class CommentService {
             System.out.println(e.getMessage());
         }
         return null;
+    }
+
+
+    public Comment update(Comment comment, Long id) {
+        Comment dbComment = commentRepository.findAssetById(id);
+        dbComment.setText(comment.getText());
+        return commentRepository.save(dbComment);
     }
 
 }
