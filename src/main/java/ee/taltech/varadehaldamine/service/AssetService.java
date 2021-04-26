@@ -27,6 +27,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -214,7 +215,7 @@ public class AssetService {
         return null;
     }
 
-    public Page<AssetInfoShort> getAuditById(String id) {
+    public Page<AssetInfo> getAuditById(String id) {
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
@@ -223,22 +224,28 @@ public class AssetService {
         AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
         q.add(AuditEntity.id().eq(id));
         List<Asset> audit = q.getResultList();
-        List<AssetInfoShort> assetInfoShorts = new ArrayList<>();
+        List<AssetInfo> assetInfos = new ArrayList<>();
         for (Asset a : audit) {
             Possessor possessor = possessorRepository.findPossessorById(a.getPossessorId());
             Classification classification = classificationRepository.findClassificationBySubClass(a.getSubClass());
-            AssetInfoShort assetInfoShort = new AssetInfoShort(a.getId(), a.getName(),
-                    possessor.getStructuralUnit() + " " + possessor.getSubdivision(),
-                    classification.getMainClass() + " " + classification.getSubClass(),
-                    a.getBuildingAbbreviature() + " " + a.getRoom(),
-                    a.getExpirationDate(), a.getActive());
-            assetInfoShorts.add(assetInfoShort);
+            KitRelation kitRelation = kitRelationRepository.findKitRelationByComponentAssetId(a.getId());
+            String majorAssetId = null;
+            if (kitRelation != null) {
+                majorAssetId = kitRelation.getMajorAssetId();
+            }
+            AssetInfo assetInfo = new AssetInfo(a.getId(), a.getName(), a.getActive(), a.getUserId(),
+                    a.getPossessorId(), a.getExpirationDate(), a.getDelicateCondition(), a.getChecked(),
+                    a.getCreatedAt(), a.getModifiedAt(), a.getPrice(), a.getResidualPrice(), a.getPurchaseDate(),
+                    a.getSubClass(), classification.getMainClass(), majorAssetId,
+                    a.getBuildingAbbreviature(), a.getRoom(), a.getDescription(), "Kasutaja firstname",
+                    "Kasutaja lastname", possessor.getStructuralUnit(), possessor.getSubdivision());
+            assetInfos.add(assetInfo);
         }
-
+        Collections.reverse(assetInfos);
         em.getTransaction().commit();
         em.close();
         Pageable pageable = PageRequest.of(0, 10);
-        return new PageImpl<>(assetInfoShorts, pageable, assetInfoShorts.size());
+        return new PageImpl<>(assetInfos, pageable, assetInfos.size());
     }
 
 

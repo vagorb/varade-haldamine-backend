@@ -3,6 +3,7 @@ package ee.taltech.varadehaldamine.modelDTO;
 import lombok.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -24,7 +25,7 @@ public class AssetInfo {
     private Boolean delicateCondition;
     private Boolean checked;
     private Date createdAt;
-    private Date modifiedAt;
+    private Timestamp modifiedAt;
 
     // table Worth
     private Double price;
@@ -76,7 +77,7 @@ public class AssetInfo {
     this.delicateCondition = delicateCondition;
     this.checked = checked;
     this.createdAt = new Date(createdAt.getTime());
-    this.modifiedAt = new Date(modifiedAt.getTime());
+    this.modifiedAt = new Timestamp(modifiedAt.getTime());
     this.price = price;
     this.residualPrice = residualPrice;
     if (purchaseDate != null){

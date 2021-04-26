@@ -57,7 +57,7 @@ public class AssetController {
 
     @Transactional
     @GetMapping("/audit/{id}")
-    public Page<AssetInfoShort> getAuditById(@PathVariable String id) {
+    public Page<AssetInfo> getAuditById(@PathVariable String id) {
         return assetService.getAuditById(id);
     }
 
