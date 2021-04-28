@@ -216,24 +216,6 @@ public class AssetService {
         return null;
     }
 
-    public String getAuditByIndex(Integer index) {
-        EntityManager em = emf.createEntityManager();
-
-        em.getTransaction().begin();
-        AuditReader auditReader = AuditReaderFactory.get(em);
-
-        AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
-        q.add(AuditEntity.revisionType().eq(RevisionType.ADD));
-        List<Asset> audit = q.getResultList();
-        List<String> ids = new ArrayList<>();
-        for (Asset a : audit) {
-            ids.add(a.getId());
-        }
-        em.getTransaction().commit();
-        em.close();
-        return ids.get(index);
-    }
-
     public Page<AssetInfo> getAuditById(String id) {
         EntityManager em = emf.createEntityManager();
 

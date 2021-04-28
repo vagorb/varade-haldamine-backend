@@ -2,14 +2,9 @@ package ee.taltech.varadehaldamine.controller;
 
 
 import ee.taltech.varadehaldamine.model.Asset;
-import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.service.AssetService;
-import org.hibernate.envers.AuditReader;
-import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.query.AuditEntity;
-import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -56,10 +51,10 @@ public class AssetController {
     }
 
     @Transactional
-    @GetMapping("/audit/index/{index}")
-    public Page<AssetInfo> getAuditByIndex(@PathVariable Integer index) {
-        String id = assetService.getAuditByIndex(index);
-        return assetService.getAuditById(id);
+    @GetMapping("/audit")
+    public AssetInfo getAuditByIndex(@RequestParam String assetId, @RequestParam Integer index) {
+        Page<AssetInfo> assets = assetService.getAuditById(assetId);
+        return assets.getContent().get(index);
     }
 
     @Transactional
