@@ -14,6 +14,7 @@ import ee.taltech.varadehaldamine.repository.KitRelationRepository;
 import ee.taltech.varadehaldamine.repository.PossessorRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
+import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -213,6 +214,24 @@ public class AssetService {
             throw new InvalidAssetException("Error when updating asset: " + e);
         }
         return null;
+    }
+
+    public List<String> getAllAssetAuditIDs() {
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        AuditReader auditReader = AuditReaderFactory.get(em);
+
+        AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
+        q.add(AuditEntity.revisionType().eq(RevisionType.ADD));
+        List<Asset> audit = q.getResultList();
+        List<String> ids = new ArrayList<>();
+        for (Asset a : audit) {
+            ids.add(a.getId());
+        }
+        em.getTransaction().commit();
+        em.close();
+        return ids;
     }
 
     public Page<AssetInfo> getAuditById(String id) {
