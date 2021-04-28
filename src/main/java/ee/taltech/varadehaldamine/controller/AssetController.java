@@ -56,9 +56,10 @@ public class AssetController {
     }
 
     @Transactional
-    @GetMapping("/audit/all")
-    public List<String> getAllAssetAuditIDs() {
-        return assetService.getAllAssetAuditIDs();
+    @GetMapping("/audit/index/{index}")
+    public Page<AssetInfo> getAuditByIndex(@PathVariable Integer index) {
+        String id = assetService.getAuditByIndex(index);
+        return assetService.getAuditById(id);
     }
 
     @Transactional

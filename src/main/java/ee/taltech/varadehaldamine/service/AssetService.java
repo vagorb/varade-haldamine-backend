@@ -216,7 +216,7 @@ public class AssetService {
         return null;
     }
 
-    public List<String> getAllAssetAuditIDs() {
+    public String getAuditByIndex(Integer index) {
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
@@ -231,7 +231,7 @@ public class AssetService {
         }
         em.getTransaction().commit();
         em.close();
-        return ids;
+        return ids.get(index);
     }
 
     public Page<AssetInfo> getAuditById(String id) {
