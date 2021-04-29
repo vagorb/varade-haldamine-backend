@@ -28,6 +28,7 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -53,6 +54,7 @@ public class AssetService {
     public List<AssetInfoShort> findAll() {
         return assetRepository.getAll();
     }
+
     // when adding new asset, the user and comments would not to be put
     public AssetInfo addAsset(AssetInfo assetInfo) {
         try {
@@ -101,12 +103,15 @@ public class AssetService {
 
     public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy) {
 
+        System.out.println(assetSearchCriteria);
         String id = "%%";
         String name = "%%";
         Integer division = null;
         String classification = "%%";
         String address = "%%";
         Boolean active = null;
+        java.util.Date start = new java.util.Date(100);
+        java.util.Date end = null;
 
         if (assetSearchCriteria.getId() != null) {
             id = "%" + assetSearchCriteria.getId().toLowerCase() + "%";
@@ -130,20 +135,38 @@ public class AssetService {
         if (assetSearchCriteria.getActive() != null) {
             active = assetSearchCriteria.getActive();
         }
+        if (assetSearchCriteria.getLifeMonthsLeft() != null) {
+            Calendar c = Calendar.getInstance();
+            c.setTime(new java.util.Date());
+            System.out.println(assetSearchCriteria.getLifeMonthsLeft());
+            if (assetSearchCriteria.getLifeMonthsLeft() == 0){
+                c.add(Calendar.MONTH, 1);
+            } else if (assetSearchCriteria.getLifeMonthsLeft() > 0){
+                Calendar cStart = Calendar.getInstance();
+                cStart.setTime(new java.util.Date());
+                cStart.add(Calendar.MONTH, assetSearchCriteria.getLifeMonthsLeft());
+                start = cStart.getTime();
+                c.add(Calendar.MONTH, assetSearchCriteria.getLifeMonthsLeft() + 1);
+            } else {
+                c.add(Calendar.YEAR, 100);
+            }
+            end = c.getTime();
+        }
 
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy).descending());
         if (order.equals("ASC")) {
             pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
         }
-
+        System.out.println(start);
+        System.out.println(end);
         if (division != null && active != null) {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, active, division, pageRequest);
+            return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, active, division, pageRequest);
         } else if (division == null && active == null) {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, pageRequest);
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, pageRequest);
         } else if (division == null) {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, active, pageRequest);
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, active, pageRequest);
         } else {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, division, pageRequest);
+            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, division, pageRequest);
         }
     }
 
@@ -250,7 +273,7 @@ public class AssetService {
     }
 
 
-    private boolean checkAssetInfoBeforeAdding(AssetInfo assetInfo){
+    private boolean checkAssetInfoBeforeAdding(AssetInfo assetInfo) {
         return assetInfo != null && assetInfo.getId() != null && !assetInfo.getId().isBlank()
                 && assetRepository.findById(assetInfo.getId()).isEmpty() && assetInfo.getId().length() <= 20
                 && assetInfo.getName() != null && !assetInfo.getName().isBlank()

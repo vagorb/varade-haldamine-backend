@@ -15,6 +15,7 @@ import org.springframework.security.oauth2.client.OAuth2AuthorizedClientId;
 import org.springframework.web.bind.annotation.*;
 import javax.persistence.*;
 import javax.transaction.Transactional;
+import javax.validation.Valid;
 
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
