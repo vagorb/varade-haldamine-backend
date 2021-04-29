@@ -17,8 +17,8 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     Asset findAssetById(String assetId);
 
     String assetInfoShortCreate = "SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfoShort(A.id, A.name, " +
-            "CONCAT(P.structuralUnit, ' ', P.subdivision), CONCAT(C.mainClass, ' ', C.subClass)," +
-            " CONCAT(A.buildingAbbreviature, ' ', A.room) , A.expirationDate, A.active)";
+            "P.structuralUnit, P.subdivision, CONCAT(C.mainClass, ' ', C.subClass)," +
+                " A.buildingAbbreviature, A.room, A.expirationDate, A.active)";
     String assetInfoCreate = "SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfo(A.id, A.name, A.active, A.userId, A.possessorId, " +
             "A.expirationDate, A.delicateCondition, A.checked, A.createdAt, A.modifiedAt, A.price, A.residualPrice, " +
             "A.purchaseDate, C.subClass, C.mainClass, K.majorAssetId, A.buildingAbbreviature, A.room, A.description, " +
