@@ -135,38 +135,44 @@ public class AssetService {
         if (assetSearchCriteria.getActive() != null) {
             active = assetSearchCriteria.getActive();
         }
-        if (assetSearchCriteria.getLifeMonthsLeft() != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(new java.util.Date());
-            System.out.println(assetSearchCriteria.getLifeMonthsLeft());
-            if (assetSearchCriteria.getLifeMonthsLeft() == 0){
-                c.add(Calendar.MONTH, 1);
-            } else if (assetSearchCriteria.getLifeMonthsLeft() > 0){
-                Calendar cStart = Calendar.getInstance();
-                cStart.setTime(new java.util.Date());
-                cStart.add(Calendar.MONTH, assetSearchCriteria.getLifeMonthsLeft());
-                start = cStart.getTime();
-                c.add(Calendar.MONTH, assetSearchCriteria.getLifeMonthsLeft() + 1);
-            } else {
-                c.add(Calendar.YEAR, 100);
-            }
-            end = c.getTime();
+        Calendar c = Calendar.getInstance();
+        c.setTime(new java.util.Date());
+        if (assetSearchCriteria.getLifeMonthsLeft() != null && assetSearchCriteria.getLifeMonthsLeft() == 0) {
+            c.add(Calendar.MONTH, 1);
+        } else if (assetSearchCriteria.getLifeMonthsLeft() != null && assetSearchCriteria.getLifeMonthsLeft() > 0) {
+            Calendar cStart = Calendar.getInstance();
+            cStart.setTime(new java.util.Date());
+            cStart.add(Calendar.MONTH, assetSearchCriteria.getLifeMonthsLeft());
+            start = cStart.getTime();
+            c.add(Calendar.MONTH, assetSearchCriteria.getLifeMonthsLeft() + 1);
+        } else {
+            c.add(Calendar.YEAR, 100);
         }
-
+        end = c.getTime();
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(sortBy).descending());
         if (order.equals("ASC")) {
             pageRequest = PageRequest.of(page, size, Sort.by(sortBy));
         }
-        System.out.println(start);
-        System.out.println(end);
-        if (division != null && active != null) {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, active, division, pageRequest);
-        } else if (division == null && active == null) {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, pageRequest);
-        } else if (division == null) {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, active, pageRequest);
+        if (assetSearchCriteria.getLifeMonthsLeft() != null && assetSearchCriteria.getLifeMonthsLeft() > 0) {
+            if (division != null && active != null) {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, active, division, pageRequest);
+            } else if (division == null && active == null) {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, pageRequest);
+            } else if (division == null) {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, active, pageRequest);
+            } else {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, division, pageRequest);
+            }
         } else {
-            return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, division, pageRequest);
+            if (division != null && active != null) {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsAllDateWithNull(id, name, classification, address, start, end, active, division, pageRequest);
+            } else if (division == null && active == null) {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(id, name, classification, address, start, end, pageRequest);
+            } else if (division == null) {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(id, name, classification, address, start, end, active, pageRequest);
+            } else {
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(id, name, classification, address, start, end, division, pageRequest);
+            }
         }
     }
 

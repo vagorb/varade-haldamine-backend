@@ -50,7 +50,6 @@ public class AssetInfoShort {
         } else {
             this.buildingAbbreviationPlusRoom = buildingAbbreviature;
         }
-        System.out.println(lifeMonthsLeft);
         this.lifeMonthsLeft = 0;
         if (date != null){
             int months = (int) ChronoUnit.MONTHS.between(LocalDate.now(), Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
