@@ -14,7 +14,6 @@ import ee.taltech.varadehaldamine.repository.KitRelationRepository;
 import ee.taltech.varadehaldamine.repository.PossessorRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
