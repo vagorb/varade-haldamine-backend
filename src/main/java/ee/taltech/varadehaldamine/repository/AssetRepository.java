@@ -23,7 +23,7 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     String assetInfoCreate = "SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfo(A.id, A.name, A.active, A.userId, A.possessorId, " +
             "A.expirationDate, A.delicateCondition, A.checked, A.createdAt, A.modifiedAt, A.price, A.residualPrice, " +
             "A.purchaseDate, C.subClass, C.mainClass, K.majorAssetId, A.buildingAbbreviature, A.room, A.description, " +
-            "P.firstname, P.lastname, Po.structuralUnit, Po.subdivision)";
+            "P.username, Po.structuralUnit, Po.subdivision)";
 
     String tableFromAssetAddressClassPossessor = " FROM Asset AS A JOIN Classification AS C ON A.subClass = C.subClass JOIN Possessor AS P ON A.possessorId = P.id";
     String tableFromAllTables = " FROM Asset AS A LEFT JOIN Classification AS C ON A.subClass = C.subClass " +

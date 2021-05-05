@@ -1,6 +1,6 @@
-INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW1234561', 'Vassili-Groza', 'Gorb');
-INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW192883', 'Nikita-Bird', 'Birjukovs');
-INSERT INTO Person(azure_id, firstname, lastname) VALUES ('WW111111', 'Artur-Sex-Instruktor', 'Hurgada');
+INSERT INTO Person(username, email) VALUES ('DimVoronoi', 'DimVoronoi@varainv.onmicrosoft.com');
+INSERT INTO Person(username, email) VALUES ('NikBir', 'NikBir@varainv.onmicrosoft.com');
+INSERT INTO Person(username, email) VALUES ('ArturInstr', 'ArturInstr@varainv.onmicrosoft.com');
 
 INSERT INTO Possessor(structural_unit, subdivision) VALUES (112, 110);
 INSERT INTO Possessor(structural_unit, subdivision) VALUES (234, 229);

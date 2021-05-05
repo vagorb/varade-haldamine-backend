@@ -14,6 +14,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientId;
 import org.springframework.web.bind.annotation.*;
+
 import javax.persistence.*;
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -22,6 +23,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.Serializable;
 import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -34,19 +37,24 @@ public class AssetController {
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/account")
-    public String getAccount() {
+    public Serializable getAccount() {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         Collection<? extends GrantedAuthority> list = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        if (list.toString().contains("Raamatupidaja")) {
-            return "Raamatupidaja";
-        } else if (list.toString().contains("ÜksuseJuht")) {
-            return "ÜksuseJuht";
-        } else if (list.toString().contains("KomisjoniLiige")) {
-            return "KomisjoniLiige";
-        } else if (list.toString().contains("Tavakasutaja")) {
-            return "Tavakasutaja";
-        } else {
-            return "Unauthorized";
-        }
+        return SecurityContextHolder.getContext().getAuthentication();
+//        if (list.toString().contains("Raamatupidaja")) {
+//            return "Raamatupidaja";
+//        } else if (list.toString().contains("ÜksuseJuht")) {
+//            return "ÜksuseJuht";
+//        } else if (list.toString().contains("KomisjoniLiige")) {
+//            return "KomisjoniLiige";
+//        } else if (list.toString().contains("Tavakasutaja")) {
+//            return "Tavakasutaja";
+//        } else {
+//            return "Unauthorized";
+//        }
     }
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
@@ -59,6 +67,7 @@ public class AssetController {
     @Autowired
     AssetService assetService;
 
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/filtered")
     @ResponseBody
     public ResponseEntity<Page<AssetInfoShort>> getAssets(
@@ -89,6 +98,7 @@ public class AssetController {
         return assetService.findAll();
     }
 
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/{id}")
     public AssetInfo getAssetById(@PathVariable String id) {
         return assetService.getAssetById(id);

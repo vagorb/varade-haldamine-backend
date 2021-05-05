@@ -53,14 +53,13 @@ public class AssetInfo {
     private String commentText;
 
     // Person data
-    private String firstname;
-    private String lastname;
+    private String username;
 
     // Possessor data
     private Integer structuralUnit;
     private Integer subdivision;
 
-    public AssetInfo(String id, String name, Boolean active, Long userId, Long possessorId, java.util.Date date, Boolean delicateCondition, Boolean checked, java.util.Date createdAt, java.util.Date modifiedAt, Double price, Double residualPrice, java.util.Date purchaseDate, String subclass, String mainClass, String majorAssetId, String buildingAbbreviation, String room, String descriptionText, String firstname, String lastname, Integer structuralUnit, Integer subdivision) {
+    public AssetInfo(String id, String name, Boolean active, Long userId, Long possessorId, java.util.Date date, Boolean delicateCondition, Boolean checked, java.util.Date createdAt, java.util.Date modifiedAt, Double price, Double residualPrice, java.util.Date purchaseDate, String subclass, String mainClass, String majorAssetId, String buildingAbbreviation, String room, String descriptionText, String username, Integer structuralUnit, Integer subdivision) {
     this.id = id;
     this.name = name;
     this.active = active;
@@ -96,8 +95,7 @@ public class AssetInfo {
     this.buildingAbbreviation = buildingAbbreviation;
     this.room = room;
     this.descriptionText = descriptionText;
-    this.firstname = firstname;
-    this.lastname = lastname;
+    this.username = username;
     this.structuralUnit = structuralUnit;
     this.subdivision = subdivision;
 }

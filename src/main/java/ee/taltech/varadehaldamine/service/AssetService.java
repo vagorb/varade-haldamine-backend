@@ -266,8 +266,8 @@ public class AssetService {
                     a.getPossessorId(), a.getExpirationDate(), a.getDelicateCondition(), a.getChecked(),
                     a.getCreatedAt(), a.getModifiedAt(), a.getPrice(), a.getResidualPrice(), a.getPurchaseDate(),
                     a.getSubClass(), classification.getMainClass(), majorAssetId,
-                    a.getBuildingAbbreviature(), a.getRoom(), a.getDescription(), "Kasutaja firstname",
-                    "Kasutaja lastname", possessor.getStructuralUnit(), possessor.getSubdivision());
+                    a.getBuildingAbbreviature(), a.getRoom(), a.getDescription(), "Kasutaja usename",
+                    possessor.getStructuralUnit(), possessor.getSubdivision());
             assetInfos.add(assetInfo);
         }
         Collections.reverse(assetInfos);

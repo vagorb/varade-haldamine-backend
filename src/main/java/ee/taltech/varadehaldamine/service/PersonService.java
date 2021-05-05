@@ -26,8 +26,8 @@ public class PersonService {
 
     public Person addPerson(PersonInfo personInfo) {
         try {
-            if (personInfo != null && !personInfo.getAzureId().isBlank() && !personInfo.getFirstname().isBlank() && !personInfo.getLastname().isBlank()) {
-                Person person = new Person(personInfo.getAzureId(), personInfo.getFirstname(), personInfo.getLastname());
+            if (personInfo != null  && !personInfo.getUsername().isBlank() && !personInfo.getUsername().isBlank()) {
+                Person person = new Person(personInfo.getUsername(), personInfo.getEmail());
                 return personRepository.save(person);
             } else {
                 throw new InvalidPersonException("Error when saving Person");
