@@ -29,10 +29,17 @@ import java.util.List;
 public class AssetController {
 
 
-    @PreAuthorize("hasRole('ROLE_admin')")
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/account")
     public Object getAccount() {
+        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
         return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
+    @GetMapping("/logout")
+    public void logout() {
+        SecurityContextHolder.clearContext();
     }
 
 
