@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientId;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @RequestMapping("asset")
@@ -31,9 +34,19 @@ public class AssetController {
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/account")
-    public Object getAccount() {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
-        return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    public String getAccount() {
+        Collection<? extends GrantedAuthority> list = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
+        if (list.toString().contains("Raamatupidaja")) {
+            return "Raamatupidaja";
+        } else if (list.toString().contains("ÜksuseJuht")) {
+            return "ÜksuseJuht";
+        } else if (list.toString().contains("KomisjoniLiige")) {
+            return "KomisjoniLiige";
+        } else if (list.toString().contains("Tavakasutaja")) {
+            return "Tavakasutaja";
+        } else {
+            return "Unauthorized";
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
