@@ -85,7 +85,14 @@ public class AssetInfo {
     }
     this.subclass = subclass;
     this.mainClass = mainClass;
-    this.majorAssetId = majorAssetId;
+    if (majorAssetId != null){
+        this.majorAssetId = majorAssetId;
+        if (majorAssetId.equals(id)){
+            kitPartName = "Peavara";
+        } else {
+            kitPartName = "Komponent";
+        }
+    }
     this.buildingAbbreviation = buildingAbbreviation;
     this.room = room;
     this.descriptionText = descriptionText;
