@@ -36,42 +36,43 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     String checkAddress = " AND (LOWER(A.buildingAbbreviature) LIKE ?4 OR LOWER(A.room) LIKE ?4)";
     String checkDate = " AND A.expirationDate BETWEEN ?5 AND ?6";
     String checkDateWithNull = " AND (A.expirationDate IS NULL OR A.expirationDate BETWEEN ?5 AND ?6)";
-    String checkActive = " AND A.active = ?7";
+    String checkUserDivision = " AND (P.structuralUnit = ?7 OR ?7 = -1)";
+    String checkActive = " AND A.active = ?8";
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor)
     List<AssetInfoShort> getAll();
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
-            checkName + checkClass + checkAddress + checkDate)
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(String id, String name, String classification, String address, Date start, Date end, PageRequest pageRequest);
+            checkName + checkClass + checkAddress + checkDate + checkUserDivision)
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
-            checkName + checkClass + checkAddress + checkDate + checkActive)
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoDivision(String id, String name, String classification, String address, Date start, Date end, Boolean active, PageRequest pageRequest);
+            checkName + checkClass + checkAddress + checkDate + checkUserDivision + checkActive)
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoDivision(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Boolean active, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
-            checkName + checkClass + checkAddress + checkDate + " AND (P.structuralUnit = ?7 OR P.subdivision = ?7)")
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActive(String id, String name, String classification, String address, Date start, Date end, Integer division, PageRequest pageRequest);
+            checkName + checkClass + checkAddress + checkDate + checkUserDivision + " AND (P.structuralUnit = ?8 OR P.subdivision = ?8)")
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActive(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Integer division, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId + checkName +
-            checkClass + checkAddress + checkDate + checkActive + " AND (P.structuralUnit = ?8 OR P.subdivision = ?8)")
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsAll(String id, String name, String classification, String address, Date start, Date end, Boolean active, Integer division, PageRequest pageRequest);
+            checkClass + checkAddress + checkDate + checkUserDivision + checkActive + " AND (P.structuralUnit = ?9 OR P.subdivision = ?9)")
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsAll(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Boolean active, Integer division, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
-            checkName + checkClass + checkAddress + checkDateWithNull)
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(String id, String name, String classification, String address, Date start, Date end, PageRequest pageRequest);
+            checkName + checkClass + checkAddress + checkDateWithNull + checkUserDivision)
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
-            checkName + checkClass + checkAddress + checkDateWithNull + checkActive)
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(String id, String name, String classification, String address, Date start, Date end, Boolean active, PageRequest pageRequest);
+            checkName + checkClass + checkAddress + checkDateWithNull + checkUserDivision + checkActive)
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Boolean active, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
-            checkName + checkClass + checkAddress + checkDateWithNull + " AND (P.structuralUnit = ?7 OR P.subdivision = ?7)")
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(String id, String name, String classification, String address, Date start, Date end, Integer division, PageRequest pageRequest);
+            checkName + checkClass + checkAddress + checkDateWithNull + checkUserDivision + " AND (P.structuralUnit = ?8 OR P.subdivision = ?8)")
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Integer division, PageRequest pageRequest);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId + checkName +
-            checkClass + checkAddress + checkDateWithNull + checkActive + " AND (P.structuralUnit = ?8 OR P.subdivision = ?8)")
-    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsAllDateWithNull(String id, String name, String classification, String address, Date start, Date end, Boolean active, Integer division, PageRequest pageRequest);
+            checkClass + checkAddress + checkDateWithNull + checkUserDivision + checkActive + " AND (P.structuralUnit = ?9 OR P.subdivision = ?9)")
+    Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsAllDateWithNull(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Boolean active, Integer division, PageRequest pageRequest);
 
     @Query(assetInfoCreate + tableFromAllTables + " WHERE A.id = ?1")
     AssetInfo getAssetInfoById(String id);

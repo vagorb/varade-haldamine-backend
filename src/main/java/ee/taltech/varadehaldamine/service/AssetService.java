@@ -100,7 +100,7 @@ public class AssetService {
         }
     }
 
-    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy) {
+    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy, List<String> roles) {
 
         System.out.println(assetSearchCriteria);
         String id = "%%";
@@ -111,6 +111,23 @@ public class AssetService {
         Boolean active = null;
         java.util.Date start = new java.util.Date(100);
         java.util.Date end = null;
+        Integer userDivision = null;
+        for (String role: roles){
+            if (role.equals("ROLE_Raamatupidaja")){
+                userDivision = -1;
+            }
+            if (role.startsWith("ROLE_D") && userDivision == null){
+                try {
+                    userDivision = Integer.valueOf(role.replace("ROLE_D", ""));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Given not integer in division filter field");
+                }
+            }
+        }
+        System.out.println(userDivision);
+        if (userDivision == null){
+            return new PageImpl<>(new ArrayList<>());
+        }
 
         if (assetSearchCriteria.getId() != null) {
             id = "%" + assetSearchCriteria.getId().toLowerCase() + "%";
@@ -154,23 +171,23 @@ public class AssetService {
         }
         if (assetSearchCriteria.getLifeMonthsLeft() != null && assetSearchCriteria.getLifeMonthsLeft() > 0) {
             if (division != null && active != null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, active, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, userDivision, active, division, pageRequest);
             } else if (division == null && active == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, userDivision, pageRequest);
             } else if (division == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, active, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, userDivision, active, pageRequest);
             } else {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, userDivision, division, pageRequest);
             }
         } else {
             if (division != null && active != null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsAllDateWithNull(id, name, classification, address, start, end, active, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsAllDateWithNull(id, name, classification, address, start, end, userDivision, active, division, pageRequest);
             } else if (division == null && active == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(id, name, classification, address, start, end, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(id, name, classification, address, start, end, userDivision, pageRequest);
             } else if (division == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(id, name, classification, address, start, end, active, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(id, name, classification, address, start, end, userDivision, active, pageRequest);
             } else {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(id, name, classification, address, start, end, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(id, name, classification, address, start, end, userDivision, division, pageRequest);
             }
         }
     }

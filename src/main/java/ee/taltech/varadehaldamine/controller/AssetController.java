@@ -83,7 +83,7 @@ public class AssetController {
         System.out.println(user.toString());
         List<String> authorities = personService.getAuthorities();
         System.out.println(authorities);
-        return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy), HttpStatus.OK);
+        return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy, authorities), HttpStatus.OK);
     }
 
     @Transactional
