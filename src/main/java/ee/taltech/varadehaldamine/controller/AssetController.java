@@ -120,12 +120,13 @@ public class AssetController {
         return assetService.getAssetById(id, authorities);
     }
 
+    @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
     @PutMapping("/{id}")
     public Asset updateAsset(@RequestBody AssetInfo assetInfo, @PathVariable String id) {
         return assetService.update(assetInfo, id);
     }
 
-
+    @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
     @PostMapping
     public ResponseEntity<Object> addAsset(@RequestBody AssetInfo asset) {
         if (assetService.addAsset(asset) != null) {
