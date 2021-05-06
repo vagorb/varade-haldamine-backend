@@ -2,9 +2,12 @@ package ee.taltech.varadehaldamine.controller;
 
 
 import ee.taltech.varadehaldamine.model.Asset;
+import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.service.AssetService;
+import ee.taltech.varadehaldamine.service.PersonService;
+import ee.taltech.varadehaldamine.service.PossessorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -12,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.client.OAuth2AuthorizedClientId;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.*;
@@ -37,24 +42,19 @@ public class AssetController {
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/account")
-    public Serializable getAccount() {
-        System.out.println(SecurityContextHolder.getContext().getAuthentication());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getName());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        System.out.println(SecurityContextHolder.getContext().getAuthentication().getAuthorities());
+    public String getAccount() {
         Collection<? extends GrantedAuthority> list = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
-        return SecurityContextHolder.getContext().getAuthentication();
-//        if (list.toString().contains("Raamatupidaja")) {
-//            return "Raamatupidaja";
-//        } else if (list.toString().contains("ÜksuseJuht")) {
-//            return "ÜksuseJuht";
-//        } else if (list.toString().contains("KomisjoniLiige")) {
-//            return "KomisjoniLiige";
-//        } else if (list.toString().contains("Tavakasutaja")) {
-//            return "Tavakasutaja";
-//        } else {
-//            return "Unauthorized";
-//        }
+        if (list.toString().contains("Raamatupidaja")) {
+            return "Raamatupidaja";
+        } else if (list.toString().contains("ÜksuseJuht")) {
+            return "ÜksuseJuht";
+        } else if (list.toString().contains("KomisjoniLiige")) {
+            return "KomisjoniLiige";
+        } else if (list.toString().contains("Tavakasutaja")) {
+            return "Tavakasutaja";
+        } else {
+            return "Unauthorized";
+        }
     }
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
@@ -63,6 +63,8 @@ public class AssetController {
         SecurityContextHolder.clearContext();
     }
 
+    @Autowired
+    PersonService personService;
 
     @Autowired
     AssetService assetService;
@@ -77,6 +79,10 @@ public class AssetController {
             @RequestParam(required = false, value = "size", defaultValue = "10") int size,
             @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
             @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
+        Person user = personService.getCurrentUser();
+        System.out.println(user.toString());
+        List<String> authorities = personService.getAuthorities();
+        System.out.println(authorities);
         return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy), HttpStatus.OK);
     }
 
