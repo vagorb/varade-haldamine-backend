@@ -2,10 +2,7 @@ package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.InvalidAssetException;
 import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
-import ee.taltech.varadehaldamine.model.Asset;
-import ee.taltech.varadehaldamine.model.Classification;
-import ee.taltech.varadehaldamine.model.KitRelation;
-import ee.taltech.varadehaldamine.model.Possessor;
+import ee.taltech.varadehaldamine.model.*;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.AssetRepository;
@@ -14,7 +11,6 @@ import ee.taltech.varadehaldamine.repository.KitRelationRepository;
 import ee.taltech.varadehaldamine.repository.PossessorRepository;
 import org.hibernate.envers.AuditReader;
 import org.hibernate.envers.AuditReaderFactory;
-import org.hibernate.envers.RevisionType;
 import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,9 +43,11 @@ public class AssetService {
     @Autowired
     private PossessorRepository possessorRepository;
     @Autowired
-    private PersonService personService;
+    private ClassificationService classificationService;
     @Autowired
     private PossessorService possessorService;
+    @Autowired
+    private PersonService personService;
 
     public List<AssetInfoShort> findAll() {
         return assetRepository.getAll();
@@ -236,6 +234,30 @@ public class AssetService {
                         existingKit.setMajorAssetId(assetInfo.getMajorAssetId());
                         kitRelationRepository.save(existingKit);
                     }
+                }
+                if (assetInfo.getStructuralUnit() != null || assetInfo.getSubdivision() != null) {
+                    Possessor newPossessor = possessorService
+                            .findPossessor(assetInfo.getStructuralUnit(), assetInfo.getSubdivision());
+                    if (newPossessor != null) {
+                        dbAsset.setPossessorId(newPossessor.getId());
+                    }
+                }
+                String newSubClass = assetInfo.getSubclass();
+                if (newSubClass != null
+                        && classificationService.doesClassificationExistBySubClass(newSubClass)) {
+                    dbAsset.setSubClass(newSubClass);
+                }
+                if (assetInfo.getUserId() == null
+                        && (assetInfo.getFirstname() != null || assetInfo.getLastname() != null)) {
+                    Person newPerson = personService
+                            .findPersonByFirstLastName(assetInfo.getFirstname(), assetInfo.getLastname());
+                    if (newPerson != null) {
+                        dbAsset.setUserId(newPerson.getId());
+                    }
+                }
+                if (assetInfo.getUserId() != null
+                        && assetInfo.getFirstname() == null && assetInfo.getLastname() == null) {
+                    dbAsset.setUserId(assetInfo.getUserId());
                 }
                 return assetRepository.save(dbAsset);
             }

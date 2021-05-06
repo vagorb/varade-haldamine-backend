@@ -38,4 +38,14 @@ public class PersonService {
         return null;
     }
 
+    public Person findPersonByFirstLastName (String firstName, String lastName) {
+        List<Person> all = findAll();
+        for (Person person : all) {
+            if (person.getFirstname().equals(firstName) && person.getLastname().equals(lastName)) {
+                return person;
+            }
+        }
+        return null;
+    }
+
 }
