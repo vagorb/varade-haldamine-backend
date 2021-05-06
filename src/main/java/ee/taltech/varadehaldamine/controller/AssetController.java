@@ -86,19 +86,26 @@ public class AssetController {
         return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy, authorities), HttpStatus.OK);
     }
 
+//    @PreAuthorize("hasRole('ROLE_Raamatupidaja') || hasRole('ROLE_Esimees')")
     @Transactional
     @GetMapping("/audit")
     public AssetInfo getAuditByIndex(@RequestParam String assetId, @RequestParam Integer index) {
+//        //register if no such user
+//        personService.getCurrentUser();
         Page<AssetInfo> assets = assetService.getAuditById(assetId);
         return assets.getContent().get(index);
     }
 
+    //    @PreAuthorize("hasRole('ROLE_Raamatupidaja') || hasRole('ROLE_Esimees')")
     @Transactional
     @GetMapping("/audit/{id}")
     public Page<AssetInfo> getAuditById(@PathVariable String id) {
+//        //register if no such user
+//        personService.getCurrentUser();
         return assetService.getAuditById(id);
     }
 
+    /// this method is not for front-end use!!!!!!!!!!!!!!!!!!!!!!!!!!!!!1
     @GetMapping
     public List<AssetInfoShort> getAll() {
         return assetService.findAll();
@@ -107,7 +114,10 @@ public class AssetController {
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/{id}")
     public AssetInfo getAssetById(@PathVariable String id) {
-        return assetService.getAssetById(id);
+        //register if no such user
+        personService.getCurrentUser();
+        List<String> authorities = personService.getAuthorities();
+        return assetService.getAssetById(id, authorities);
     }
 
     @PutMapping("/{id}")

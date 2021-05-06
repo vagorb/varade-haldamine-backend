@@ -50,7 +50,7 @@ public class PersonService {
             String azureId = defaultOidcUser.getIdToken().getClaim("oid");
             Person currentUser = getUserByAzureToken(azureId);
             if (currentUser == null) {
-                currentUser = registerNewUser(defaultOidcUser.getName(), defaultOidcUser.getPreferredUsername(), azureId);
+                currentUser = registerNewUser(defaultOidcUser.getName(), defaultOidcUser.getPreferredUsername().toLowerCase(), azureId);
             }
             return currentUser;
         }

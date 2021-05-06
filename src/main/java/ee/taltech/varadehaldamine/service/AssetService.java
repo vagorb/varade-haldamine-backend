@@ -2,6 +2,7 @@ package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.InvalidAssetException;
 import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
+import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
 import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Classification;
 import ee.taltech.varadehaldamine.model.KitRelation;
@@ -76,7 +77,7 @@ public class AssetService {
                         assetInfo.getDescriptionText());
                 assetRepository.save(asset);
                 addKitRelation(assetInfo);
-                return assetRepository.getAssetInfoById(assetInfo.getId());
+                return assetRepository.getAssetInfoByIdAndDivision(assetInfo.getId(), -1);
             }
         } catch (Exception e) {
             throw new InvalidAssetException("Error when adding asset: " + e);
@@ -85,8 +86,10 @@ public class AssetService {
     }
 
 
-    public AssetInfo getAssetById(String assetId) {
-        return assetRepository.getAssetInfoById(assetId);
+    public AssetInfo getAssetById(String assetId, List<String> roles) {
+        Integer userDivision = getDivision(roles);
+        System.out.println(userDivision);
+        return assetRepository.getAssetInfoByIdAndDivision(assetId.toLowerCase(), userDivision);
     }
 
     private void addKitRelation(AssetInfo assetInfo) {
@@ -111,24 +114,7 @@ public class AssetService {
         Boolean active = null;
         java.util.Date start = new java.util.Date(100);
         java.util.Date end = null;
-        Integer userDivision = null;
-        for (String role: roles){
-            if (role.equals("ROLE_Raamatupidaja")){
-                userDivision = -1;
-            }
-            if (role.startsWith("ROLE_D") && userDivision == null){
-                try {
-                    userDivision = Integer.valueOf(role.replace("ROLE_D", ""));
-                } catch (NumberFormatException e) {
-                    throw new IllegalArgumentException("Given not integer in division filter field");
-                }
-            }
-        }
-        System.out.println(userDivision);
-        if (userDivision == null){
-            return new PageImpl<>(new ArrayList<>());
-        }
-
+        Integer userDivision = getDivision(roles);
         if (assetSearchCriteria.getId() != null) {
             id = "%" + assetSearchCriteria.getId().toLowerCase() + "%";
         }
@@ -312,5 +298,25 @@ public class AssetService {
                 || kitRelationRepository.findKitRelationByComponentAssetId(assetInfo.getMajorAssetId()) != null
                 || assetInfo.getMajorAssetId().equals(assetInfo.getId())
                 && assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null);
+    }
+
+    private Integer getDivision(List<String> roles){
+        Integer division = null;
+        for (String role: roles){
+            if (role.equals("ROLE_Raamatupidaja")){
+                return -1;
+            } else if (role.startsWith("ROLE_D") && division == null){
+                try {
+                    division = Integer.valueOf(role.replace("ROLE_D", ""));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Given not integer in division filter field");
+                }
+            }
+        }
+        System.out.println(division);
+        if (division == null){
+            throw new WrongCurrentUserRoleException("Check user have right roles");
+        }
+        return division;
     }
 }
