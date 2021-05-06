@@ -9,5 +9,5 @@ public interface PersonRepository extends JpaRepository<Person, String> {
 
     Person findPersonById(Long id);
 
-    Person findPersonByEmail(String email);
+    Person findPersonByAzureId(String token);
 }

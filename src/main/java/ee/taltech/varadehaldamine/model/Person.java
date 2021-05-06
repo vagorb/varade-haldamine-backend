@@ -17,9 +17,11 @@ public class Person {
     private Long id;
     private String username;
     private String email;
+    private String azureId;
 
-    public Person(String username, String email) {
+    public Person(String username, String email, String azureId) {
         this.username = username;
         this.email = email;
+        this.azureId = azureId;
     }
 }

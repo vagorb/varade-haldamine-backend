@@ -67,6 +67,7 @@ CREATE TABLE IF NOT EXISTS Person_audit (
     id SERIAL,
     username VARCHAR(100) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
+    azure_id VARCHAR(100) UNIQUE NOT NULL,
     PRIMARY KEY (revision_id, id),
     CONSTRAINT idfk_asset_revinfo_rev_id FOREIGN KEY (revision_id) REFERENCES Revision_info (revision_id)
 );
