@@ -39,15 +39,20 @@ import java.util.List;
 @RestController
 public class AssetController {
 
+    @Autowired
+    PersonService personService;
 
-    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
-    @GetMapping("/account")
-    public String getAccount() {
+    @Autowired
+    AssetService assetService;
+
+
+    @GetMapping("/accountt")
+    public String getAccountt() {
         Collection<? extends GrantedAuthority> list = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         if (list.toString().contains("Raamatupidaja")) {
             return "Raamatupidaja";
         } else if (list.toString().contains("ÜksuseJuht")) {
-            return "ÜksuseJuht";
+            return "2";
         } else if (list.toString().contains("KomisjoniLiige")) {
             return "KomisjoniLiige";
         } else if (list.toString().contains("Tavakasutaja")) {
@@ -58,16 +63,17 @@ public class AssetController {
     }
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
+    @GetMapping("/account")
+    public Object getAccount() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/logout")
     public void logout() {
         SecurityContextHolder.clearContext();
     }
 
-    @Autowired
-    PersonService personService;
-
-    @Autowired
-    AssetService assetService;
 
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/filtered")
