@@ -52,7 +52,7 @@ public class AssetController {
         if (list.toString().contains("Raamatupidaja")) {
             return "Raamatupidaja";
         } else if (list.toString().contains("ÜksuseJuht")) {
-            return "2";
+            return "ÜksuseJuht";
         } else if (list.toString().contains("KomisjoniLiige")) {
             return "KomisjoniLiige";
         } else if (list.toString().contains("Tavakasutaja")) {
