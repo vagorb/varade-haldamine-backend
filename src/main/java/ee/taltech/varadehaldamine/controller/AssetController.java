@@ -86,6 +86,17 @@ public class AssetController {
         return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy, authorities), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
+    @GetMapping("/own")
+    public Page<AssetInfoShort> getAssetsUserOwning(
+            @RequestParam(required = false, value = "page", defaultValue = "0") int page,
+            // Using default value of 10 instead of a pathVariable
+            @RequestParam(required = false, value = "size", defaultValue = "10") int size) {
+        //register if no such user
+        Person user = personService.getCurrentUser();
+        return assetService.getAssetsUserOwning(user, page, size);
+    }
+
 //    @PreAuthorize("hasRole('ROLE_Raamatupidaja') || hasRole('ROLE_Esimees')")
     @Transactional
     @GetMapping("/audit")

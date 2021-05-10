@@ -3,10 +3,7 @@ package ee.taltech.varadehaldamine.service;
 import ee.taltech.varadehaldamine.exception.InvalidAssetException;
 import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
 import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
-import ee.taltech.varadehaldamine.model.Asset;
-import ee.taltech.varadehaldamine.model.Classification;
-import ee.taltech.varadehaldamine.model.KitRelation;
-import ee.taltech.varadehaldamine.model.Possessor;
+import ee.taltech.varadehaldamine.model.*;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.repository.AssetRepository;
@@ -176,6 +173,11 @@ public class AssetService {
                 return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(id, name, classification, address, start, end, userDivision, division, pageRequest);
             }
         }
+    }
+
+    public Page<AssetInfoShort> getAssetsUserOwning(Person user, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return assetRepository.getAssetInfoShortByUserId(user.getId(), pageRequest);
     }
 
     public Asset update(AssetInfo assetInfo, String id) {

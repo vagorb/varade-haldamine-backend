@@ -77,4 +77,6 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     @Query(assetInfoCreate + tableFromAllTables + checkId + " AND (Po.structuralUnit = ?2 OR ?2 = -1)")
     AssetInfo getAssetInfoByIdAndDivision(String id, Integer userDivision);
 
+    @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + " WHERE A.userId = ?1")
+    Page<AssetInfoShort> getAssetInfoShortByUserId(Long id, PageRequest pageRequest);
 }
