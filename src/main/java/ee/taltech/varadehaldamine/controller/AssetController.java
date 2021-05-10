@@ -94,7 +94,7 @@ public class AssetController {
             @RequestParam(required = false, value = "size", defaultValue = "10") int size) {
         //register if no such user
         Person user = personService.getCurrentUser();
-        return assetService.getAssetsUserOwning(user, page, size);
+        return assetService.getAssetsUserOwning(user.getId(), page, size);
     }
 
 //    @PreAuthorize("hasRole('ROLE_Raamatupidaja') || hasRole('ROLE_Esimees')")
@@ -126,9 +126,9 @@ public class AssetController {
     @GetMapping("/{id}")
     public AssetInfo getAssetById(@PathVariable String id) {
         //register if no such user
-        personService.getCurrentUser();
+        Person person = personService.getCurrentUser();
         List<String> authorities = personService.getAuthorities();
-        return assetService.getAssetById(id, authorities);
+        return assetService.getAssetById(id, authorities, person.getId());
     }
 
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")

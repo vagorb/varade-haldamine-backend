@@ -74,7 +74,9 @@ public class AssetService {
                         assetInfo.getDescriptionText());
                 assetRepository.save(asset);
                 addKitRelation(assetInfo);
-                return assetRepository.getAssetInfoByIdAndDivision(assetInfo.getId(), -1);
+
+                // in getAssetInfoByIdAndDivisionOrUserId put 0 as userId, as userDivision -1 makes able to return every asset
+                return assetRepository.getAssetInfoByIdAndDivisionOrUserId(assetInfo.getId(), -1, 0L);
             }
         } catch (Exception e) {
             throw new InvalidAssetException("Error when adding asset: " + e);
@@ -83,10 +85,10 @@ public class AssetService {
     }
 
 
-    public AssetInfo getAssetById(String assetId, List<String> roles) {
+    public AssetInfo getAssetById(String assetId, List<String> roles, Long id) {
         Integer userDivision = getDivision(roles);
         System.out.println(userDivision);
-        return assetRepository.getAssetInfoByIdAndDivision(assetId.toLowerCase(), userDivision);
+        return assetRepository.getAssetInfoByIdAndDivisionOrUserId(assetId.toLowerCase(), userDivision, id);
     }
 
     private void addKitRelation(AssetInfo assetInfo) {
@@ -175,9 +177,9 @@ public class AssetService {
         }
     }
 
-    public Page<AssetInfoShort> getAssetsUserOwning(Person user, int page, int size){
+    public Page<AssetInfoShort> getAssetsUserOwning(Long id, int page, int size){
         PageRequest pageRequest = PageRequest.of(page, size);
-        return assetRepository.getAssetInfoShortByUserId(user.getId(), pageRequest);
+        return assetRepository.getAssetInfoShortByUserId(id, pageRequest);
     }
 
     public Asset update(AssetInfo assetInfo, String id) {

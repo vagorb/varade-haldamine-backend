@@ -74,8 +74,8 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
             checkClass + checkAddress + checkDateWithNull + checkUserDivision + checkActive + " AND (P.structuralUnit = ?9 OR P.subdivision = ?9)")
     Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsAllDateWithNull(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, Boolean active, Integer division, PageRequest pageRequest);
 
-    @Query(assetInfoCreate + tableFromAllTables + checkId + " AND (Po.structuralUnit = ?2 OR ?2 = -1)")
-    AssetInfo getAssetInfoByIdAndDivision(String id, Integer userDivision);
+    @Query(assetInfoCreate + tableFromAllTables + checkId + " AND (Po.structuralUnit = ?2 OR ?2 = -1 OR A.userId = ?3)")
+    AssetInfo getAssetInfoByIdAndDivisionOrUserId(String id, Integer userDivision, Long userId);
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + " WHERE A.userId = ?1")
     Page<AssetInfoShort> getAssetInfoShortByUserId(Long id, PageRequest pageRequest);
