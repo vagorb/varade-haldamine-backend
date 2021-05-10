@@ -104,7 +104,6 @@ public class AssetService {
 
     public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy, List<String> roles) {
 
-        System.out.println(assetSearchCriteria);
         String id = "%%";
         String name = "%%";
         Integer division = null;

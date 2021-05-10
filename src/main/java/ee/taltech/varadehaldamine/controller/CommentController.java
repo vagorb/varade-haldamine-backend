@@ -1,6 +1,5 @@
 package ee.taltech.varadehaldamine.controller;
 
-import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Comment;
 import ee.taltech.varadehaldamine.modelDTO.CommentInfo;
 import ee.taltech.varadehaldamine.service.CommentService;
