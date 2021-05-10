@@ -235,7 +235,7 @@ public class AssetService {
                         kitRelationRepository.save(existingKit);
                     }
                 }
-                if (assetInfo.getStructuralUnit() != null || assetInfo.getSubdivision() != null) {
+                if (assetInfo.getStructuralUnit() != null) {
                     Possessor newPossessor = possessorService
                             .findPossessor(assetInfo.getStructuralUnit(), assetInfo.getSubdivision());
                     if (newPossessor != null) {
@@ -243,8 +243,9 @@ public class AssetService {
                     }
                 }
                 String newSubClass = assetInfo.getSubclass();
-                if (newSubClass != null
-                        && classificationService.doesClassificationExistBySubClass(newSubClass)) {
+                String newMainCLass = assetInfo.getMainClass();
+                if (newSubClass != null && newMainCLass != null
+                        && classificationService.doesClassificationExist(newMainCLass, newSubClass)) {
                     dbAsset.setSubClass(newSubClass);
                 }
                 if (assetInfo.getUserId() == null

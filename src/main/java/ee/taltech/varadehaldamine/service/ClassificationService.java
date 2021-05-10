@@ -43,10 +43,10 @@ public class ClassificationService {
         return classificationRepository.save(dbClassification);
     }
 
-    public boolean doesClassificationExistBySubClass(String subClass) {
+    public boolean doesClassificationExist(String mainClass, String subClass) {
         List<Classification> all = findAll();
         for (Classification classification : all) {
-            if (classification.getSubClass().equals(subClass)) {
+            if (classification.getSubClass().equals(subClass) && classification.getMainClass().equals(mainClass)) {
                 return true;
             }
         }
