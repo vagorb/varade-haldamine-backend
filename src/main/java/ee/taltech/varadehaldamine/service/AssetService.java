@@ -44,9 +44,11 @@ public class AssetService {
     @Autowired
     private PossessorRepository possessorRepository;
     @Autowired
-    private PersonService personService;
+    private ClassificationService classificationService;
     @Autowired
     private PossessorService possessorService;
+    @Autowired
+    private PersonService personService;
 
     public List<AssetInfoShort> findAll() {
         return assetRepository.getAll();
@@ -242,12 +244,64 @@ public class AssetService {
                         kitRelationRepository.save(existingKit);
                     }
                 }
+                if (assetInfo.getStructuralUnit() != null) {
+                    Possessor newPossessor = possessorService
+                            .findPossessor(assetInfo.getStructuralUnit(), assetInfo.getSubdivision());
+                    if (newPossessor != null) {
+                        dbAsset.setPossessorId(newPossessor.getId());
+                    }
+                }
+                String newSubClass = assetInfo.getSubclass();
+                String newMainCLass = assetInfo.getMainClass();
+                if (newSubClass != null && newMainCLass != null
+                        && classificationService.doesClassificationExist(newMainCLass, newSubClass)) {
+                    dbAsset.setSubClass(newSubClass);
+                }
+                if (assetInfo.getUserId() == null
+                        && (assetInfo.getFirstname() != null || assetInfo.getLastname() != null)) {
+                    Person newPerson = personService
+                            .findPersonByFirstLastName(assetInfo.getFirstname(), assetInfo.getLastname());
+                    if (newPerson != null) {
+                        dbAsset.setUserId(newPerson.getId());
+                    }
+                }
+                if (assetInfo.getUserId() != null
+                        && assetInfo.getFirstname() == null && assetInfo.getLastname() == null) {
+                    dbAsset.setUserId(assetInfo.getUserId());
+                }
                 return assetRepository.save(dbAsset);
             }
         } catch (NumberFormatException e) {
             throw new InvalidAssetException("Error when updating asset: " + e);
         }
         return null;
+    }
+
+    public Asset check(String id) {
+        Asset dbAsset = assetRepository.findAssetById(id);
+        try {
+            if (id != null && dbAsset != null) {
+                dbAsset.setChecked(!dbAsset.getChecked());
+                return assetRepository.save(dbAsset);
+            }
+        } catch (Exception e) {
+            throw new InvalidAssetException("Error when adding asset: " + e);
+        }
+        return null;
+    }
+
+    public boolean checkMultiple(List<String> assetIds) {
+        if (assetIds != null && assetIds.size() > 0) {
+            for (String id : assetIds) {
+                Asset dbAsset = assetRepository.findAssetById(id);
+                if (dbAsset != null) {
+                    dbAsset.setChecked(!dbAsset.getChecked());
+                    assetRepository.save(dbAsset);
+                }
+            }
+            return true;
+        }
+        return false;
     }
 
     public Page<AssetInfo> getAuditById(String id) {

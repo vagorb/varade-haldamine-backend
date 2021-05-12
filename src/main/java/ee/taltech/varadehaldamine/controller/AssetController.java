@@ -198,8 +198,27 @@ public class AssetController {
      */
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
     @PutMapping("/{id}")
-    public Asset updateAsset(@RequestBody AssetInfo assetInfo, @PathVariable String id) {
-        return assetService.update(assetInfo, id);
+    public ResponseEntity<Object> updateAsset(@RequestBody AssetInfo assetInfo, @PathVariable String id) {
+        if (assetService.update(assetInfo, id) != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
+
+    @PutMapping("/check/{id}")
+    public ResponseEntity<Object> checkAsset(@PathVariable String id) {
+        if (assetService.check(id) != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
+
+    @PutMapping("/check")
+    public ResponseEntity<Object> checkMultiple(@RequestBody List<String> assetIds) {
+        if (assetService.checkMultiple(assetIds)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
     /**
