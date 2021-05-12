@@ -1,7 +1,6 @@
 package ee.taltech.varadehaldamine.controller;
 
 
-import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
 import ee.taltech.varadehaldamine.service.AssetService;
@@ -11,19 +10,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.client.OAuth2AuthorizedClientId;
 import org.springframework.web.bind.annotation.*;
-import javax.persistence.*;
-import javax.transaction.Transactional;
-import javax.validation.Valid;
 
-import org.springframework.security.core.Authentication;
+import javax.transaction.Transactional;
+
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import java.security.Principal;
-import java.util.ArrayList;
+
 import java.util.Collection;
 import java.util.List;
 
@@ -95,8 +89,27 @@ public class AssetController {
     }
 
     @PutMapping("/{id}")
-    public Asset updateAsset(@RequestBody AssetInfo assetInfo, @PathVariable String id) {
-        return assetService.update(assetInfo, id);
+    public ResponseEntity<Object> updateAsset(@RequestBody AssetInfo assetInfo, @PathVariable String id) {
+        if (assetService.update(assetInfo, id) != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
+
+    @PutMapping("/check/{id}")
+    public ResponseEntity<Object> checkAsset(@PathVariable String id) {
+        if (assetService.check(id) != null) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
+
+    @PutMapping("/check")
+    public ResponseEntity<Object> checkMultiple(@RequestBody List<String> assetIds) {
+        if (assetService.checkMultiple(assetIds)) {
+            return ResponseEntity.status(HttpStatus.OK).build();
+        }
+        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
 

@@ -268,6 +268,33 @@ public class AssetService {
         return null;
     }
 
+    public Asset check(String id) {
+        Asset dbAsset = assetRepository.findAssetById(id);
+        try {
+            if (id != null && dbAsset != null) {
+                dbAsset.setChecked(!dbAsset.getChecked());
+                return assetRepository.save(dbAsset);
+            }
+        } catch (Exception e) {
+            throw new InvalidAssetException("Error when adding asset: " + e);
+        }
+        return null;
+    }
+
+    public boolean checkMultiple(List<String> assetIds) {
+        if (assetIds != null && assetIds.size() > 0) {
+            for (String id : assetIds) {
+                Asset dbAsset = assetRepository.findAssetById(id);
+                if (dbAsset != null) {
+                    dbAsset.setChecked(!dbAsset.getChecked());
+                    assetRepository.save(dbAsset);
+                }
+            }
+            return true;
+        }
+        return false;
+    }
+
     public Page<AssetInfo> getAuditById(String id) {
         EntityManager em = emf.createEntityManager();
 
