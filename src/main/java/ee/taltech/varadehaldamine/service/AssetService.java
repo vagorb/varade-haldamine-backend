@@ -257,18 +257,6 @@ public class AssetService {
                         && classificationService.doesClassificationExist(newMainCLass, newSubClass)) {
                     dbAsset.setSubClass(newSubClass);
                 }
-                if (assetInfo.getUserId() == null
-                        && (assetInfo.getFirstname() != null || assetInfo.getLastname() != null)) {
-                    Person newPerson = personService
-                            .findPersonByFirstLastName(assetInfo.getFirstname(), assetInfo.getLastname());
-                    if (newPerson != null) {
-                        dbAsset.setUserId(newPerson.getId());
-                    }
-                }
-                if (assetInfo.getUserId() != null
-                        && assetInfo.getFirstname() == null && assetInfo.getLastname() == null) {
-                    dbAsset.setUserId(assetInfo.getUserId());
-                }
                 return assetRepository.save(dbAsset);
             }
         } catch (NumberFormatException e) {
