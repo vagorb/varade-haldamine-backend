@@ -15,13 +15,13 @@ public class Person {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String username;
+    private String email;
     private String azureId;
-    private String firstname;
-    private String lastname;
 
-    public Person(String azureId, String firstName, String lastName) {
+    public Person(String username, String email, String azureId) {
+        this.username = username;
+        this.email = email;
         this.azureId = azureId;
-        this.firstname = firstName;
-        this.lastname = lastName;
     }
 }

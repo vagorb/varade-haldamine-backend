@@ -2,6 +2,7 @@ package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.InvalidAssetException;
 import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
+import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
 import ee.taltech.varadehaldamine.model.*;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
@@ -75,7 +76,9 @@ public class AssetService {
                         assetInfo.getDescriptionText());
                 assetRepository.save(asset);
                 addKitRelation(assetInfo);
-                return assetRepository.getAssetInfoById(assetInfo.getId());
+
+                // in getAssetInfoByIdAndDivisionOrUserId put 0 as userId, as userDivision -1 makes able to return every asset
+                return assetRepository.getAssetInfoByIdAndDivisionOrUserId(assetInfo.getId(), -1, 0L);
             }
         } catch (Exception e) {
             throw new InvalidAssetException("Error when adding asset: " + e);
@@ -84,8 +87,10 @@ public class AssetService {
     }
 
 
-    public AssetInfo getAssetById(String assetId) {
-        return assetRepository.getAssetInfoById(assetId);
+    public AssetInfo getAssetById(String assetId, List<String> roles, Long id) {
+        Integer userDivision = getDivision(roles);
+        System.out.println(userDivision);
+        return assetRepository.getAssetInfoByIdAndDivisionOrUserId(assetId.toLowerCase(), userDivision, id);
     }
 
     private void addKitRelation(AssetInfo assetInfo) {
@@ -99,9 +104,8 @@ public class AssetService {
         }
     }
 
-    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy) {
+    public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy, List<String> roles) {
 
-        System.out.println(assetSearchCriteria);
         String id = "%%";
         String name = "%%";
         Integer division = null;
@@ -110,7 +114,7 @@ public class AssetService {
         Boolean active = null;
         java.util.Date start = new java.util.Date(100);
         java.util.Date end = null;
-
+        Integer userDivision = getDivision(roles);
         if (assetSearchCriteria.getId() != null) {
             id = "%" + assetSearchCriteria.getId().toLowerCase() + "%";
         }
@@ -153,25 +157,30 @@ public class AssetService {
         }
         if (assetSearchCriteria.getLifeMonthsLeft() != null && assetSearchCriteria.getLifeMonthsLeft() > 0) {
             if (division != null && active != null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, active, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsAll(id, name, classification, address, start, end, userDivision, active, division, pageRequest);
             } else if (division == null && active == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(id, name, classification, address, start, end, userDivision, pageRequest);
             } else if (division == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, active, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivision(id, name, classification, address, start, end, userDivision, active, pageRequest);
             } else {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActive(id, name, classification, address, start, end, userDivision, division, pageRequest);
             }
         } else {
             if (division != null && active != null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsAllDateWithNull(id, name, classification, address, start, end, active, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsAllDateWithNull(id, name, classification, address, start, end, userDivision, active, division, pageRequest);
             } else if (division == null && active == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(id, name, classification, address, start, end, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivisionDateWithNull(id, name, classification, address, start, end, userDivision, pageRequest);
             } else if (division == null) {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(id, name, classification, address, start, end, active, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoDivisionDateWithNull(id, name, classification, address, start, end, userDivision, active, pageRequest);
             } else {
-                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(id, name, classification, address, start, end, division, pageRequest);
+                return assetRepository.getFilteredAndSortedAssetInfoShortsNoActiveDateWithNull(id, name, classification, address, start, end, userDivision, division, pageRequest);
             }
         }
+    }
+
+    public Page<AssetInfoShort> getAssetsUserOwning(Long id, int page, int size){
+        PageRequest pageRequest = PageRequest.of(page, size);
+        return assetRepository.getAssetInfoShortByUserId(id, pageRequest);
     }
 
     public Asset update(AssetInfo assetInfo, String id) {
@@ -317,8 +326,8 @@ public class AssetService {
                     a.getPossessorId(), a.getExpirationDate(), a.getDelicateCondition(), a.getChecked(),
                     a.getCreatedAt(), a.getModifiedAt(), a.getPrice(), a.getResidualPrice(), a.getPurchaseDate(),
                     a.getSubClass(), classification.getMainClass(), majorAssetId,
-                    a.getBuildingAbbreviature(), a.getRoom(), a.getDescription(), "Kasutaja firstname",
-                    "Kasutaja lastname", possessor.getStructuralUnit(), possessor.getSubdivision());
+                    a.getBuildingAbbreviature(), a.getRoom(), a.getDescription(), "Kasutaja usename",
+                    possessor.getStructuralUnit(), possessor.getSubdivision());
             assetInfos.add(assetInfo);
         }
         Collections.reverse(assetInfos);
@@ -346,5 +355,25 @@ public class AssetService {
                 || kitRelationRepository.findKitRelationByComponentAssetId(assetInfo.getMajorAssetId()) != null
                 || assetInfo.getMajorAssetId().equals(assetInfo.getId())
                 && assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null);
+    }
+
+    private Integer getDivision(List<String> roles){
+        Integer division = null;
+        for (String role: roles){
+            if (role.equals("ROLE_Raamatupidaja")){
+                return -1;
+            } else if (role.startsWith("ROLE_D") && division == null){
+                try {
+                    division = Integer.valueOf(role.replace("ROLE_D", ""));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Given not integer in division filter field");
+                }
+            }
+        }
+        System.out.println(division);
+        if (division == null){
+            throw new WrongCurrentUserRoleException("Check user have right roles");
+        }
+        return division;
     }
 }
