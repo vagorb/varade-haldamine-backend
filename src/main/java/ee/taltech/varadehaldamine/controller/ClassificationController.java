@@ -20,7 +20,7 @@ public class ClassificationController {
     @Autowired
     ClassificationService classificationService;
 
-    @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
+
     @GetMapping
     public List<Classification> getAll() {
         return classificationService.findAll();
@@ -29,6 +29,7 @@ public class ClassificationController {
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
     @PostMapping
     public ResponseEntity<Object> addClassification(@RequestBody ClassificationInfo classification) {
+        System.out.println("dopustim");
         if (classificationService.addClassification(classification) != null) {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
