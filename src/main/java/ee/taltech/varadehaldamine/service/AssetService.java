@@ -54,6 +54,10 @@ public class AssetService {
         return assetRepository.getAll();
     }
 
+    public List<AssetInfo> getAllInfoAboutAsset(){
+        return assetRepository.getAllInfoAboutAsset();
+    }
+
     // when adding new asset, the user and comments would not to be put
     public AssetInfo addAsset(AssetInfo assetInfo) {
         try {

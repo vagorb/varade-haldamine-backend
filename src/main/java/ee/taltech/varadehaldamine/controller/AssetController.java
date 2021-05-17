@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.controller;
 
 
+import ee.taltech.varadehaldamine.filesHandling.ExcelAssetExporter;
 import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
@@ -15,12 +16,14 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
@@ -236,5 +239,23 @@ public class AssetController {
             return ResponseEntity.status(HttpStatus.CREATED).build();
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    }
+
+    @GetMapping("/")
+    public void exportAllAssetsExcel(HttpServletResponse response){
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=assets.xlsx";
+        response.setHeader(headerKey, headerValue);
+
+        List<AssetInfo> assets = assetService.getAllInfoAboutAsset();
+
+        ExcelAssetExporter excelAssetExporter = new ExcelAssetExporter(assets);
+        try {
+            excelAssetExporter.export(response);
+        } catch (IOException e){
+            System.out.println("error when asset excel generating");
+            System.out.println(e);
+        }
+
     }
 }

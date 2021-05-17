@@ -42,6 +42,9 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor)
     List<AssetInfoShort> getAll();
 
+    @Query(assetInfoCreate + tableFromAllTables)
+    List<AssetInfo> getAllInfoAboutAsset();
+
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +
             checkName + checkClass + checkAddress + checkDate + checkUserDivision)
     Page<AssetInfoShort> getFilteredAndSortedAssetInfoShortsNoActiveAndNoDivision(String id, String name, String classification, String address, Date start, Date end, Integer userDivision, PageRequest pageRequest);
