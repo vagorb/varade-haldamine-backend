@@ -54,7 +54,8 @@ public class AssetService {
         return assetRepository.getAll();
     }
 
-    public List<AssetInfo> getAllInfoAboutAsset(){
+    public List<AssetInfo> getAllInfoAboutAssetASC(){
+
         return assetRepository.getAllInfoAboutAsset();
     }
 

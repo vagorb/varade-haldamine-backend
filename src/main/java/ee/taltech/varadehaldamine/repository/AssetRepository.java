@@ -39,10 +39,12 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
     String checkUserDivision = " AND (P.structuralUnit = ?7 OR ?7 = -1)";
     String checkActive = " AND A.active = ?8";
 
+    String sortByIdAsc = " ORDER BY A.id ASC";
+
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor)
     List<AssetInfoShort> getAll();
 
-    @Query(assetInfoCreate + tableFromAllTables)
+    @Query(assetInfoCreate + tableFromAllTables + sortByIdAsc)
     List<AssetInfo> getAllInfoAboutAsset();
 
     @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor + checkId +

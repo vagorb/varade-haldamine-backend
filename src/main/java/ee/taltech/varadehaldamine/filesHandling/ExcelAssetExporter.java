@@ -52,7 +52,6 @@ public class ExcelAssetExporter {
             data.add(assets.get(index).getDelicateCondition());
             assetData.put(index, data);
         }
-        System.out.println(assetData);
     }
 
     public ExcelAssetExporter(List<AssetInfo> assets) {
@@ -96,8 +95,8 @@ public class ExcelAssetExporter {
         row.createCell(19).setCellValue("Delikaatse sisuga");
     }
 
-    private String getDataByIndex(int index){
-        Object data = assetData.get(index).get(index);
+    private String getDataByIndex(int assetIndex,int index){
+        Object data = assetData.get(assetIndex-1).get(index);
         if (data == null){
             return "";
         } else if (data instanceof Boolean){
@@ -114,7 +113,7 @@ public class ExcelAssetExporter {
         for (int index = 1; index <= assetData.size(); index++){
             Row row = sheet.createRow(index);
             for (int column = 0; column < 20; column++){
-                String data = getDataByIndex(column);
+                String data = getDataByIndex(index, column);
                 row.createCell(column).setCellValue(data);
             }
         }

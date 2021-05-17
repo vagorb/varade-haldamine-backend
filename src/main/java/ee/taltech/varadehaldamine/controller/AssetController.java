@@ -247,14 +247,13 @@ public class AssetController {
         String headerValue = "attachment; filename=assets.xlsx";
         response.setHeader(headerKey, headerValue);
 
-        List<AssetInfo> assets = assetService.getAllInfoAboutAsset();
+        List<AssetInfo> assets = assetService.getAllInfoAboutAssetASC();
 
         ExcelAssetExporter excelAssetExporter = new ExcelAssetExporter(assets);
         try {
             excelAssetExporter.export(response);
         } catch (IOException e){
-            System.out.println("error when asset excel generating");
-            System.out.println(e);
+            System.out.println("error when asset excel generating: " + e);
         }
 
     }
