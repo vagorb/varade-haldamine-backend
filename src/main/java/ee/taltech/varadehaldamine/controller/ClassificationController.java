@@ -61,7 +61,7 @@ public class ClassificationController {
      * @return changed classification
      */
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
-    @PutMapping("/{sub_class}")
+    @PutMapping("/{subclass}")
     public Classification updateClassification(@RequestBody Classification classification, @PathVariable String subClass) {
         return classificationService.update(classification, subClass);
     }

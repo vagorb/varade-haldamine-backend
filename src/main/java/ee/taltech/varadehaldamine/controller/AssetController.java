@@ -2,7 +2,6 @@ package ee.taltech.varadehaldamine.controller;
 
 
 import ee.taltech.varadehaldamine.filesHandling.ExcelAssetExporter;
-import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
@@ -46,7 +45,7 @@ public class AssetController {
      * @return role name
      */
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
-    @GetMapping("/account")
+    @GetMapping("/accountt")
     public String getAccount() {
 
     @GetMapping("/accountt")
