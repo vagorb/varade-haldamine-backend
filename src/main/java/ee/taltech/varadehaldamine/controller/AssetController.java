@@ -31,6 +31,11 @@ import java.util.List;
 @RestController
 public class AssetController {
 
+    @Autowired
+    PersonService personService;
+
+    @Autowired
+    AssetService assetService;
 
     /**
      * This method is used by front-end to understand, which user (his/her role)
@@ -43,6 +48,9 @@ public class AssetController {
     @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
     @GetMapping("/account")
     public String getAccount() {
+
+    @GetMapping("/accountt")
+    public String getAccountt() {
         Collection<? extends GrantedAuthority> list = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         if (list.toString().contains("Raamatupidaja")) {
             return "Raamatupidaja";
@@ -57,6 +65,12 @@ public class AssetController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
+    @GetMapping("/account")
+    public Object getAccount() {
+        return SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
     /**
      * Logout function to logout user from Azure
      *
@@ -68,11 +82,6 @@ public class AssetController {
         SecurityContextHolder.clearContext();
     }
 
-    @Autowired
-    PersonService personService;
-
-    @Autowired
-    AssetService assetService;
 
     /**
      * Method to get assets, also ables to filter and sort assets by different criteria.
