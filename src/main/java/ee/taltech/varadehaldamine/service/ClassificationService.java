@@ -35,4 +35,23 @@ public class ClassificationService {
         return null;
     }
 
+    public Classification update(Classification classification, String main_class) {
+        Classification dbClassification = classificationRepository.findClassificationBySubClass(main_class);
+        System.out.println(classification.getMainClass());
+        dbClassification.setMainClass(classification.getMainClass());
+        System.out.println(dbClassification.getMainClass());
+        return classificationRepository.save(dbClassification);
+    }
+
+    public boolean doesClassificationExist(String mainClass, String subClass) {
+        List<Classification> all = findAll();
+        for (Classification classification : all) {
+            if (classification.getSubClass().equals(subClass) && classification.getMainClass().equals(mainClass)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

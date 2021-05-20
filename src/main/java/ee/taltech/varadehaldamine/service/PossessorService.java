@@ -38,4 +38,24 @@ public class PossessorService {
         }
         return null;
     }
+
+    public Possessor update(Possessor possessor, Long id) {
+        Possessor dbPossessor = possessorRepository.findPossessorById(id);
+        dbPossessor.setStructuralUnit(possessor.getStructuralUnit());
+        return possessorRepository.save(dbPossessor);
+    }
+
+    public Possessor findPossessor(Integer structuralUnit, Integer subDivision) {
+        List<Possessor> all = findAll();
+        for (Possessor possessor : all) {
+            if (subDivision == null
+                    && possessor.getStructuralUnit().equals(structuralUnit)
+                    || possessor.getStructuralUnit().equals(structuralUnit)
+                    && possessor.getSubdivision().equals(subDivision)) {
+                return possessor;
+            }
+        }
+        return null;
+    }
+
 }

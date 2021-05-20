@@ -1,4 +1,4 @@
-package ee.taltech.varadehaldamine.controller;
+package ee.taltech.varadehaldamine.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

@@ -1,11 +1,10 @@
 package ee.taltech.varadehaldamine.model;
 
 import lombok.*;
+import org.hibernate.envers.Audited;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -13,6 +12,7 @@ import javax.persistence.Id;
 @Setter
 @ToString
 @EqualsAndHashCode
+@Audited
 @Entity
 public class Possessor {
     @Id
@@ -20,4 +20,7 @@ public class Possessor {
     private Long id;
     private Integer structuralUnit;
     private Integer subdivision;
+
+//    @OneToMany(mappedBy = "possessorId", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Asset> assets;
 }

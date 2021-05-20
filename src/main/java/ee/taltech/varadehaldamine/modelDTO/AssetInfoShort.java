@@ -1,5 +1,6 @@
 package ee.taltech.varadehaldamine.modelDTO;
 
+import io.swagger.models.auth.In;
 import lombok.*;
 
 import javax.persistence.Id;
@@ -35,12 +36,20 @@ public class AssetInfoShort {
     private Integer lifeMonthsLeft;
     private Boolean active;
 
-    public AssetInfoShort(String id, String name, String structuralUnitPlusSubdivision, String mainClassPlusSubclass, String buildingAbbreviationPlusRoom, Date date, Boolean active) {
+    public AssetInfoShort(String id, String name, Integer structuralUnit, Integer subdivision, String mainClassPlusSubclass, String buildingAbbreviature, String room, Date date, Boolean active) {
         this.id = id;
         this.name = name;
-        this.structuralUnitPlusSubdivision = structuralUnitPlusSubdivision;
+        if (subdivision != null){
+            this.structuralUnitPlusSubdivision = structuralUnit + " " + subdivision;
+        } else {
+            this.structuralUnitPlusSubdivision = structuralUnit.toString();
+        }
         this.mainClassPlusSubclass = mainClassPlusSubclass;
-        this.buildingAbbreviationPlusRoom = buildingAbbreviationPlusRoom;
+        if (room != null){
+            this.buildingAbbreviationPlusRoom = buildingAbbreviature + " " + room;
+        } else {
+            this.buildingAbbreviationPlusRoom = buildingAbbreviature;
+        }
         this.lifeMonthsLeft = 0;
         if (date != null){
             int months = (int) ChronoUnit.MONTHS.between(LocalDate.now(), Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
