@@ -240,7 +240,7 @@ public class AssetController {
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/exportExcel")
     public void exportAllAssetsExcel(HttpServletResponse response){
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=assets.xlsx";
@@ -254,6 +254,5 @@ public class AssetController {
         } catch (IOException e){
             System.out.println("error when asset excel generating: " + e);
         }
-
     }
 }
