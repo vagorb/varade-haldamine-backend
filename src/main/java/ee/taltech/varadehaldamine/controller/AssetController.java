@@ -2,7 +2,6 @@ package ee.taltech.varadehaldamine.controller;
 
 
 import ee.taltech.varadehaldamine.filesHandling.ExcelAssetExporter;
-import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfoShort;
@@ -14,15 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -142,6 +137,8 @@ public class AssetController {
         Page<AssetInfo> assets = assetService.getAuditById(assetId);
         return assets.getContent().get(index);
     }
+
+
 
     /**
      * Method to get all audits in paged variant of the asset.
