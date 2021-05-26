@@ -2,6 +2,7 @@ package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.InvalidAssetException;
 import ee.taltech.varadehaldamine.exception.InvalidKitRelationException;
+import ee.taltech.varadehaldamine.exception.InventoryExcelException;
 import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
 import ee.taltech.varadehaldamine.model.*;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
@@ -16,7 +17,9 @@ import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -296,16 +299,21 @@ public class AssetService {
         return false;
     }
 
-    public List<List<AssetInfo>> getLists(List<String> roles) {
+    public List<AssetInfo> getLists(List<String> roles) {
         Integer division = inventoryService.getDivision(roles);
-        System.out.println(division);
         Inventory inventory = inventoryService.getOngoingInventory(division);
-        List<List<AssetInfo>> result = getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
+        if (inventory == null) {
+            throw new InventoryExcelException();
+        }
+        List<AssetInfo> result = getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
                 inventory.getAssets());
         return result;
     }
 
-    public List<List<AssetInfo>> getAssetListByDate(Date firstDate, Date lastDate, Set<String> inventoryAssets) {
+    public List<AssetInfo> getAssetListByDate(Date firstDate, Date lastDate, Set<String> inventoryAssets) {
+        if (firstDate == null || lastDate == null|| inventoryAssets.size() == 0) {
+            throw new InventoryExcelException();
+        }
         List<AssetInfo> resultLastDate = new ArrayList<>();
         List<AssetInfo> resultFirstDate = new ArrayList<>();
         for (String assetId : inventoryAssets) {
@@ -324,9 +332,9 @@ public class AssetService {
                 }
             }
         }
-        List<List<AssetInfo>> result = new ArrayList<>();
-        result.add(resultFirstDate);
-        result.add(resultLastDate);
+        List<AssetInfo> result = new ArrayList<>();
+        result.addAll(resultFirstDate);
+        result.addAll(resultLastDate);
         return result;
     }
 
@@ -356,6 +364,8 @@ public class AssetService {
         q.add(AuditEntity.id().eq(id));
         List<Asset> audit = q.getResultList();
         Collections.reverse(audit);
+        em.getTransaction().commit();
+        em.close();
         return audit;
     }
 

@@ -85,4 +85,4 @@ CREATE TABLE IF NOT EXISTS Inventory_assets (
     id INT NOT NULL,
     assets VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (id) REFERENCES Inventory (id)
-)
+);

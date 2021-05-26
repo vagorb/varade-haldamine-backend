@@ -94,8 +94,8 @@ public class InventoryService {
 
     public Inventory getOngoingInventory(Integer division) {
         for (Inventory inventory : inventoryRepository.findAll()) {
-            if (inventory.getDivision().equals(division)
-                    && inventory.getEndDate().toLocalDate().getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
+            if (inventory.getDivision().equals(division)){
+//                    && inventory.getEndDate().toLocalDate().getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
                 return inventory;
             }
         }

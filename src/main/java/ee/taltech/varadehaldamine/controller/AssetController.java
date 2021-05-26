@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.controller;
 
 
+import ee.taltech.varadehaldamine.exception.InventoryExcelException;
 import ee.taltech.varadehaldamine.filesHandling.ExcelAssetExporter;
 import ee.taltech.varadehaldamine.model.Person;
 import ee.taltech.varadehaldamine.modelDTO.AssetInfo;
@@ -40,9 +41,6 @@ public class AssetController {
      *
      * @return role name
      */
-    @PreAuthorize("hasRole('ROLE_Tavakasutaja')")
-    @GetMapping("/accountt")
-    public String getAccount() {
 
     @GetMapping("/accountt")
     public String getAccountt() {
@@ -212,6 +210,7 @@ public class AssetController {
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
+    @PreAuthorize("hasRole('ROLE_KomisjoniLiige')")
     @PutMapping("/check/{id}")
     public ResponseEntity<Object> checkAsset(@PathVariable String id) {
         if (assetService.check(id) != null) {
@@ -219,7 +218,7 @@ public class AssetController {
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
-
+    @PreAuthorize("hasRole('ROLE_KomisjoniLiige')")
     @PutMapping("/check")
     public ResponseEntity<Object> checkMultiple(@RequestBody List<String> assetIds) {
         if (assetService.checkMultiple(assetIds)) {
@@ -261,9 +260,23 @@ public class AssetController {
         }
     }
 
-    @GetMapping("idkyet")
-    public List<List<AssetInfo>> getInventoryStart() {
+    @Transactional
+    @GetMapping("/inventoryExcel")
+    public void getInventoryStart(HttpServletResponse response) {
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=assets.xlsx";
+        response.setHeader(headerKey, headerValue);
         List<String> authorities = personService.getAuthorities();
-        return assetService.getLists(authorities);
+        List<AssetInfo> assets = assetService.getLists(authorities);
+        System.out.println(assets.size());
+        if (assets.size() == 0) {
+            throw new InventoryExcelException();
+        }
+        ExcelAssetExporter excelAssetExporter =  new ExcelAssetExporter(assets);
+        try {
+            excelAssetExporter.export(response);
+        } catch (IOException e){
+            System.out.println("error when asset excel generating: " + e);
+        }
     }
 }
