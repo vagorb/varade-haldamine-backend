@@ -24,10 +24,7 @@ import javax.persistence.PersistenceUnit;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class AssetService {
@@ -49,6 +46,8 @@ public class AssetService {
     private PossessorService possessorService;
     @Autowired
     private PersonService personService;
+    @Autowired
+    private InventoryService inventoryService;
 
     public List<AssetInfoShort> findAll() {
         return assetRepository.getAll();
@@ -297,7 +296,57 @@ public class AssetService {
         return false;
     }
 
-    public Page<AssetInfo> getAuditById(String id) {
+    public List<List<AssetInfo>> getLists(List<String> roles) {
+        Integer division = inventoryService.getDivision(roles);
+        System.out.println(division);
+        Inventory inventory = inventoryService.getOngoingInventory(division);
+        List<List<AssetInfo>> result = getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
+                inventory.getAssets());
+        return result;
+    }
+
+    public List<List<AssetInfo>> getAssetListByDate(Date firstDate, Date lastDate, Set<String> inventoryAssets) {
+        List<AssetInfo> resultLastDate = new ArrayList<>();
+        List<AssetInfo> resultFirstDate = new ArrayList<>();
+        for (String assetId : inventoryAssets) {
+            List<Asset> audit = getAuditList(assetId);
+            boolean isLastAdded = false;
+            for (Asset auditAsset : audit) {
+                if (isLastAdded && (auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().equals(firstDate.toLocalDate())
+                        || auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().isBefore(firstDate.toLocalDate()))) {
+                    resultFirstDate.add(constructAssetInfo(auditAsset));
+                    break;
+                }
+                if (!isLastAdded && (auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().equals(lastDate.toLocalDate())
+                        || auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().isBefore(lastDate.toLocalDate()))) {
+                    resultLastDate.add(constructAssetInfo(auditAsset));
+                    isLastAdded = true;
+                }
+            }
+        }
+        List<List<AssetInfo>> result = new ArrayList<>();
+        result.add(resultFirstDate);
+        result.add(resultLastDate);
+        return result;
+    }
+
+    private AssetInfo constructAssetInfo(Asset asset) {
+        Possessor possessor = possessorRepository.findPossessorById(asset.getPossessorId());
+        Classification classification = classificationRepository.findClassificationBySubClass(asset.getSubClass());
+        KitRelation kitRelation = kitRelationRepository.findKitRelationByComponentAssetId(asset.getId());
+        String majorAssetId = null;
+        if (kitRelation != null) {
+            majorAssetId = kitRelation.getMajorAssetId();
+        }
+        return new AssetInfo(asset.getId(), asset.getName(), asset.getActive(), asset.getUserId(),
+                asset.getPossessorId(), asset.getExpirationDate(), asset.getDelicateCondition(), asset.getChecked(),
+                asset.getCreatedAt(), asset.getModifiedAt(), asset.getPrice(), asset.getResidualPrice(), asset.getPurchaseDate(),
+                asset.getSubClass(), classification.getMainClass(), majorAssetId,
+                asset.getBuildingAbbreviature(), asset.getRoom(), asset.getDescription(), "Kasutaja usename",
+                possessor.getStructuralUnit(), possessor.getSubdivision());
+    }
+
+    private List<Asset> getAuditList(String id) {
         EntityManager em = emf.createEntityManager();
 
         em.getTransaction().begin();
@@ -306,22 +355,22 @@ public class AssetService {
         AuditQuery q = auditReader.createQuery().forRevisionsOfEntity(Asset.class, true, true);
         q.add(AuditEntity.id().eq(id));
         List<Asset> audit = q.getResultList();
+        Collections.reverse(audit);
+        return audit;
+    }
+
+    public Page<AssetInfo> getAuditById(String id) {
+        EntityManager em = emf.createEntityManager();
+
+        em.getTransaction().begin();
+        AuditReader auditReader = AuditReaderFactory.get(em);
+
+        List<Asset> audit = getAuditList(id);
         List<AssetInfo> assetInfos = new ArrayList<>();
+        Collections.reverse(audit);
+        System.out.println(audit);
         for (Asset a : audit) {
-            Possessor possessor = possessorRepository.findPossessorById(a.getPossessorId());
-            Classification classification = classificationRepository.findClassificationBySubClass(a.getSubClass());
-            KitRelation kitRelation = kitRelationRepository.findKitRelationByComponentAssetId(a.getId());
-            String majorAssetId = null;
-            if (kitRelation != null) {
-                majorAssetId = kitRelation.getMajorAssetId();
-            }
-            AssetInfo assetInfo = new AssetInfo(a.getId(), a.getName(), a.getActive(), a.getUserId(),
-                    a.getPossessorId(), a.getExpirationDate(), a.getDelicateCondition(), a.getChecked(),
-                    a.getCreatedAt(), a.getModifiedAt(), a.getPrice(), a.getResidualPrice(), a.getPurchaseDate(),
-                    a.getSubClass(), classification.getMainClass(), majorAssetId,
-                    a.getBuildingAbbreviature(), a.getRoom(), a.getDescription(), "Kasutaja usename",
-                    possessor.getStructuralUnit(), possessor.getSubdivision());
-            assetInfos.add(assetInfo);
+            assetInfos.add(constructAssetInfo(a));
         }
         Collections.reverse(assetInfos);
         em.getTransaction().commit();
