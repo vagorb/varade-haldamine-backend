@@ -12,10 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Service
 public class InventoryService {
@@ -95,6 +92,16 @@ public class InventoryService {
         }
     }
 
+    public Inventory getOngoingInventory(Integer division) {
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(division)
+                    && inventory.getEndDate().toLocalDate().getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
+                return inventory;
+            }
+        }
+        return null;
+    }
+
     public List<Asset> getAssetsInInventory(Long inventoryId) {
         Inventory dbInventory = inventoryRepository.findInventoryById(inventoryId);
         if (dbInventory != null) {
@@ -111,7 +118,7 @@ public class InventoryService {
         return null;
     }
 
-    private Integer getDivision(List<String> roles) {
+    public Integer getDivision(List<String> roles) {
         Integer division = null;
         for (String role: roles) {
             if (role.startsWith("ROLE_D") && division == null) {

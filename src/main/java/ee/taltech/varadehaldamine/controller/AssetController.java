@@ -251,4 +251,10 @@ public class AssetController {
             System.out.println("error when asset excel generating: " + e);
         }
     }
+
+    @GetMapping("idkyet")
+    public List<List<AssetInfo>> getInventoryStart() {
+        List<String> authorities = personService.getAuthorities();
+        return assetService.getLists(authorities);
+    }
 }
