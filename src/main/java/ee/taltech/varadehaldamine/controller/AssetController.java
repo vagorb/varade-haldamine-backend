@@ -92,9 +92,7 @@ public class AssetController {
             @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
             @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
         Person user = personService.getCurrentUser();
-        System.out.println(user.toString());
         List<String> authorities = personService.getAuthorities();
-        System.out.println(authorities);
         return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy, authorities), HttpStatus.OK);
     }
 
@@ -229,7 +227,7 @@ public class AssetController {
      * @param asset new asset
      * @return message to front-end, the asset is added or not
      */
-    @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
+    //@PreAuthorize("hasRole('ROLE_Raamatupidaja')")
     @PostMapping
     public ResponseEntity<Object> addAsset(@RequestBody AssetInfo asset) {
         if (assetService.addAsset(asset) != null) {

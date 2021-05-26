@@ -51,7 +51,8 @@ public class PossessorService {
             if (subDivision == null
                     && possessor.getStructuralUnit().equals(structuralUnit)
                     || possessor.getStructuralUnit().equals(structuralUnit)
-                    && possessor.getSubdivision().equals(subDivision)) {
+                    && possessor.getSubdivision().equals(subDivision)
+                    || possessor.getStructuralUnit().equals(structuralUnit)) {
                 return possessor;
             }
         }
