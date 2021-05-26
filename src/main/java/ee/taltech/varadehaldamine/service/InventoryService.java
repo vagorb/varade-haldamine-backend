@@ -1,5 +1,8 @@
 package ee.taltech.varadehaldamine.service;
 
+import ee.taltech.varadehaldamine.exception.AssetIsNotChecked;
+import ee.taltech.varadehaldamine.exception.OngoingInventoryAlreadyExists;
+import ee.taltech.varadehaldamine.exception.OngoingInventoryDoesNotExist;
 import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
 import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Inventory;
@@ -28,6 +31,12 @@ public class InventoryService {
 
     public Inventory createInventory(List<String> roles) {
         Integer userDivision = getDivision(roles);
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(userDivision) && inventory.getEndDate() == null) {
+                throw new OngoingInventoryAlreadyExists();
+            }
+        }
+        setAssetsUnchecked(userDivision);
         Inventory newInventory = new Inventory();
         newInventory.setDivision(userDivision);
         newInventory.setStartDate(new Date(System.currentTimeMillis()));
@@ -36,16 +45,25 @@ public class InventoryService {
         return inventoryRepository.save(newInventory);
     }
 
-    public Inventory endInventory(Long inventoryId, List<String> roles) {
-        Inventory dbInventory = inventoryRepository.findInventoryById(inventoryId);
+    public Inventory endInventory(List<String> roles) {
         Integer userDivision = getDivision(roles);
-        if (dbInventory != null && userDivision == dbInventory.getDivision()) {
+        Inventory dbInventory = null;
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(userDivision) && inventory.getEndDate() == null) {
+                dbInventory = inventory;
+                break;
+            }
+        }
+        if (dbInventory == null) {
+            throw new OngoingInventoryDoesNotExist();
+        }
+        if (userDivision.equals(dbInventory.getDivision())) {
             Set<String> allCurrentAssets = getAssetsSetByPossessor(dbInventory.getDivision());
             Set<String> allInventoryAssets = dbInventory.getAssets();
             for (String assetId : allCurrentAssets) {
                 allInventoryAssets.add(assetId);
                 if (!assetRepository.findAssetById(assetId).getChecked()) {
-                    return null;
+                    throw new AssetIsNotChecked(assetId);
                 }
             }
             dbInventory.setAssets(allInventoryAssets);
@@ -55,16 +73,26 @@ public class InventoryService {
         return null;
     }
 
-    public Set<String> getAssetsSetByPossessor(Integer divison) {
+    public Set<String> getAssetsSetByPossessor(Integer division) {
         List<Asset> allAssets = assetRepository.findAll();
         Set<String> inventoryAssets = new HashSet<>();
         for (Asset asset : allAssets) {
             if (possessorService.getPossesorById(asset.getPossessorId()).getId()
-                    .equals(possessorService.findPossessor(divison, null).getId())) {
+                    .equals(possessorService.findPossessor(division, null).getId())) {
                 inventoryAssets.add(asset.getId());
             }
         }
         return inventoryAssets;
+    }
+
+    public void setAssetsUnchecked(Integer division) {
+        List<Asset> allAssets = assetRepository.findAll();
+        for (Asset asset : allAssets) {
+            if (possessorService.getPossesorById(asset.getPossessorId()).getId()
+                    .equals(possessorService.findPossessor(division, null).getId())) {
+                asset.setChecked(false);
+            }
+        }
     }
 
     public List<Asset> getAssetsInInventory(Long inventoryId) {

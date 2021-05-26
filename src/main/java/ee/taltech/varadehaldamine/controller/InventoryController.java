@@ -31,10 +31,10 @@ public class InventoryController {
     }
 
     @PreAuthorize("hasRole('ROLE_ÜksuseJuht')")
-    @PutMapping("/{inventoryId}")
-    public ResponseEntity<Object> endInventory(@PathVariable Long inventoryId) {
+    @PutMapping
+    public ResponseEntity<Object> endInventory() {
         List<String> authorities = personService.getAuthorities();
-        if (inventoryService.endInventory(inventoryId, authorities) != null) {
+        if (inventoryService.endInventory(authorities) != null) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
