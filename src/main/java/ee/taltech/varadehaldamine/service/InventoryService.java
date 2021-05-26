@@ -1,6 +1,5 @@
 package ee.taltech.varadehaldamine.service;
 
-import ee.taltech.varadehaldamine.exception.PossessorNotFoundException;
 import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
 import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Inventory;
@@ -27,11 +26,8 @@ public class InventoryService {
     @Autowired
     private PossessorService possessorService;
 
-    public Inventory createInventory(List<String> roles, Long id) {
+    public Inventory createInventory(List<String> roles) {
         Integer userDivision = getDivision(roles);
-        if (userDivision == null) {
-            throw new PossessorNotFoundException();
-        }
         Inventory newInventory = new Inventory();
         newInventory.setDivision(userDivision);
         newInventory.setStartDate(new Date(System.currentTimeMillis()));
@@ -40,10 +36,10 @@ public class InventoryService {
         return inventoryRepository.save(newInventory);
     }
 
-    public Inventory endInventory(Long inventoryId) {
+    public Inventory endInventory(Long inventoryId, List<String> roles) {
         Inventory dbInventory = inventoryRepository.findInventoryById(inventoryId);
-        System.out.println("oke");
-        if (dbInventory != null) {
+        Integer userDivision = getDivision(roles);
+        if (dbInventory != null && userDivision == dbInventory.getDivision()) {
             Set<String> allCurrentAssets = getAssetsSetByPossessor(dbInventory.getDivision());
             Set<String> allInventoryAssets = dbInventory.getAssets();
             for (String assetId : allCurrentAssets) {
@@ -52,7 +48,6 @@ public class InventoryService {
                     return null;
                 }
             }
-            System.out.println("yes");
             dbInventory.setAssets(allInventoryAssets);
             dbInventory.setEndDate(new Date(System.currentTimeMillis()));
             return inventoryRepository.save(dbInventory);
@@ -99,7 +94,6 @@ public class InventoryService {
                 }
             }
         }
-        System.out.println(division);
         if (division == null) {
             throw new WrongCurrentUserRoleException("Check user roles");
         }

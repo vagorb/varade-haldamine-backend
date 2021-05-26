@@ -227,7 +227,7 @@ public class AssetController {
      * @param asset new asset
      * @return message to front-end, the asset is added or not
      */
-    //@PreAuthorize("hasRole('ROLE_Raamatupidaja')")
+    @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
     @PostMapping
     public ResponseEntity<Object> addAsset(@RequestBody AssetInfo asset) {
         if (assetService.addAsset(asset) != null) {
