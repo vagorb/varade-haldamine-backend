@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -50,6 +51,22 @@ public class InventoryService {
             dbInventory.setAssets(allInventoryAssets);
             dbInventory.setEndDate(new Date(System.currentTimeMillis()));
             return inventoryRepository.save(dbInventory);
+        }
+        return null;
+    }
+
+    public List<Asset> getAssetsInInventory(Long inventoryId) {
+        Inventory dbInventory = inventoryRepository.findInventoryById(inventoryId);
+        if (dbInventory != null) {
+            List<Asset> allCurrentAssets = assetRepository.findAll();
+            Set<String> allInventoryAssets = dbInventory.getAssets();
+            List<Asset> result = new ArrayList<>();
+            for (Asset asset : allCurrentAssets) {
+                if (allInventoryAssets.contains(asset.getId())) {
+                    result.add(asset);
+                }
+            }
+            return result;
         }
         return null;
     }
