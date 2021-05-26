@@ -22,6 +22,7 @@ public class Inventory {
     private Long id;
     private Date startDate;
     private Date endDate;
+    private Integer division;
 
     @ElementCollection
     @CollectionTable(name = "Inventory_assets", joinColumns = @JoinColumn(name = "id"))

@@ -101,9 +101,7 @@ public class AssetController {
             @RequestParam(value = "order", required = false, defaultValue = "ASC") String order,
             @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
         Person user = personService.getCurrentUser();
-        System.out.println(user.toString());
         List<String> authorities = personService.getAuthorities();
-        System.out.println(authorities);
         return new ResponseEntity<>(assetService.getAssetsList(page, size, assetSearchCriteria, order, sortBy, authorities), HttpStatus.OK);
     }
 

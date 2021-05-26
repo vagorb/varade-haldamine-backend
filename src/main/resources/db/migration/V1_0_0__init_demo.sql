@@ -77,7 +77,8 @@ CREATE TABLE IF NOT EXISTS Comment (
 CREATE TABLE IF NOT EXISTS Inventory (
     id SERIAL PRIMARY KEY,
     start_date TIMESTAMP NOT NULL DEFAULT NOW(),
-    end_date TIMESTAMP
+    end_date TIMESTAMP,
+    division INT NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS Inventory_assets (

@@ -1,5 +1,9 @@
 package ee.taltech.varadehaldamine.service;
 
+import ee.taltech.varadehaldamine.exception.AssetIsNotChecked;
+import ee.taltech.varadehaldamine.exception.OngoingInventoryAlreadyExists;
+import ee.taltech.varadehaldamine.exception.OngoingInventoryDoesNotExist;
+import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
 import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Inventory;
 import ee.taltech.varadehaldamine.repository.AssetRepository;
@@ -22,30 +26,44 @@ public class InventoryService {
     @Autowired
     private AssetRepository assetRepository;
 
-    public Inventory createInventory() {
-        System.out.println("not oke");
-        Inventory newInventory = new Inventory();
-        newInventory.setStartDate(new Date(System.currentTimeMillis()));
-        List<Asset> allCurrentAssets = assetRepository.findAll();
-        Set<String> inventoryAssets = new HashSet<>();
-        for (Asset asset : allCurrentAssets) {
-            inventoryAssets.add(asset.getId());
+    @Autowired
+    private PossessorService possessorService;
+
+    public Inventory createInventory(List<String> roles) {
+        Integer userDivision = getDivision(roles);
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(userDivision) && inventory.getEndDate() == null) {
+                throw new OngoingInventoryAlreadyExists();
+            }
         }
+        setAssetsUnchecked(userDivision);
+        Inventory newInventory = new Inventory();
+        newInventory.setDivision(userDivision);
+        newInventory.setStartDate(new Date(System.currentTimeMillis()));
+        Set<String> inventoryAssets = getAssetsSetByPossessor(userDivision);
         newInventory.setAssets(inventoryAssets);
-        System.out.println("oke");
         return inventoryRepository.save(newInventory);
     }
 
-    public Inventory endInventory(Long inventoryId) {
-        Inventory dbInventory = inventoryRepository.findInventoryById(inventoryId);
-        if (dbInventory != null) {
-            List<Asset> allCurrentAssets = assetRepository.findAll();
+    public Inventory endInventory(List<String> roles) {
+        Integer userDivision = getDivision(roles);
+        Inventory dbInventory = null;
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(userDivision) && inventory.getEndDate() == null) {
+                dbInventory = inventory;
+                break;
+            }
+        }
+        if (dbInventory == null) {
+            throw new OngoingInventoryDoesNotExist();
+        }
+        if (userDivision.equals(dbInventory.getDivision())) {
+            Set<String> allCurrentAssets = getAssetsSetByPossessor(dbInventory.getDivision());
             Set<String> allInventoryAssets = dbInventory.getAssets();
-            for (Asset asset : allCurrentAssets) {
-                allInventoryAssets.add(asset.getId());
-                if (!asset.getChecked()) {
-                    System.out.println("nou");
-                    return null;
+            for (String assetId : allCurrentAssets) {
+                allInventoryAssets.add(assetId);
+                if (!assetRepository.findAssetById(assetId).getChecked()) {
+                    throw new AssetIsNotChecked(assetId);
                 }
             }
             dbInventory.setAssets(allInventoryAssets);
@@ -53,6 +71,28 @@ public class InventoryService {
             return inventoryRepository.save(dbInventory);
         }
         return null;
+    }
+
+    public Set<String> getAssetsSetByPossessor(Integer division) {
+        List<Asset> allAssets = assetRepository.findAll();
+        Set<String> inventoryAssets = new HashSet<>();
+        for (Asset asset : allAssets) {
+            if (possessorService.getPossesorById(asset.getPossessorId()).getId()
+                    .equals(possessorService.findPossessor(division, null).getId())) {
+                inventoryAssets.add(asset.getId());
+            }
+        }
+        return inventoryAssets;
+    }
+
+    public void setAssetsUnchecked(Integer division) {
+        List<Asset> allAssets = assetRepository.findAll();
+        for (Asset asset : allAssets) {
+            if (possessorService.getPossesorById(asset.getPossessorId()).getId()
+                    .equals(possessorService.findPossessor(division, null).getId())) {
+                asset.setChecked(false);
+            }
+        }
     }
 
     public List<Asset> getAssetsInInventory(Long inventoryId) {
@@ -69,5 +109,22 @@ public class InventoryService {
             return result;
         }
         return null;
+    }
+
+    private Integer getDivision(List<String> roles) {
+        Integer division = null;
+        for (String role: roles) {
+            if (role.startsWith("ROLE_D") && division == null) {
+                try {
+                    division = Integer.valueOf(role.replace("ROLE_D", ""));
+                } catch (NumberFormatException e) {
+                    throw new IllegalArgumentException("Given not integer in division filter field");
+                }
+            }
+        }
+        if (division == null) {
+            throw new WrongCurrentUserRoleException("Check user roles");
+        }
+        return division;
     }
 }
