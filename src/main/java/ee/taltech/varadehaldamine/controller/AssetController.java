@@ -13,15 +13,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
-
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -151,6 +147,8 @@ public class AssetController {
         return assets.getContent().get(index);
     }
 
+
+
     /**
      * Method to get all audits in paged variant of the asset.
      *
@@ -249,7 +247,7 @@ public class AssetController {
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
-    @GetMapping("/")
+    @GetMapping("/exportExcel")
     public void exportAllAssetsExcel(HttpServletResponse response){
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=assets.xlsx";
@@ -263,6 +261,5 @@ public class AssetController {
         } catch (IOException e){
             System.out.println("error when asset excel generating: " + e);
         }
-
     }
 }
