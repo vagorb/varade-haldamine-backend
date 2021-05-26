@@ -296,13 +296,18 @@ public class AssetService {
         return false;
     }
 
+    public List<List<AssetInfo>> getInventoryListsByYear(List<String> roles, int year) {
+        Integer division = inventoryService.getDivision(roles);
+        Inventory inventory = inventoryService.getInventoryByYear(division, year);
+        return getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
+                inventory.getAssets());
+    }
+
     public List<List<AssetInfo>> getLists(List<String> roles) {
         Integer division = inventoryService.getDivision(roles);
-        System.out.println(division);
         Inventory inventory = inventoryService.getOngoingInventory(division);
-        List<List<AssetInfo>> result = getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
+        return getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
                 inventory.getAssets());
-        return result;
     }
 
     public List<List<AssetInfo>> getAssetListByDate(Date firstDate, Date lastDate, Set<String> inventoryAssets) {

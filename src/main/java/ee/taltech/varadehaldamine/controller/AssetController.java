@@ -252,9 +252,15 @@ public class AssetController {
         }
     }
 
-    @GetMapping("idkyet")
-    public List<List<AssetInfo>> getInventoryStart() {
+    @GetMapping("/inventory/now")
+    public List<List<AssetInfo>> getInventoryLists() {
         List<String> authorities = personService.getAuthorities();
         return assetService.getLists(authorities);
+    }
+
+    @GetMapping("/inventory/{year}")
+    public List<List<AssetInfo>> getInventoryListsByYear(@PathVariable int year) {
+        List<String> authorities = personService.getAuthorities();
+        return assetService.getInventoryListsByYear(authorities, year);
     }
 }
