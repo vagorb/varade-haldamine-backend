@@ -260,20 +260,18 @@ public class AssetController {
         }
     }
 
-    @GetMapping("/inventory/now")
-    public List<List<AssetInfo>> getInventoryLists() {
+
     @Transactional
     @GetMapping("/inventoryExcel")
-    public void getInventoryStart(HttpServletResponse response) {
+    public void getInventoryLists(HttpServletResponse response) {
+        List<String> authorities = personService.getAuthorities();
+        List<AssetInfo> assets = assetService.getLists(authorities);
+        if (assets.size() == 0) {
+            throw new InventoryExcelException("No assets");
+        }
         String headerKey = "Content-Disposition";
         String headerValue = "attachment; filename=assets.xlsx";
         response.setHeader(headerKey, headerValue);
-        List<String> authorities = personService.getAuthorities();
-        List<AssetInfo> assets = assetService.getLists(authorities);
-        System.out.println(assets.size());
-        if (assets.size() == 0) {
-            throw new InventoryExcelException();
-        }
         ExcelAssetExporter excelAssetExporter =  new ExcelAssetExporter(assets);
         try {
             excelAssetExporter.export(response);
@@ -282,9 +280,25 @@ public class AssetController {
         }
     }
 
+    @Transactional
     @GetMapping("/inventory/{year}")
-    public List<List<AssetInfo>> getInventoryListsByYear(@PathVariable int year) {
+    public void getInventoryListsByYear(@PathVariable int year, HttpServletResponse response) {
         List<String> authorities = personService.getAuthorities();
-        return assetService.getInventoryListsByYear(authorities, year);
+        List<AssetInfo> assets = assetService.getInventoryListsByYear(authorities, year);
+        if (assets.size() == 0) {
+            throw new InventoryExcelException("No assets");
+        }
+        ExcelAssetExporter excelAssetExporter =  new ExcelAssetExporter(assets);
+        String headerKey = "Content-Disposition";
+        String headerValue = "attachment; filename=assets.xlsx";
+        response.setHeader(headerKey, headerValue);
+
+
+        try {
+            excelAssetExporter.export(response);
+        } catch (IOException e){
+            System.out.println("error when asset excel generating: " + e);
+        }
+
     }
 }

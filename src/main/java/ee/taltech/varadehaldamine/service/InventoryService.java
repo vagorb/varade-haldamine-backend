@@ -1,6 +1,7 @@
 package ee.taltech.varadehaldamine.service;
 
 import ee.taltech.varadehaldamine.exception.AssetIsNotChecked;
+import ee.taltech.varadehaldamine.exception.InventoryExcelException;
 import ee.taltech.varadehaldamine.exception.OngoingInventoryAlreadyExists;
 import ee.taltech.varadehaldamine.exception.OngoingInventoryDoesNotExist;
 import ee.taltech.varadehaldamine.exception.WrongCurrentUserRoleException;
@@ -94,6 +95,9 @@ public class InventoryService {
 
     public Inventory getInventoryByYear(Integer division, int year) {
         for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getEndDate() == null) {
+                throw new InventoryExcelException("Inventory still ongoing");
+            }
             if (inventory.getDivision().equals(division)
                     && inventory.getEndDate().toLocalDate().getYear() == year) {
                 return inventory;
@@ -104,8 +108,11 @@ public class InventoryService {
 
     public Inventory getOngoingInventory(Integer division) {
         for (Inventory inventory : inventoryRepository.findAll()) {
-            if (inventory.getDivision().equals(division)){
-//                    && inventory.getEndDate().toLocalDate().getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
+            if (inventory.getEndDate() == null) {
+                throw new InventoryExcelException("Inventory still ongoing");
+            }
+            if (inventory.getDivision().equals(division)
+                    && inventory.getEndDate().toLocalDate().getYear() == Calendar.getInstance().get(Calendar.YEAR)) {
                 return inventory;
             }
         }

@@ -299,24 +299,32 @@ public class AssetService {
         return false;
     }
 
-    public List<AssetInfo> getLists(List<String> roles) {
-    public List<List<AssetInfo>> getInventoryListsByYear(List<String> roles, int year) {
+
+    public List<AssetInfo> getInventoryListsByYear (List < String > roles,int year) {
         Integer division = inventoryService.getDivision(roles);
         Inventory inventory = inventoryService.getInventoryByYear(division, year);
-        return getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
-                inventory.getAssets());
+        if (inventory == null) {
+            throw new InventoryExcelException("Inventory not found");
+        } else {
+            return getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
+                    inventory.getAssets());
+        }
     }
 
-    public List<List<AssetInfo>> getLists(List<String> roles) {
+
+    public List<AssetInfo> getLists (List < String > roles) {
         Integer division = inventoryService.getDivision(roles);
         Inventory inventory = inventoryService.getOngoingInventory(division);
+
         if (inventory == null) {
-            throw new InventoryExcelException();
+            throw new InventoryExcelException("inventory not found");
+        } else {
+            return getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
+                    inventory.getAssets());
         }
-        List<AssetInfo> result = getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
-        return getAssetListByDate(inventory.getStartDate(), inventory.getEndDate(),
-                inventory.getAssets());
     }
+
+
 
     public List<AssetInfo> getAssetListByDate(Date firstDate, Date lastDate, Set<String> inventoryAssets) {
         if (firstDate == null || lastDate == null|| inventoryAssets.size() == 0) {
