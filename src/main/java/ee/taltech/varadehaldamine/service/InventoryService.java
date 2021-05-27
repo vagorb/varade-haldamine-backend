@@ -92,6 +92,16 @@ public class InventoryService {
         }
     }
 
+    public Inventory getInventoryByYear(Integer division, int year) {
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(division)
+                    && inventory.getEndDate().toLocalDate().getYear() == year) {
+                return inventory;
+            }
+        }
+        return null;
+    }
+
     public Inventory getOngoingInventory(Integer division) {
         for (Inventory inventory : inventoryRepository.findAll()) {
             if (inventory.getDivision().equals(division)){

@@ -260,6 +260,8 @@ public class AssetController {
         }
     }
 
+    @GetMapping("/inventory/now")
+    public List<List<AssetInfo>> getInventoryLists() {
     @Transactional
     @GetMapping("/inventoryExcel")
     public void getInventoryStart(HttpServletResponse response) {
@@ -278,5 +280,11 @@ public class AssetController {
         } catch (IOException e){
             System.out.println("error when asset excel generating: " + e);
         }
+    }
+
+    @GetMapping("/inventory/{year}")
+    public List<List<AssetInfo>> getInventoryListsByYear(@PathVariable int year) {
+        List<String> authorities = personService.getAuthorities();
+        return assetService.getInventoryListsByYear(authorities, year);
     }
 }
