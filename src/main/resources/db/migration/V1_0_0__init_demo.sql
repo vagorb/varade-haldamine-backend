@@ -81,8 +81,8 @@ CREATE TABLE IF NOT EXISTS Inventory (
     division INT NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS Inventory_assets (
+CREATE TABLE IF NOT EXISTS Inventory_asset (
     id INT NOT NULL,
-    assets VARCHAR(255) DEFAULT NULL,
+    asset VARCHAR(255) DEFAULT NULL,
     FOREIGN KEY (id) REFERENCES Inventory (id)
 )
