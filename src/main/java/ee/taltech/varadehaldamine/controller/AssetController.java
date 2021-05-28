@@ -223,7 +223,8 @@ public class AssetController {
     @PreAuthorize("hasRole('ROLE_KomisjoniLiige')")
     @PutMapping("/check/{id}")
     public ResponseEntity<Object> checkAsset(@PathVariable String id) {
-        if (assetService.check(id) != null) {
+        List<String> authorities = personService.getAuthorities();
+        if (assetService.check(id, authorities) != null) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
@@ -231,7 +232,8 @@ public class AssetController {
     @PreAuthorize("hasRole('ROLE_KomisjoniLiige')")
     @PutMapping("/check")
     public ResponseEntity<Object> checkMultiple(@RequestBody List<String> assetIds) {
-        if (assetService.checkMultiple(assetIds)) {
+        List<String> authorities = personService.getAuthorities();
+        if (assetService.checkMultiple(assetIds, authorities)) {
             return ResponseEntity.status(HttpStatus.OK).build();
         }
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
@@ -271,6 +273,7 @@ public class AssetController {
     }
 
 
+    @PreAuthorize("hasRole('ROLE_ÜksuseJuht')")
     @Transactional
     @GetMapping("/inventoryExcel")
     public void getInventoryLists(HttpServletResponse response) {
@@ -290,6 +293,7 @@ public class AssetController {
         }
     }
 
+    @PreAuthorize("hasRole('ROLE_ÜksuseJuht')")
     @Transactional
     @GetMapping("/inventory/{year}")
     public void getInventoryListsByYear(@PathVariable int year, HttpServletResponse response) {

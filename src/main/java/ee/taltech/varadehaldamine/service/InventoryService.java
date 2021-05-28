@@ -95,7 +95,7 @@ public class InventoryService {
 
     public Inventory getInventoryByYear(Integer division, int year) {
         for (Inventory inventory : inventoryRepository.findAll()) {
-            if (inventory.getEndDate() == null) {
+            if (inventory.getDivision().equals(division) && inventory.getEndDate() == null) {
                 throw new InventoryExcelException("Inventory still ongoing");
             }
             if (inventory.getDivision().equals(division)
@@ -106,9 +106,18 @@ public class InventoryService {
         return null;
     }
 
+    public Boolean getInventoryOngoing(Integer division) {
+        for (Inventory inventory : inventoryRepository.findAll()) {
+            if (inventory.getDivision().equals(division) && inventory.getEndDate() == null) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public Inventory getOngoingInventory(Integer division) {
         for (Inventory inventory : inventoryRepository.findAll()) {
-            if (inventory.getEndDate() == null) {
+            if (inventory.getDivision().equals(division) && inventory.getEndDate() == null) {
                 throw new InventoryExcelException("Inventory still ongoing");
             }
             if (inventory.getDivision().equals(division)

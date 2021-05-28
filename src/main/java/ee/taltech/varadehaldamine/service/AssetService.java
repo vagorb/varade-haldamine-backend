@@ -272,10 +272,12 @@ public class AssetService {
         return null;
     }
 
-    public Asset check(String id) {
+    public Asset check(String id, List<String> authorities) {
         Asset dbAsset = assetRepository.findAssetById(id);
+        Integer division = inventoryService.getDivision(authorities);
         try {
-            if (id != null && dbAsset != null) {
+            if (id != null && dbAsset != null && inventoryService.getInventoryOngoing(division)) {
+
                 dbAsset.setChecked(!dbAsset.getChecked());
                 return assetRepository.save(dbAsset);
             }
@@ -285,11 +287,13 @@ public class AssetService {
         return null;
     }
 
-    public boolean checkMultiple(List<String> assetIds) {
+    public boolean checkMultiple(List<String> assetIds, List<String> authorities) {
         if (assetIds != null && assetIds.size() > 0) {
             for (String id : assetIds) {
                 Asset dbAsset = assetRepository.findAssetById(id);
-                if (dbAsset != null) {
+                Integer division = inventoryService.getDivision(authorities);
+                if (dbAsset != null  && inventoryService.getInventoryOngoing(division)) {
+
                     dbAsset.setChecked(!dbAsset.getChecked());
                     assetRepository.save(dbAsset);
                 }
