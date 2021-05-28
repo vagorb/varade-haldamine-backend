@@ -15,8 +15,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import javax.transaction.Transactional;
 import java.io.IOException;
@@ -32,6 +34,14 @@ public class AssetController {
 
     @Autowired
     AssetService assetService;
+
+    @GetMapping("/username")
+    public String  getUser() {
+        Object userObject = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        DefaultOidcUser defaultOidcUser = (DefaultOidcUser) userObject;
+        return defaultOidcUser.getFullName();
+    }
+
 
     /**
      * This method is used by front-end to understand, which user (his/her role)
