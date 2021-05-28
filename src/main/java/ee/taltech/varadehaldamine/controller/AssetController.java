@@ -272,7 +272,11 @@ public class AssetController {
         }
     }
 
-
+    /**
+     * Method to export excel with all assets
+     *
+     * @param response -excel file
+     */
     @PreAuthorize("hasRole('ROLE_ÜksuseJuht')")
     @Transactional
     @GetMapping("/inventoryExcel")
