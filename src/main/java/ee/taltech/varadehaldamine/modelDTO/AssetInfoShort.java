@@ -35,8 +35,9 @@ public class AssetInfoShort {
     private String buildingAbbreviationPlusRoom;
     private Integer lifeMonthsLeft;
     private Boolean active;
+    private Boolean checked;
 
-    public AssetInfoShort(String id, String name, Integer structuralUnit, Integer subdivision, String mainClassPlusSubclass, String buildingAbbreviature, String room, Date date, Boolean active) {
+    public AssetInfoShort(String id, String name, Integer structuralUnit, Integer subdivision, String mainClassPlusSubclass, String buildingAbbreviature, String room, Date date, Boolean active, Boolean checked) {
         this.id = id;
         this.name = name;
         if (subdivision != null){
@@ -59,5 +60,6 @@ public class AssetInfoShort {
             this.lifeMonthsLeft = months;
         }
         this.active = active;
+        this.checked = checked;
     }
 }
