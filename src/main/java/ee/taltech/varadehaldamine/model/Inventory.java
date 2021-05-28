@@ -25,7 +25,7 @@ public class Inventory {
     private Integer division;
 
     @ElementCollection
-    @CollectionTable(name = "Inventory_assets", joinColumns = @JoinColumn(name = "id"))
-    @Column(name = "assets")
+    @CollectionTable(name = "Inventory_asset", joinColumns = @JoinColumn(name = "id"))
+    @Column(name = "asset")
     private Set<String> assets = new HashSet<>();
 }
