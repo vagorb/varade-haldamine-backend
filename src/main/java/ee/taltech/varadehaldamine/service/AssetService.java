@@ -236,8 +236,12 @@ public class AssetService {
                     dbAsset.setBuildingAbbreviature(buildingAbbreviation);
                 }
                 String room = assetInfo.getRoom();
-                if (room != null && room.length() <= 10) {
-                    dbAsset.setRoom(room);
+                if (room != null && room.length() > 0 && room.length() <= 10) {
+                    if (room.equalsIgnoreCase("-")) {
+                        dbAsset.setRoom(null);
+                    } else {
+                        dbAsset.setRoom(room);
+                    }
                 }
                 String descritpion = assetInfo.getDescriptionText();
                 if (descritpion != null && descritpion.length() <= 255) {
