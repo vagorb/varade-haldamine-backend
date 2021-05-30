@@ -243,9 +243,9 @@ public class AssetService {
                         dbAsset.setRoom(room);
                     }
                 }
-                String descritpion = assetInfo.getDescriptionText();
-                if (descritpion != null && descritpion.length() <= 255) {
-                    dbAsset.setDescription(descritpion);
+                String description = assetInfo.getDescriptionText();
+                if (description != null && description.length() > 0 && description.length() <= 255) {
+                    dbAsset.setDescription(description);
                 }
                 if (assetInfo.getMajorAssetId() != null) {
                     KitRelation existingKit = kitRelationRepository
