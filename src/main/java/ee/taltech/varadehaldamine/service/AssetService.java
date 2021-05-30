@@ -412,8 +412,7 @@ public class AssetService {
             List<Asset> audit = getAuditList(assetId);
             boolean isLastAdded = false;
             for (Asset auditAsset : audit) {
-                if (isLastAdded && (auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().equals(firstDate.toLocalDate())
-                        || auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().isBefore(firstDate.toLocalDate()))) {
+                if (isLastAdded && (auditAsset.getModifiedAt().toLocalDateTime().toLocalDate().equals(firstDate.toLocalDate()))) {
                     resultFirstDate.add(constructAssetInfo(auditAsset));
                     break;
                 }
@@ -488,7 +487,6 @@ public class AssetService {
         List<Asset> audit = getAuditList(id);
         List<AssetInfo> assetInfos = new ArrayList<>();
         Collections.reverse(audit);
-        System.out.println(audit);
         for (Asset a : audit) {
             assetInfos.add(constructAssetInfo(a));
         }
