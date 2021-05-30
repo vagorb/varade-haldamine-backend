@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,7 +27,7 @@ public class Asset {
     private String id;
     private String name;
 
-//    @JsonIgnore
+    //    @JsonIgnore
 //    @ManyToOne
 //    @JoinColumn(name = "sub_class")
     private String subClass;
@@ -50,23 +51,19 @@ public class Asset {
     private String room;
     private String description;
 
-    @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-
     public Asset(String id, String name, String sub_class, Long possessor, Date expirationDate,
                  Boolean delicateCondition, Boolean checked, Double price, Double residualPrice, Timestamp
                          purchaseDate, String buildingAbbreviature, String room, String description) {
         this.id = id;
         this.name = name;
         this.active = true;
-        this.checked = false;
+        this.checked = Objects.requireNonNullElse(checked, false);
         this.subClass = sub_class;
         this.possessorId = possessor;
         this.expirationDate = expirationDate;
         this.delicateCondition = delicateCondition;
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.modifiedAt = new Timestamp(System.currentTimeMillis());
-        this.checked = checked;
         this.price = price;
         this.residualPrice = residualPrice;
         this.purchaseDate = purchaseDate;

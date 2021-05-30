@@ -1,6 +1,5 @@
 package ee.taltech.varadehaldamine.modelDTO;
 
-import io.swagger.models.auth.In;
 import lombok.*;
 
 import javax.persistence.Id;
@@ -15,17 +14,6 @@ import java.util.Date;
 @NoArgsConstructor
 @ToString
 public class AssetInfoShort {
-//    private String id;
-//    private String name;
-//    private Boolean active;
-//
-//    // Address data
-//    private String buildingAbbreviationPlusRoom;
-//
-//    // Person data
-//    private String personName;
-//
-//    private Date modifiedAt;
 
     @Id
     private String id;
@@ -35,23 +23,24 @@ public class AssetInfoShort {
     private String buildingAbbreviationPlusRoom;
     private Integer lifeMonthsLeft;
     private Boolean active;
+    private Boolean checked;
 
-    public AssetInfoShort(String id, String name, Integer structuralUnit, Integer subdivision, String mainClassPlusSubclass, String buildingAbbreviature, String room, Date date, Boolean active) {
+    public AssetInfoShort(String id, String name, Integer structuralUnit, Integer subdivision, String mainClassPlusSubclass, String buildingAbbreviature, String room, Date date, Boolean active, Boolean checked) {
         this.id = id;
         this.name = name;
-        if (subdivision != null){
+        if (subdivision != null) {
             this.structuralUnitPlusSubdivision = structuralUnit + " " + subdivision;
         } else {
             this.structuralUnitPlusSubdivision = structuralUnit.toString();
         }
         this.mainClassPlusSubclass = mainClassPlusSubclass;
-        if (room != null){
+        if (room != null) {
             this.buildingAbbreviationPlusRoom = buildingAbbreviature + " " + room;
         } else {
             this.buildingAbbreviationPlusRoom = buildingAbbreviature;
         }
         this.lifeMonthsLeft = 0;
-        if (date != null){
+        if (date != null) {
             int months = (int) ChronoUnit.MONTHS.between(LocalDate.now(), Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
             if (months < 0) {
                 months = 0;
@@ -59,5 +48,6 @@ public class AssetInfoShort {
             this.lifeMonthsLeft = months;
         }
         this.active = active;
+        this.checked = checked;
     }
 }

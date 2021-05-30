@@ -73,3 +73,16 @@ CREATE TABLE IF NOT EXISTS Comment (
     text VARCHAR(255) NOT NULL,
     created_at TIMESTAMP DEFAULT NOW()
     );
+
+CREATE TABLE IF NOT EXISTS Inventory (
+    id SERIAL PRIMARY KEY,
+    start_date TIMESTAMP NOT NULL DEFAULT NOW(),
+    end_date TIMESTAMP,
+    division INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Inventory_asset (
+    id INT NOT NULL,
+    asset VARCHAR(255) DEFAULT NULL,
+    FOREIGN KEY (id) REFERENCES Inventory (id)
+);

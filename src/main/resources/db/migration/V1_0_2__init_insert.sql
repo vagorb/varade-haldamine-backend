@@ -1,6 +1,6 @@
-INSERT INTO Person(username, email, azure_id) VALUES ('DimVoronoi', 'dimvoronoi@varainv.onmicrosoft.com', 'd1bf8950-46fc-4f72-ae02-80f1b2b9ab70');
-INSERT INTO Person(username, email, azure_id) VALUES ('NikBir', 'nikbir@varainv.onmicrosoft.com', 'f108cc1f-8d3e-4f38-b96b-450df41cd4d8');
-INSERT INTO Person(username, email, azure_id) VALUES ('ArturInstr', 'arturinstr@varainv.onmicrosoft.com', '42fe5de0-5729-4fc5-9421-0622ae9a753c');
+INSERT INTO Person(username, email, azure_id) VALUES ('DimVoronoidota', 'dimvoronoi4IK@varainv.onmicrosoft.com', 'd1bf8950-46fc-4f72-ae02-80f1b2b9ab70');
+INSERT INTO Person(username, email, azure_id) VALUES ('NikBirber', 'nikbir@varainv4IK.onmicrosoft.com', 'f108cc1f-8d3e-4f38-b96b-450df41cd4d8');
+INSERT INTO Person(username, email, azure_id) VALUES ('ArturInstruktor', 'arturinstr4IK@varainv.onmicrosoft.com', '42fe5de0-5729-4fc5-9421-0622ae9a753c');
 
 INSERT INTO Possessor(structural_unit, subdivision) VALUES (112, 110);
 INSERT INTO Possessor(structural_unit, subdivision) VALUES (234, 229);

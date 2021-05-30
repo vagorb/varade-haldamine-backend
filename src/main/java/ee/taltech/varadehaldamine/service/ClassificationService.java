@@ -14,6 +14,11 @@ public class ClassificationService {
     @Autowired
     private ClassificationRepository classificationRepository;
 
+    /**
+     * Method to get all classifications from db.
+     *
+     * @return list of classifications
+     */
     public List<Classification> findAll() {
         return classificationRepository.findAll();
     }
@@ -35,14 +40,26 @@ public class ClassificationService {
         return null;
     }
 
-    public Classification update(Classification classification, String main_class) {
-        Classification dbClassification = classificationRepository.findClassificationBySubClass(main_class);
-        System.out.println(classification.getMainClass());
+    /**
+     * Method to change main class of the subclass
+     *
+     * @param classification main class holder
+     * @param subClass       subclass to find right classification
+     * @return changed classification
+     */
+    public Classification update(Classification classification, String subClass) {
+        Classification dbClassification = classificationRepository.findClassificationBySubClass(subClass);
         dbClassification.setMainClass(classification.getMainClass());
-        System.out.println(dbClassification.getMainClass());
         return classificationRepository.save(dbClassification);
     }
 
+    /**
+     * Method to check if classification exists with given main class and subclass.
+     *
+     * @param mainClass main class
+     * @param subClass  subclass
+     * @return exists or not
+     */
     public boolean doesClassificationExist(String mainClass, String subClass) {
         List<Classification> all = findAll();
         for (Classification classification : all) {

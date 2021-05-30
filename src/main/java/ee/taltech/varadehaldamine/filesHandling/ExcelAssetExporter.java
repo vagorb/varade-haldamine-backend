@@ -20,11 +20,11 @@ public class ExcelAssetExporter {
     private final XSSFWorkbook workbook;
     private final XSSFSheet sheet;
 
-    private final HashMap<Integer,List<Object>> assetData;
+    private final HashMap<Integer, List<Object>> assetData;
 
-    private void sortAssetData(List<AssetInfo> assets){
+    private void sortAssetData(List<AssetInfo> assets) {
         List<Object> data;
-        for (int index = 0; index < assets.size(); index++){
+        for (int index = 0; index < assets.size(); index++) {
             data = new LinkedList<>();
             data.add(assets.get(index).getId());
             data.add(assets.get(index).getName());
@@ -40,7 +40,7 @@ public class ExcelAssetExporter {
             data.add(assets.get(index).getRoom());
             data.add(assets.get(index).getUserId());
             data.add(assets.get(index).getUsername());
-            if (assets.get(index).getPurchaseDate()!= null){
+            if (assets.get(index).getPurchaseDate() != null) {
                 data.add(true);
             } else {
                 data.add(false);
@@ -95,12 +95,12 @@ public class ExcelAssetExporter {
         row.createCell(19).setCellValue("Delikaatse sisuga");
     }
 
-    private String getDataByIndex(int assetIndex,int index){
-        Object data = assetData.get(assetIndex-1).get(index);
-        if (data == null){
+    private String getDataByIndex(int assetIndex, int index) {
+        Object data = assetData.get(assetIndex - 1).get(index);
+        if (data == null) {
             return "";
-        } else if (data instanceof Boolean){
-            if ((boolean) data){
+        } else if (data instanceof Boolean) {
+            if ((boolean) data) {
                 return "Jah";
             }
             return "Ei";
@@ -110,9 +110,9 @@ public class ExcelAssetExporter {
 
 
     private void writeDataRows() {
-        for (int index = 1; index <= assetData.size(); index++){
+        for (int index = 1; index <= assetData.size(); index++) {
             Row row = sheet.createRow(index);
-            for (int column = 0; column < 20; column++){
+            for (int column = 0; column < 20; column++) {
                 String data = getDataByIndex(index, column);
                 row.createCell(column).setCellValue(data);
             }

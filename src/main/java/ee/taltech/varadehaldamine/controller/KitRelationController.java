@@ -18,7 +18,7 @@ public class KitRelationController {
     /**
      * Method to get all major assets of the system.
      * Used when adding new asset.
-     *
+     * <p>
      * Roles: Raamatupidaja.
      *
      * @return List of major assets ids as strings

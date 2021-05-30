@@ -21,14 +21,31 @@ public class PersonService {
     @Autowired
     private PersonRepository personRepository;
 
+    /**
+     * Method to get all users from db.
+     *
+     * @return all persons
+     */
     public List<Person> findAll() {
         return personRepository.findAll();
     }
 
+    /**
+     * Method to get person by id.
+     *
+     * @param assetId asset id
+     * @return person from db
+     */
     public Person getPersonById(Long assetId) {
         return personRepository.findPersonById(assetId);
     }
 
+    /**
+     * Method to add new person in db.
+     *
+     * @param personInfo person information holder
+     * @return added person
+     */
     public Person addPerson(PersonInfo personInfo) {
         try {
             if (personInfo != null && !personInfo.getUsername().isBlank() && !personInfo.getUsername().isBlank()) {
@@ -43,6 +60,11 @@ public class PersonService {
         return null;
     }
 
+    /**
+     * Method to get current user information from db.
+     *
+     * @return current user
+     */
     public Person getCurrentUser() {
         Object userObject = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         if (userObject instanceof DefaultOidcUser) {
@@ -57,18 +79,37 @@ public class PersonService {
         return null;
     }
 
+    /**
+     * Method to get person by azure token.
+     *
+     * @param token azure token
+     * @return person
+     */
     private Person getUserByAzureToken(String token) {
         return personRepository.findPersonByAzureId(token);
     }
 
+    /**
+     * Method to add person not by PersonInfo.
+     *
+     * @param username person username
+     * @param email    person email
+     * @param azureId  person azure id
+     * @return added person
+     */
     private Person registerNewUser(String username, String email, String azureId) {
         return personRepository.save(new Person(username, email, azureId));
     }
 
+    /**
+     * Method to get all roles of current user.
+     *
+     * @return list of roles
+     */
     public List<String> getAuthorities() {
         Collection<? extends GrantedAuthority> listOfAuthorities = SecurityContextHolder.getContext().getAuthentication().getAuthorities();
         List<String> authorities = new LinkedList<>();
-        for (GrantedAuthority role: listOfAuthorities){
+        for (GrantedAuthority role : listOfAuthorities) {
             authorities.add(role.getAuthority());
         }
         return authorities;

@@ -21,7 +21,7 @@ public class PossessorController {
 
     /**
      * Method to get all possessors.
-     *
+     * <p>
      * Roles: only Raamatupidaja.
      *
      * @return List of possessors
@@ -34,7 +34,7 @@ public class PossessorController {
 
     /**
      * Method to add new possessor.
-     *
+     * <p>
      * Roles: only Raamatupidaja.
      *
      * @param possessor information of the new possessor
@@ -51,11 +51,11 @@ public class PossessorController {
 
     /**
      * Method to update data of the possessor.
-     *
+     * <p>
      * Roles: only Raamatupidaja.
      *
      * @param possessor information about fields to change
-     * @param id possessor id to change
+     * @param id        possessor id to change
      * @return changed possessor
      */
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")

@@ -13,7 +13,7 @@ import java.sql.Timestamp;
 @Setter
 @ToString
 @EqualsAndHashCode
-@Audited
+//@Audited
 @Entity
 public class Comment {
     @Id
