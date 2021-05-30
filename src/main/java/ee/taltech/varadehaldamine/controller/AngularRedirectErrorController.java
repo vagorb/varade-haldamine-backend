@@ -15,6 +15,9 @@ import org.springframework.web.context.request.WebRequest;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
+/**
+ * This controller is used to avoid Whitelabel error in frontend.
+ */
 @Controller
 @RequestMapping("${server.error.path:${error.path:/error}}")
 class AngularRedirectErrorController extends AbstractErrorController {

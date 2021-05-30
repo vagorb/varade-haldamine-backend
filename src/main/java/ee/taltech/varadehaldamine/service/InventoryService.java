@@ -27,6 +27,12 @@ public class InventoryService {
     @Autowired
     private PossessorService possessorService;
 
+    /**
+     * Method to start new inventory.
+     *
+     * @param roles user roles
+     * @return started inventory
+     */
     public Inventory createInventory(List<String> roles) {
         Integer userDivision = getDivision(roles);
         for (Inventory inventory : inventoryRepository.findAll()) {
@@ -43,6 +49,12 @@ public class InventoryService {
         return inventoryRepository.save(newInventory);
     }
 
+    /**
+     * Method to end existing inventory.
+     *
+     * @param roles user roles
+     * @return ended inventory
+     */
     public Inventory endInventory(List<String> roles) {
         Integer userDivision = getDivision(roles);
         Inventory dbInventory = null;
@@ -71,11 +83,17 @@ public class InventoryService {
         return null;
     }
 
+    /**
+     * Method to get the last inventory of the division.
+     *
+     * @param division division nr
+     * @return asset id set
+     */
     public Set<String> getAssetsSetByPossessor(Integer division) {
         List<Asset> allAssets = assetRepository.findAll();
         Set<String> inventoryAssets = new HashSet<>();
         for (Asset asset : allAssets) {
-            if (possessorService.getPossesorById(asset.getPossessorId()).getId()
+            if (possessorService.getPossessorById(asset.getPossessorId()).getId()
                     .equals(possessorService.findPossessor(division, null).getId())) {
                 inventoryAssets.add(asset.getId());
             }
@@ -83,16 +101,28 @@ public class InventoryService {
         return inventoryAssets;
     }
 
+    /**
+     * Method to make assets unchecked.
+     *
+     * @param division division nr
+     */
     public void setAssetsUnchecked(Integer division) {
         List<Asset> allAssets = assetRepository.findAll();
         for (Asset asset : allAssets) {
-            if (possessorService.getPossesorById(asset.getPossessorId()).getId()
+            if (possessorService.getPossessorById(asset.getPossessorId()).getId()
                     .equals(possessorService.findPossessor(division, null).getId())) {
                 asset.setChecked(false);
             }
         }
     }
 
+    /**
+     * Method to get inventory by year.
+     *
+     * @param division division nr
+     * @param year     inventory year
+     * @return inventory of particular year
+     */
     public Inventory getInventoryByYear(Integer division, int year) {
         for (Inventory inventory : inventoryRepository.findAll()) {
             if (inventory.getDivision().equals(division) && inventory.getEndDate() == null) {
@@ -106,6 +136,12 @@ public class InventoryService {
         return null;
     }
 
+    /**
+     * Method to check if there is ongoing inventory.
+     *
+     * @param division division nr
+     * @return inventory is on or not
+     */
     public Boolean getInventoryOngoing(Integer division) {
         for (Inventory inventory : inventoryRepository.findAll()) {
             if (inventory.getDivision().equals(division) && inventory.getEndDate() == null) {
@@ -115,6 +151,12 @@ public class InventoryService {
         return false;
     }
 
+    /**
+     * Method to get ongoing inventory by division.
+     *
+     * @param division division nr
+     * @return ongoing inventory
+     */
     public Inventory getOngoingInventory(Integer division) {
         for (Inventory inventory : inventoryRepository.findAll()) {
             if (inventory.getDivision().equals(division) && inventory.getEndDate() == null) {
@@ -128,25 +170,15 @@ public class InventoryService {
         return null;
     }
 
-    public List<Asset> getAssetsInInventory(Long inventoryId) {
-        Inventory dbInventory = inventoryRepository.findInventoryById(inventoryId);
-        if (dbInventory != null) {
-            List<Asset> allCurrentAssets = assetRepository.findAll();
-            Set<String> allInventoryAssets = dbInventory.getAssets();
-            List<Asset> result = new ArrayList<>();
-            for (Asset asset : allCurrentAssets) {
-                if (allInventoryAssets.contains(asset.getId())) {
-                    result.add(asset);
-                }
-            }
-            return result;
-        }
-        return null;
-    }
-
+    /**
+     * Method to get division from given roles.
+     *
+     * @param roles list of user roles
+     * @return division nr
+     */
     public Integer getDivision(List<String> roles) {
         Integer division = null;
-        for (String role: roles) {
+        for (String role : roles) {
             if (role.startsWith("ROLE_D") && division == null) {
                 try {
                     division = Integer.valueOf(role.replace("ROLE_D", ""));

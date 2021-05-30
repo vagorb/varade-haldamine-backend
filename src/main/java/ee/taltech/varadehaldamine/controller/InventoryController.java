@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Date;
 import java.util.List;
 
 @RequestMapping("inventory")
@@ -21,6 +20,12 @@ public class InventoryController {
     @Autowired
     private PersonService personService;
 
+    /**
+     * Method to start new inventory.
+     * Inventory starts by division, division is taken from user who calls this method.
+     *
+     * @return status
+     */
     @PreAuthorize("hasRole('ROLE_ÜksuseJuht')")
     @PostMapping
     public ResponseEntity<Object> createInventory() {
@@ -31,6 +36,12 @@ public class InventoryController {
         return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
     }
 
+    /**
+     * Method to end inventory.
+     * Inventory ends by division, division is taken from user who calls this method.
+     *
+     * @return status
+     */
     @PreAuthorize("hasRole('ROLE_ÜksuseJuht')")
     @PutMapping
     public ResponseEntity<Object> endInventory() {

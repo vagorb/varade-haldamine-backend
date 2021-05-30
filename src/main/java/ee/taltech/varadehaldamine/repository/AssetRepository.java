@@ -15,8 +15,6 @@ import java.util.List;
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, String> {
 
-    Asset findAssetById(String assetId);
-
     String assetInfoShortCreate = "SELECT new ee.taltech.varadehaldamine.modelDTO.AssetInfoShort(A.id, A.name, " +
             "P.structuralUnit, P.subdivision, CONCAT(C.mainClass, ' ', C.subClass)," +
             " A.buildingAbbreviature, A.room, A.expirationDate, A.active, A.checked)";
@@ -41,8 +39,7 @@ public interface AssetRepository extends JpaRepository<Asset, String> {
 
     String sortByIdAsc = " ORDER BY A.id ASC";
 
-    @Query(assetInfoShortCreate + tableFromAssetAddressClassPossessor)
-    List<AssetInfoShort> getAll();
+    Asset findAssetById(String assetId);
 
     @Query(assetInfoCreate + tableFromAllTables + sortByIdAsc)
     List<AssetInfo> getAllInfoAboutAsset();

@@ -17,9 +17,7 @@ import org.hibernate.envers.query.AuditEntity;
 import org.hibernate.envers.query.AuditQuery;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -48,19 +46,19 @@ public class AssetService {
     @Autowired
     private PossessorService possessorService;
     @Autowired
-    private PersonService personService;
-    @Autowired
     private InventoryService inventoryService;
 
-    public List<AssetInfoShort> findAll() {
-        return assetRepository.getAll();
-    }
-
-    public List<AssetInfo> getAllInfoAboutAssetASC(){
-
+    public List<AssetInfo> getAllInfoAboutAssetASC() {
         return assetRepository.getAllInfoAboutAsset();
     }
 
+    /**
+     * Method to add new asset. It takes AssetInfo and if the needed fields are correct,
+     * then the new asset from this information.
+     *
+     * @param assetInfo information to create asset from
+     * @return asset from database
+     */
     // when adding new asset, the user and comments would not to be put
     public AssetInfo addAsset(AssetInfo assetInfo) {
         try {
@@ -94,12 +92,24 @@ public class AssetService {
     }
 
 
+    /**
+     * Method to get asset by id, if user is in right role or division.
+     *
+     * @param assetId id of asset
+     * @param roles   list of roles
+     * @param id      asset id
+     * @return asset
+     */
     public AssetInfo getAssetById(String assetId, List<String> roles, Long id) {
         Integer userDivision = getDivision(roles);
-        System.out.println(userDivision);
         return assetRepository.getAssetInfoByIdAndDivisionOrUserId(assetId.toLowerCase(), userDivision, id);
     }
 
+    /**
+     * Add existing asset into kit to others assets
+     *
+     * @param assetInfo information pack
+     */
     private void addKitRelation(AssetInfo assetInfo) {
         try {
             if (assetInfo.getMajorAssetId() != null) {
@@ -111,8 +121,19 @@ public class AssetService {
         }
     }
 
+    /**
+     * Method to get paginated assets (AssetInfoShort), used for table.
+     * Ables different search and sort criteria.
+     *
+     * @param page                nr of page
+     * @param size                page size
+     * @param assetSearchCriteria information to filter by
+     * @param order               asc or desc order
+     * @param sortBy              criteria to sort by
+     * @param roles               list of roles
+     * @return paginated assets
+     */
     public Page<AssetInfoShort> getAssetsList(int page, int size, AssetInfoShort assetSearchCriteria, String order, String sortBy, List<String> roles) {
-
         String id = "%%";
         String name = "%%";
         Integer division = null;
@@ -185,7 +206,17 @@ public class AssetService {
         }
     }
 
-    public Page<AssetInfoShort> getAssetsUserOwning(Long id, int page, int size){
+    /**
+     * Method to get assets where current user is marked as user/owner.
+     * Here is no matter if asset and user divisions are different,
+     * as user may own assets from different divisions
+     *
+     * @param id   asset id
+     * @param page page nr
+     * @param size page size
+     * @return paginated assets
+     */
+    public Page<AssetInfoShort> getAssetsUserOwning(Long id, int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size);
         return assetRepository.getAssetInfoShortByUserId(id, pageRequest);
     }
@@ -276,12 +307,18 @@ public class AssetService {
         return null;
     }
 
+    /**
+     * Asset check method for inventory.
+     *
+     * @param id          asset id
+     * @param authorities list of roles
+     * @return asset
+     */
     public Asset check(String id, List<String> authorities) {
         Asset dbAsset = assetRepository.findAssetById(id);
         Integer division = inventoryService.getDivision(authorities);
         try {
             if (id != null && dbAsset != null && inventoryService.getInventoryOngoing(division)) {
-
                 dbAsset.setChecked(!dbAsset.getChecked());
                 return assetRepository.save(dbAsset);
             }
@@ -291,12 +328,19 @@ public class AssetService {
         return null;
     }
 
+    /**
+     * Multiple assets check method for inventory.
+     *
+     * @param assetIds    list of asset id
+     * @param authorities list of roles
+     * @return if checked or not
+     */
     public boolean checkMultiple(List<String> assetIds, List<String> authorities) {
         if (assetIds != null && assetIds.size() > 0) {
             for (String id : assetIds) {
                 Asset dbAsset = assetRepository.findAssetById(id);
                 Integer division = inventoryService.getDivision(authorities);
-                if (dbAsset != null  && inventoryService.getInventoryOngoing(division)) {
+                if (dbAsset != null && inventoryService.getInventoryOngoing(division)) {
 
                     dbAsset.setChecked(!dbAsset.getChecked());
                     assetRepository.save(dbAsset);
@@ -308,7 +352,16 @@ public class AssetService {
     }
 
 
-    public List<AssetInfo> getInventoryListsByYear (List < String > roles,int year) {
+    /**
+     * Method to get list of assets of the given name and by the users division.
+     * First list at the start of the inventory and second at the end of the inventory.
+     * This method finds inventory and uses getAssetListByDate to get needed lists.
+     *
+     * @param roles list of roles
+     * @param year  year to get inventory by
+     * @return list of assets
+     */
+    public List<AssetInfo> getInventoryListsByYear(List<String> roles, int year) {
         Integer division = inventoryService.getDivision(roles);
         Inventory inventory = inventoryService.getInventoryByYear(division, year);
         if (inventory == null) {
@@ -319,11 +372,18 @@ public class AssetService {
         }
     }
 
-
-    public List<AssetInfo> getLists (List < String > roles) {
+    /**
+     * Method to get list of assets of the given name and by the users division.
+     * First list at the start of the inventory and second at the end of the inventory.
+     * Returns the last one.
+     * This method finds inventory and uses getAssetListByDate to get needed lists.
+     *
+     * @param roles list of roles
+     * @return list of assets
+     */
+    public List<AssetInfo> getLists(List<String> roles) {
         Integer division = inventoryService.getDivision(roles);
         Inventory inventory = inventoryService.getOngoingInventory(division);
-
         if (inventory == null) {
             throw new InventoryExcelException("inventory not found");
         } else {
@@ -333,9 +393,17 @@ public class AssetService {
     }
 
 
-
+    /**
+     * Method to get list of assets of the given name and by the users division.
+     * First list at the start of the inventory and second at the end of the inventory.
+     *
+     * @param firstDate       start date
+     * @param lastDate        end date
+     * @param inventoryAssets set with asset id
+     * @return list of assets
+     */
     public List<AssetInfo> getAssetListByDate(Date firstDate, Date lastDate, Set<String> inventoryAssets) {
-        if (firstDate == null || lastDate == null|| inventoryAssets.size() == 0) {
+        if (firstDate == null || lastDate == null || inventoryAssets.size() == 0) {
             throw new InventoryExcelException();
         }
         List<AssetInfo> resultLastDate = new ArrayList<>();
@@ -362,6 +430,12 @@ public class AssetService {
         return result;
     }
 
+    /**
+     * Method to make assetInfo from given asset.
+     *
+     * @param asset asset to make assetinfo
+     * @return new assetinfo
+     */
     private AssetInfo constructAssetInfo(Asset asset) {
         Possessor possessor = possessorRepository.findPossessorById(asset.getPossessorId());
         Classification classification = classificationRepository.findClassificationBySubClass(asset.getSubClass());
@@ -378,6 +452,12 @@ public class AssetService {
                 possessor.getStructuralUnit(), possessor.getSubdivision());
     }
 
+    /**
+     * Method to get all changes of asset by asset id.
+     *
+     * @param id of asset
+     * @return list of assets (changes of one asset)
+     */
     private List<Asset> getAuditList(String id) {
         EntityManager em = emf.createEntityManager();
 
@@ -393,6 +473,12 @@ public class AssetService {
         return audit;
     }
 
+    /**
+     * Method to get audit of asset by asset id.
+     *
+     * @param id asset id
+     * @return list of assets (changes of one asset)
+     */
     public Page<AssetInfo> getAuditById(String id) {
         EntityManager em = emf.createEntityManager();
 
@@ -414,6 +500,12 @@ public class AssetService {
     }
 
 
+    /**
+     * Method to validate assetinfo that all needed information about asset is given to then construct new asset.
+     *
+     * @param assetInfo asset to add in database
+     * @return correct information or not
+     */
     private boolean checkAssetInfoBeforeAdding(AssetInfo assetInfo) {
         return assetInfo != null && assetInfo.getId() != null && !assetInfo.getId().isBlank()
                 && assetRepository.findById(assetInfo.getId()).isEmpty() && assetInfo.getId().length() <= 20
@@ -433,12 +525,18 @@ public class AssetService {
                 && assetInfo.getPrice() != null && assetInfo.getResidualPrice() != null);
     }
 
-    private Integer getDivision(List<String> roles){
+    /**
+     * Method to get division from list of roles.
+     *
+     * @param roles to search from right role, which shows division
+     * @return division nr
+     */
+    private Integer getDivision(List<String> roles) {
         Integer division = null;
-        for (String role: roles){
-            if (role.equals("ROLE_Raamatupidaja")){
+        for (String role : roles) {
+            if (role.equals("ROLE_Raamatupidaja")) {
                 return -1;
-            } else if (role.startsWith("ROLE_D") && division == null){
+            } else if (role.startsWith("ROLE_D") && division == null) {
                 try {
                     division = Integer.valueOf(role.replace("ROLE_D", ""));
                 } catch (NumberFormatException e) {
@@ -446,8 +544,7 @@ public class AssetService {
                 }
             }
         }
-        System.out.println(division);
-        if (division == null){
+        if (division == null) {
             throw new WrongCurrentUserRoleException("Check user have right roles");
         }
         return division;

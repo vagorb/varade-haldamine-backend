@@ -21,8 +21,4 @@ public class Classification {
     @Id
     private String subClass;
     private String mainClass;
-
-
-//    @OneToMany(mappedBy = "subClass", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Asset> assets;
 }

@@ -21,13 +21,12 @@ public class ClassificationController {
 
     /**
      * Method to see add classifications.
-     *
+     * <p>
      * Roles: only Raamatupidaja
      *
      * @return Classification list
      */
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")
-
     @GetMapping
     public List<Classification> getAll() {
         return classificationService.findAll();
@@ -35,7 +34,7 @@ public class ClassificationController {
 
     /**
      * Method to register new classification.
-     *
+     * <p>
      * Roles: only Raamatupidaja.
      *
      * @param classification information of new classification
@@ -53,11 +52,11 @@ public class ClassificationController {
 
     /**
      * Method to change data of the classification.
-     *
+     * <p>
      * Roles: only Raamatupidaja.
      *
      * @param classification information of new data to classification fields
-     * @param subClass subclass to change it
+     * @param subClass       subclass to change it
      * @return changed classification
      */
     @PreAuthorize("hasRole('ROLE_Raamatupidaja')")

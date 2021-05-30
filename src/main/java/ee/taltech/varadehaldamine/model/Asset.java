@@ -27,7 +27,7 @@ public class Asset {
     private String id;
     private String name;
 
-//    @JsonIgnore
+    //    @JsonIgnore
 //    @ManyToOne
 //    @JoinColumn(name = "sub_class")
     private String subClass;
@@ -50,9 +50,6 @@ public class Asset {
     private String buildingAbbreviature;
     private String room;
     private String description;
-
-//    @OneToMany(mappedBy = "asset", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<Comment> comments;
 
     public Asset(String id, String name, String sub_class, Long possessor, Date expirationDate,
                  Boolean delicateCondition, Boolean checked, Double price, Double residualPrice, Timestamp

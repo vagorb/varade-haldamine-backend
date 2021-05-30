@@ -15,14 +15,31 @@ public class PossessorService {
     @Autowired
     private PossessorRepository possessorRepository;
 
+    /**
+     * Method to get all possessors from db.
+     *
+     * @return all possessors
+     */
     public List<Possessor> findAll() {
         return possessorRepository.findAll();
     }
 
-    public Possessor getPossesorById(Long possessorId) {
+    /**
+     * Method to get possessor by id.
+     *
+     * @param possessorId possessor id
+     * @return possessor
+     */
+    public Possessor getPossessorById(Long possessorId) {
         return possessorRepository.findPossessorById(possessorId);
     }
 
+    /**
+     * Method to add new possessor.
+     *
+     * @param possessorInfo new possessor info holder
+     * @return added possessor
+     */
     public Possessor addPossessor(PossessorInfo possessorInfo) {
         try {
             if (possessorInfo != null && possessorInfo.getStructuralUnit() != null) {
@@ -39,12 +56,26 @@ public class PossessorService {
         return null;
     }
 
+    /**
+     * Method to update possessors' structural unit.
+     *
+     * @param possessor new possessor unit holder
+     * @param id        possessor id
+     * @return changes possessor
+     */
     public Possessor update(Possessor possessor, Long id) {
         Possessor dbPossessor = possessorRepository.findPossessorById(id);
         dbPossessor.setStructuralUnit(possessor.getStructuralUnit());
         return possessorRepository.save(dbPossessor);
     }
 
+    /**
+     * Method to check if possessor with given structural unit and subdivision exists.
+     *
+     * @param structuralUnit structural unit
+     * @param subDivision    subdivision
+     * @return exists or not
+     */
     public Possessor findPossessor(Integer structuralUnit, Integer subDivision) {
         List<Possessor> all = findAll();
         for (Possessor possessor : all) {

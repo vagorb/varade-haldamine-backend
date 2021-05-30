@@ -60,44 +60,44 @@ public class AssetInfo {
     private Integer subdivision;
 
     public AssetInfo(String id, String name, Boolean active, Long userId, Long possessorId, java.util.Date date, Boolean delicateCondition, Boolean checked, java.util.Date createdAt, java.util.Date modifiedAt, Double price, Double residualPrice, java.util.Date purchaseDate, String subclass, String mainClass, String majorAssetId, String buildingAbbreviation, String room, String descriptionText, String username, Integer structuralUnit, Integer subdivision) {
-    this.id = id;
-    this.name = name;
-    this.active = active;
-    this.userId = userId;
-    this.possessorId = possessorId;
-    this.lifeMonthsLeft = 0;
-    if (date != null){
-        int months = (int) ChronoUnit.MONTHS.between(LocalDate.now(), Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
-        if (months < 0) {
-            months = 0;
+        this.id = id;
+        this.name = name;
+        this.active = active;
+        this.userId = userId;
+        this.possessorId = possessorId;
+        this.lifeMonthsLeft = 0;
+        if (date != null) {
+            int months = (int) ChronoUnit.MONTHS.between(LocalDate.now(), Instant.ofEpochMilli(date.getTime()).atZone(ZoneId.systemDefault()).toLocalDate());
+            if (months < 0) {
+                months = 0;
+            }
+            this.lifeMonthsLeft = months;
         }
-        this.lifeMonthsLeft = months;
-    }
-    this.delicateCondition = delicateCondition;
-    this.checked = checked;
-    this.createdAt = new Date(createdAt.getTime());
-    this.modifiedAt = new Timestamp(modifiedAt.getTime());
-    this.price = price;
-    this.residualPrice = residualPrice;
-    if (purchaseDate != null){
-        this.purchaseDate = new Date(purchaseDate.getTime());
-    }
-    this.subclass = subclass;
-    this.mainClass = mainClass;
-    if (majorAssetId != null){
-        this.majorAssetId = majorAssetId;
-        if (majorAssetId.equals(id)){
-            kitPartName = "Peavara";
-        } else {
-            kitPartName = "Komponent";
+        this.delicateCondition = delicateCondition;
+        this.checked = checked;
+        this.createdAt = new Date(createdAt.getTime());
+        this.modifiedAt = new Timestamp(modifiedAt.getTime());
+        this.price = price;
+        this.residualPrice = residualPrice;
+        if (purchaseDate != null) {
+            this.purchaseDate = new Date(purchaseDate.getTime());
         }
+        this.subclass = subclass;
+        this.mainClass = mainClass;
+        if (majorAssetId != null) {
+            this.majorAssetId = majorAssetId;
+            if (majorAssetId.equals(id)) {
+                kitPartName = "Peavara";
+            } else {
+                kitPartName = "Komponent";
+            }
+        }
+        this.buildingAbbreviation = buildingAbbreviation;
+        this.room = room;
+        this.descriptionText = descriptionText;
+        this.username = username;
+        this.structuralUnit = structuralUnit;
+        this.subdivision = subdivision;
     }
-    this.buildingAbbreviation = buildingAbbreviation;
-    this.room = room;
-    this.descriptionText = descriptionText;
-    this.username = username;
-    this.structuralUnit = structuralUnit;
-    this.subdivision = subdivision;
-}
 
 }

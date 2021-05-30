@@ -1,6 +1,5 @@
 package ee.taltech.varadehaldamine.repository;
 
-import ee.taltech.varadehaldamine.model.Asset;
 import ee.taltech.varadehaldamine.model.Comment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
