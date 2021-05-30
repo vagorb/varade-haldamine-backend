@@ -10,6 +10,7 @@ import javax.persistence.*;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -59,14 +60,13 @@ public class Asset {
         this.id = id;
         this.name = name;
         this.active = true;
-        this.checked = false;
+        this.checked = Objects.requireNonNullElse(checked, false);
         this.subClass = sub_class;
         this.possessorId = possessor;
         this.expirationDate = expirationDate;
         this.delicateCondition = delicateCondition;
         this.createdAt = new Timestamp(System.currentTimeMillis());
         this.modifiedAt = new Timestamp(System.currentTimeMillis());
-        this.checked = checked;
         this.price = price;
         this.residualPrice = residualPrice;
         this.purchaseDate = purchaseDate;
