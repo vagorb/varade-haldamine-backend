@@ -31,7 +31,7 @@ public class InventoryService {
         Integer userDivision = getDivision(roles);
         for (Inventory inventory : inventoryRepository.findAll()) {
             if (inventory.getDivision().equals(userDivision) && inventory.getEndDate() == null) {
-                throw new OngoingInventoryAlreadyExists();
+                throw new OngoingInventoryAlreadyExists("Could not start inventory because it has already been started.");
             }
         }
         setAssetsUnchecked(userDivision);
@@ -53,7 +53,7 @@ public class InventoryService {
             }
         }
         if (dbInventory == null) {
-            throw new OngoingInventoryDoesNotExist();
+            throw new OngoingInventoryDoesNotExist("Could not end inventory because there are no inventory in progress.");
         }
         if (userDivision.equals(dbInventory.getDivision())) {
             Set<String> allCurrentAssets = getAssetsSetByPossessor(dbInventory.getDivision());
@@ -61,7 +61,7 @@ public class InventoryService {
             for (String assetId : allCurrentAssets) {
                 allInventoryAssets.add(assetId);
                 if (!assetRepository.findAssetById(assetId).getChecked()) {
-                    throw new AssetIsNotChecked(assetId);
+                    throw new AssetIsNotChecked("Could not end inventory because not all assets were checked yet.");
                 }
             }
             dbInventory.setAssets(allInventoryAssets);
