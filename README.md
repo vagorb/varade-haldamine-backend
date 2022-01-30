@@ -10,11 +10,17 @@ https://github.com/vagorb/varade-haldamine-frontend
 # Technologies
 
 Azure AD - For User Validation
+
 PostgreSQL - For Database
+
 Docker - For Database
+
 Angular - For Frontend
+
 Spring - For Backend
+
 Java - For Backend
+
 Flyway - For Data Migration
 
 # Screenshots
