@@ -7,6 +7,16 @@ https://drive.google.com/file/d/1F3Ajil6kLGvQEauqUdp58BVswPBqS7_m/view
 
 https://github.com/vagorb/varade-haldamine-frontend
 
+# Technologies
+
+Azure AD - For User Validation
+PostgreSQL - For Database
+Docker - For Database
+Angular - For Frontend
+Spring - For Backend
+Java - For Backend
+Flyway - For Data Migration
+
 # Screenshots
 
 Login page
